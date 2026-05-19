@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>PRO DARK POS SYSTEM</title>
+<title>FULL POS SYSTEM FIXED</title>
 
 <style>
 *{
@@ -36,7 +36,6 @@ border-radius:12px;
 text-align:center;
 cursor:pointer;
 border:1px solid #1f2937;
-font-size:14px;
 }
 
 /* PAGE */
@@ -51,11 +50,9 @@ padding:20px;
 display:block;
 }
 
-/* HEADER */
 .header{
 display:flex;
 justify-content:space-between;
-align-items:center;
 margin-bottom:12px;
 }
 
@@ -74,30 +71,22 @@ background:#ef4444;
 color:white;
 }
 
-/* INPUT FIX DARK MODE */
 input,select{
 width:100%;
 padding:10px;
-margin:6px 0;
+margin:5px 0;
 border-radius:8px;
-
-background:#111827;     /* 🔥 أسود */
-color:white;            /* 🔥 كتابة بيضاء */
-border:1px solid #374151;
+border:none;
+background:#111827;
+color:white;
 outline:none;
 }
 
-input::placeholder{
-color:#9ca3af;
-}
-
-/* focus */
-input:focus, select:focus{
+input:focus,select:focus{
 border:1px solid #22c55e;
 box-shadow:0 0 8px rgba(34,197,94,0.4);
 }
 
-/* TABLE */
 table{
 width:100%;
 margin-top:10px;
@@ -132,7 +121,7 @@ margin-top:10px;
 background:#111827;
 padding:10px;
 border-radius:10px;
-line-height:1.7;
+line-height:1.6;
 }
 </style>
 </head>
@@ -147,7 +136,7 @@ line-height:1.7;
 <div class="card" onclick="openPage('products')">📦 المنتجات</div>
 <div class="card" onclick="openPage('sales')">🧾 البيع</div>
 <div class="card" onclick="openPage('stock')">📊 المخزون</div>
-<div class="card" onclick="openPage('low')">⚠ المنتجات الناقصة</div>
+<div class="card" onclick="openPage('low')">⚠ الناقص</div>
 </div>
 
 <!-- PRODUCTS -->
@@ -164,6 +153,14 @@ line-height:1.7;
 <button onclick="addBatch()">إضافة</button>
 
 <table>
+<thead>
+<tr>
+<th>الاسم</th>
+<th>الكمية</th>
+<th>شراء</th>
+<th>بيع</th>
+</tr>
+</thead>
 <tbody id="productTable"></tbody>
 </table>
 </div>
@@ -200,7 +197,6 @@ line-height:1.7;
 <th>الربح</th>
 </tr>
 </thead>
-
 <tbody id="stockTable"></tbody>
 </table>
 
@@ -222,7 +218,6 @@ line-height:1.7;
 <th>الحالة</th>
 </tr>
 </thead>
-
 <tbody id="lowTable"></tbody>
 </table>
 </div>
@@ -315,7 +310,7 @@ box.style.display="block";
 /* LOW STOCK */
 function renderLow(){
 
-lowTable.innerHTML = batches.filter(b=>b.qty<=3).map(b=>`
+lowTable.innerHTML = batches.map(b=>`
 <tr>
 <td>${b.name}</td>
 <td>${b.qty}</td>
