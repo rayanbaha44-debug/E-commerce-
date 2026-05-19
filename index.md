@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>PRO STOCK SYSTEM FULL</title>
+<title>PRO STOCK SYSTEM</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
@@ -31,10 +31,8 @@ border-radius:12px;
 text-align:center;
 cursor:pointer;
 border:1px solid #1f2937;
-font-size:14px;
 }
 
-/* PAGE */
 .page{display:none;width:100%;height:100vh;padding:20px;}
 .page.active{display:block;}
 
@@ -154,7 +152,7 @@ color:black;
 <div id="stock" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>📊 المخزون + رأس المال</h2>
+<h2>📊 المخزون</h2>
 </div>
 
 <table>
