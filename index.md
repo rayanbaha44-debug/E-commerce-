@@ -2,10 +2,15 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>PRO STOCK SYSTEM</title>
+<title>PRO DARK POS SYSTEM</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui;
+}
 
 body{
 background:#0a0f1c;
@@ -31,11 +36,22 @@ border-radius:12px;
 text-align:center;
 cursor:pointer;
 border:1px solid #1f2937;
+font-size:14px;
 }
 
-.page{display:none;width:100%;height:100vh;padding:20px;}
-.page.active{display:block;}
+/* PAGE */
+.page{
+display:none;
+width:100%;
+height:100vh;
+padding:20px;
+}
 
+.page.active{
+display:block;
+}
+
+/* HEADER */
 .header{
 display:flex;
 justify-content:space-between;
@@ -53,16 +69,35 @@ color:black;
 font-weight:bold;
 }
 
-.back{background:#ef4444;color:white;}
+.back{
+background:#ef4444;
+color:white;
+}
 
+/* INPUT FIX DARK MODE */
 input,select{
 width:100%;
 padding:10px;
-margin:5px 0;
+margin:6px 0;
 border-radius:8px;
-border:none;
+
+background:#111827;     /* 🔥 أسود */
+color:white;            /* 🔥 كتابة بيضاء */
+border:1px solid #374151;
+outline:none;
 }
 
+input::placeholder{
+color:#9ca3af;
+}
+
+/* focus */
+input:focus, select:focus{
+border:1px solid #22c55e;
+box-shadow:0 0 8px rgba(34,197,94,0.4);
+}
+
+/* TABLE */
 table{
 width:100%;
 margin-top:10px;
@@ -78,14 +113,6 @@ text-align:center;
 border-bottom:1px solid #1f2937;
 }
 
-.box{
-margin-top:10px;
-background:#111827;
-padding:10px;
-border-radius:10px;
-line-height:1.7;
-}
-
 /* ALERT */
 #alertBox{
 position:fixed;
@@ -97,6 +124,15 @@ display:none;
 z-index:9999;
 font-weight:bold;
 color:black;
+}
+
+/* BOX */
+.box{
+margin-top:10px;
+background:#111827;
+padding:10px;
+border-radius:10px;
+line-height:1.7;
 }
 </style>
 </head>
@@ -152,7 +188,7 @@ color:black;
 <div id="stock" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>📊 المخزون</h2>
+<h2>📊 المخزون + الأرباح</h2>
 </div>
 
 <table>
@@ -164,6 +200,7 @@ color:black;
 <th>الربح</th>
 </tr>
 </thead>
+
 <tbody id="stockTable"></tbody>
 </table>
 
@@ -185,6 +222,7 @@ color:black;
 <th>الحالة</th>
 </tr>
 </thead>
+
 <tbody id="lowTable"></tbody>
 </table>
 </div>
@@ -277,9 +315,7 @@ box.style.display="block";
 /* LOW STOCK */
 function renderLow(){
 
-let low = batches.filter(b=>b.qty<=3);
-
-lowTable.innerHTML = low.map(b=>`
+lowTable.innerHTML = batches.filter(b=>b.qty<=3).map(b=>`
 <tr>
 <td>${b.name}</td>
 <td>${b.qty}</td>
