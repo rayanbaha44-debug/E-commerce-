@@ -8,8 +8,8 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
 
 body{
-background:#0a0f1c;
-color:white;
+background:white;
+color:black;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -25,12 +25,13 @@ width:360px;
 }
 
 .card{
-background:#111827;
+background:#f3f4f6;
 padding:18px;
 border-radius:12px;
 text-align:center;
 cursor:pointer;
-border:1px solid #1f2937;
+border:1px solid #d1d5db;
+color:black;
 }
 
 .page{display:none;width:100%;height:100vh;padding:20px;}
@@ -40,6 +41,7 @@ border:1px solid #1f2937;
 display:flex;
 justify-content:space-between;
 margin-bottom:12px;
+color:black;
 }
 
 button{
@@ -59,9 +61,9 @@ width:100%;
 padding:10px;
 margin:5px 0;
 border-radius:8px;
-border:none;
-background:#111827;
-color:white;
+border:1px solid #ccc;
+background:white;
+color:black;
 }
 
 /* TABLE */
@@ -69,7 +71,7 @@ table{
 width:100%;
 margin-top:10px;
 border-collapse:collapse;
-background:#111827;
+background:white;
 border-radius:10px;
 overflow:hidden;
 }
@@ -77,7 +79,8 @@ overflow:hidden;
 td,th{
 padding:10px;
 text-align:center;
-border-bottom:1px solid #1f2937;
+border-bottom:1px solid #ddd;
+color:black;
 }
 
 .del{
@@ -86,6 +89,7 @@ padding:5px 8px;
 border-radius:6px;
 cursor:pointer;
 font-size:12px;
+color:white;
 }
 </style>
 </head>
@@ -131,11 +135,21 @@ font-size:12px;
 <div id="sales" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>🧾 البيع</h2>
+<h2>🧾 البيع (تم التحديث)</h2>
 </div>
 
-<select id="saleSelect"></select>
+<!-- 🔎 SEARCH -->
+<input id="saleSearch" placeholder="ابحث عن المنتج..." oninput="render()">
+
+<!-- 📦 PRODUCT SELECT -->
+<select id="saleProduct" onchange="render()"></select>
+
+<!-- 📦 STOCK SELECT -->
+<select id="saleStock"></select>
+
+<!-- 🔢 QTY -->
 <input id="saleQty" type="number" value="1">
+
 <button onclick="sell()">بيع</button>
 
 <table>
@@ -163,7 +177,7 @@ font-size:12px;
 <tbody id="stockTable"></tbody>
 </table>
 
-<div id="totals" style="margin-top:10px;background:#111827;padding:10px;border-radius:10px;"></div>
+<div id="totals" style="margin-top:10px;background:#f3f4f6;padding:10px;border-radius:10px;"></div>
 </div>
 
 <!-- LOW STOCK -->
@@ -187,7 +201,7 @@ font-size:12px;
 
 <script>
 
-/* SAFE DATA */
+/* DATA */
 let batches = JSON.parse(localStorage.getItem("batches")||"[]");
 let sales = JSON.parse(localStorage.getItem("sales")||"[]");
 
@@ -212,9 +226,8 @@ localStorage.setItem("batches",JSON.stringify(batches));
 localStorage.setItem("sales",JSON.stringify(sales));
 }
 
-/* ADD PRODUCT */
+/* ADD */
 function addProduct(){
-
 batches.push({
 id:Date.now(),
 name:pName.value.trim(),
@@ -222,12 +235,11 @@ buy:+pBuy.value,
 sell:+pSell.value,
 qty:+pQty.value
 });
-
 save();
 render();
 }
 
-/* DELETE ONLY ONE */
+/* DELETE */
 function deleteProduct(id){
 batches = batches.filter(b=>b.id!==id);
 save();
@@ -237,7 +249,7 @@ render();
 /* SELL */
 function sell(){
 
-let id = +saleSelect.value;
+let id = +saleProduct.value;
 let qty = +saleQty.value;
 
 let b = batches.find(x=>x.id===id);
@@ -255,13 +267,15 @@ save();
 render();
 }
 
-/* RENDER PRODUCTS */
+/* RENDER */
 function render(){
 
-/* PRODUCTS */
-productTable.innerHTML = "";
+let search = saleSearch.value?.toLowerCase() || "";
+
+/* PRODUCTS TABLE */
+productTable.innerHTML="";
 batches.forEach(b=>{
-productTable.innerHTML += `
+productTable.innerHTML+=`
 <tr>
 <td>${b.name}</td>
 <td>${b.qty}</td>
@@ -272,12 +286,12 @@ productTable.innerHTML += `
 });
 
 /* STOCK */
-stockTable.innerHTML = "";
+stockTable.innerHTML="";
 batches.forEach(b=>{
-let capital = b.buy*b.qty;
-let profit = (b.sell-b.buy)*b.qty;
+let capital=b.buy*b.qty;
+let profit=(b.sell-b.buy)*b.qty;
 
-stockTable.innerHTML += `
+stockTable.innerHTML+=`
 <tr>
 <td>${b.name}</td>
 <td>${b.qty}</td>
@@ -288,10 +302,10 @@ stockTable.innerHTML += `
 });
 
 /* LOW STOCK */
-lowTable.innerHTML = "";
+lowTable.innerHTML="";
 batches.forEach(b=>{
 if(b.qty<=3){
-lowTable.innerHTML += `
+lowTable.innerHTML+=`
 <tr>
 <td>${b.name}</td>
 <td>${b.qty}</td>
@@ -300,18 +314,25 @@ lowTable.innerHTML += `
 }
 });
 
-/* SALES SELECT */
-saleSelect.innerHTML = batches.map(b=>
-`<option value="${b.id}">
-${b.name} | ${b.qty}
-</option>`
+/* FILTERED PRODUCTS */
+let filtered = batches.filter(b=>b.name.toLowerCase().includes(search));
+
+saleProduct.innerHTML = filtered.map(b=>
+`<option value="${b.id}">${b.name} | stock ${b.qty}</option>`
 ).join('');
 
-/* TOTALS */
-let capital = batches.reduce((a,b)=>a+(b.buy*b.qty),0);
-let profit = batches.reduce((a,b)=>a+((b.sell-b.buy)*b.qty),0);
+/* STOCK SELECT */
+let selected = batches.find(b=>b.id==saleProduct.value) || filtered[0];
 
-totals.innerHTML = `
+saleStock.innerHTML = selected
+? `<option>${selected.name} - stock: ${selected.qty}</option>`
+: "";
+
+/* TOTALS */
+let capital=batches.reduce((a,b)=>a+(b.buy*b.qty),0);
+let profit=batches.reduce((a,b)=>a+((b.sell-b.buy)*b.qty),0);
+
+totals.innerHTML=`
 💰 رأس المال: ${capital.toFixed(2)} DA<br>
 📈 الأرباح: ${profit.toFixed(2)} DA<br>
 💼 المجموع: ${(capital+profit).toFixed(2)} DA
