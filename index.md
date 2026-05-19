@@ -89,26 +89,6 @@ cursor:pointer;
 font-size:12px;
 color:white;
 }
-
-/* SALES LOG */
-#salesLog{
-margin-top:15px;
-background:#f3f4f6;
-padding:10px;
-border-radius:10px;
-max-height:200px;
-overflow:auto;
-}
-
-.delSale{
-background:#dc2626;
-padding:4px 6px;
-border-radius:6px;
-cursor:pointer;
-font-size:11px;
-color:white;
-margin-right:5px;
-}
 </style>
 </head>
 
@@ -155,6 +135,7 @@ margin-right:5px;
 <h2>🧾 البيع</h2>
 </div>
 
+<!-- 🔎 SEARCH (FIXED) -->
 <input id="saleSearch" placeholder="ابحث عن المنتج..." oninput="renderSales()">
 
 <select id="saleStock"></select>
@@ -162,9 +143,6 @@ margin-right:5px;
 <input id="saleQty" type="number" value="1">
 
 <button onclick="sell()">بيع</button>
-
-<!-- SALES LOG -->
-<div id="salesLog"></div>
 
 </div>
 
@@ -240,7 +218,7 @@ save();
 render();
 }
 
-/* DELETE PRODUCT */
+/* DELETE */
 function deleteProduct(id){
 batches=batches.filter(b=>b.id!==id);
 save();
@@ -269,30 +247,24 @@ save();
 render();
 }
 
-/* DELETE SALE 🔥 NEW */
-function deleteSale(index){
-sales.splice(index,1);
-save();
-render();
-}
-
-/* SMART SEARCH */
+/* 🔥 FIXED SEARCH (ALL MATCHING PRODUCTS) */
 function renderSales(){
 
-let search=saleSearch.value.toLowerCase();
+let search = saleSearch.value.toLowerCase();
 
-let filtered=batches.filter(b=>
+/* includes search (ALL RESULTS) */
+let filtered = batches.filter(b =>
 b.name.toLowerCase().includes(search)
 );
 
-saleStock.innerHTML=filtered.map(b=>
+saleStock.innerHTML = filtered.map(b=>
 `<option value="${b.id}">
-${b.name} | stock ${b.qty}
+${b.name} | شراء: ${b.buy} | بيع: ${b.sell} | stock: ${b.qty}
 </option>`
 ).join('');
 }
 
-/* RENDER */
+/* MAIN RENDER */
 function render(){
 
 productTable.innerHTML="";
@@ -343,13 +315,7 @@ totals.innerHTML=`
 💼 المجموع: ${(capital+profit).toFixed(2)} DA
 `;
 
-/* SALES LOG WITH DELETE */
-salesLog.innerHTML = sales.map((s,i)=>
-`<div style="padding:6px;border-bottom:1px solid #ddd">
-<span class="delSale" onclick="deleteSale(${i})">🗑</span>
-🧾 ${s.name} | x${s.qty} | 💰 ${s.profit} DA | ⏰ ${s.time}
-</div>`
-).join('');
+renderSales();
 }
 
 render();
