@@ -2,15 +2,10 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>FULL STOCK & PRODUCTS SYSTEM FIX</title>
+<title>FIXED POS SYSTEM</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:system-ui;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
 
 body{
 background:#0a0f1c;
@@ -38,19 +33,9 @@ cursor:pointer;
 border:1px solid #1f2937;
 }
 
-/* PAGES */
-.page{
-display:none;
-width:100%;
-height:100vh;
-padding:20px;
-}
+.page{display:none;width:100%;height:100vh;padding:20px;}
+.page.active{display:block;}
 
-.page.active{
-display:block;
-}
-
-/* HEADER */
 .header{
 display:flex;
 justify-content:space-between;
@@ -67,12 +52,8 @@ color:black;
 font-weight:bold;
 }
 
-.back{
-background:#ef4444;
-color:white;
-}
+.back{background:#ef4444;color:white;}
 
-/* INPUT FIX */
 input,select{
 width:100%;
 padding:10px;
@@ -81,12 +62,6 @@ border-radius:8px;
 border:none;
 background:#111827;
 color:white;
-outline:none;
-}
-
-input:focus,select:focus{
-border:1px solid #22c55e;
-box-shadow:0 0 8px rgba(34,197,94,0.4);
 }
 
 /* TABLE */
@@ -105,10 +80,8 @@ text-align:center;
 border-bottom:1px solid #1f2937;
 }
 
-/* DELETE */
 .del{
 background:#ef4444;
-color:white;
 padding:5px 8px;
 border-radius:6px;
 cursor:pointer;
@@ -124,6 +97,7 @@ font-size:12px;
 <div class="card" onclick="openPage('products')">📦 المنتجات</div>
 <div class="card" onclick="openPage('sales')">🧾 البيع</div>
 <div class="card" onclick="openPage('stock')">📊 المخزون</div>
+<div class="card" onclick="openPage('low')">⚠ الناقص</div>
 </div>
 
 <!-- PRODUCTS -->
@@ -137,7 +111,7 @@ font-size:12px;
 <input id="pBuy" placeholder="سعر الشراء">
 <input id="pSell" placeholder="سعر البيع">
 <input id="pQty" placeholder="الكمية">
-<button onclick="addProduct()">إضافة منتج</button>
+<button onclick="addProduct()">إضافة</button>
 
 <table>
 <thead>
@@ -160,12 +134,8 @@ font-size:12px;
 <h2>🧾 البيع</h2>
 </div>
 
-<input id="searchInput" placeholder="🔎 بحث منتج" oninput="search()">
-
 <select id="saleSelect"></select>
-
 <input id="saleQty" type="number" value="1">
-
 <button onclick="sell()">بيع</button>
 
 <table>
@@ -177,7 +147,7 @@ font-size:12px;
 <div id="stock" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>📊 المخزون + الحسابات</h2>
+<h2>📊 المخزون</h2>
 </div>
 
 <table>
@@ -196,14 +166,33 @@ font-size:12px;
 <div id="totals" style="margin-top:10px;background:#111827;padding:10px;border-radius:10px;"></div>
 </div>
 
+<!-- LOW STOCK -->
+<div id="low" class="page">
+<div class="header">
+<button class="back" onclick="back()">⬅ رجوع</button>
+<h2>⚠ المنتجات الناقصة</h2>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>المنتج</th>
+<th>الكمية</th>
+<th>الحالة</th>
+</tr>
+</thead>
+<tbody id="lowTable"></tbody>
+</table>
+</div>
+
 <script>
 
-/* DATA SAFE FIX */
+/* SAFE DATA */
 let batches = JSON.parse(localStorage.getItem("batches")||"[]");
 let sales = JSON.parse(localStorage.getItem("sales")||"[]");
 
-if(!Array.isArray(batches)) batches = [];
-if(!Array.isArray(sales)) sales = [];
+if(!Array.isArray(batches)) batches=[];
+if(!Array.isArray(sales)) sales=[];
 
 /* NAV */
 function openPage(id){
@@ -226,44 +215,23 @@ localStorage.setItem("sales",JSON.stringify(sales));
 /* ADD PRODUCT */
 function addProduct(){
 
-let name = pName.value.trim();
-let buy = +pBuy.value;
-let sell = +pSell.value;
-let qty = +pQty.value;
-
-if(!name || !buy || !sell || !qty) return;
-
 batches.push({
 id:Date.now(),
-name,
-buy,
-sell,
-qty
+name:pName.value.trim(),
+buy:+pBuy.value,
+sell:+pSell.value,
+qty:+pQty.value
 });
 
 save();
 render();
 }
 
-/* DELETE PRODUCT */
+/* DELETE ONLY ONE */
 function deleteProduct(id){
 batches = batches.filter(b=>b.id!==id);
 save();
 render();
-}
-
-/* SEARCH */
-function search(){
-
-let val = searchInput.value.toLowerCase();
-
-let filtered = batches.filter(b=>b.name.toLowerCase().includes(val));
-
-saleSelect.innerHTML = filtered.map(b=>`
-<option value="${b.id}">
-${b.name} | qty:${b.qty}
-</option>
-`).join('');
 }
 
 /* SELL */
@@ -273,7 +241,7 @@ let id = +saleSelect.value;
 let qty = +saleQty.value;
 
 let b = batches.find(x=>x.id===id);
-if(!b || b.qty < qty) return;
+if(!b || b.qty<qty) return;
 
 b.qty -= qty;
 
@@ -287,7 +255,7 @@ save();
 render();
 }
 
-/* RENDER EVERYTHING (FIXED STRONG) */
+/* RENDER PRODUCTS */
 function render(){
 
 /* PRODUCTS */
@@ -295,48 +263,49 @@ productTable.innerHTML = "";
 batches.forEach(b=>{
 productTable.innerHTML += `
 <tr>
-<td>${b.name || ""}</td>
-<td>${b.qty || 0}</td>
-<td>${b.buy || 0}</td>
-<td>${b.sell || 0}</td>
+<td>${b.name}</td>
+<td>${b.qty}</td>
+<td>${b.buy}</td>
+<td>${b.sell}</td>
 <td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
-</tr>
-`;
+</tr>`;
 });
 
 /* STOCK */
 stockTable.innerHTML = "";
 batches.forEach(b=>{
-
-let capital = (b.buy||0)*(b.qty||0);
-let profit = ((b.sell||0)-(b.buy||0))*(b.qty||0);
+let capital = b.buy*b.qty;
+let profit = (b.sell-b.buy)*b.qty;
 
 stockTable.innerHTML += `
 <tr>
-<td>${b.name || ""}</td>
-<td>${b.qty || 0}</td>
+<td>${b.name}</td>
+<td>${b.qty}</td>
 <td>${capital.toFixed(2)}</td>
 <td>${profit.toFixed(2)}</td>
 <td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
-</tr>
-`;
+</tr>`;
 });
 
-/* SALES */
-salesTable.innerHTML = sales.map(s=>`
+/* LOW STOCK */
+lowTable.innerHTML = "";
+batches.forEach(b=>{
+if(b.qty<=3){
+lowTable.innerHTML += `
 <tr>
-<td>${s.name}</td>
-<td>${s.qty}</td>
-<td>${s.profit.toFixed(2)}</td>
-</tr>
-`).join('');
+<td>${b.name}</td>
+<td>${b.qty}</td>
+<td>${b.qty<=1?"🔴 خطر":"🟡 ناقص"}</td>
+</tr>`;
+}
+});
 
-/* SELECT */
-saleSelect.innerHTML = batches.map(b=>`
-<option value="${b.id}">
-${b.name} | شراء:${b.buy} | بيع:${b.sell} | qty:${b.qty}
-</option>
-`).join('');
+/* SALES SELECT */
+saleSelect.innerHTML = batches.map(b=>
+`<option value="${b.id}">
+${b.name} | ${b.qty}
+</option>`
+).join('');
 
 /* TOTALS */
 let capital = batches.reduce((a,b)=>a+(b.buy*b.qty),0);
@@ -347,7 +316,6 @@ totals.innerHTML = `
 📈 الأرباح: ${profit.toFixed(2)} DA<br>
 💼 المجموع: ${(capital+profit).toFixed(2)} DA
 `;
-
 }
 
 render();
