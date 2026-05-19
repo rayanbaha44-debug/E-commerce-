@@ -16,7 +16,6 @@ align-items:center;
 height:100vh;
 }
 
-/* DASHBOARD */
 #dashboard{
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -66,7 +65,6 @@ background:white;
 color:black;
 }
 
-/* TABLE */
 table{
 width:100%;
 margin-top:10px;
@@ -91,12 +89,31 @@ cursor:pointer;
 font-size:12px;
 color:white;
 }
+
+/* SALES LOG */
+#salesLog{
+margin-top:15px;
+background:#f3f4f6;
+padding:10px;
+border-radius:10px;
+max-height:200px;
+overflow:auto;
+}
+
+.delSale{
+background:#dc2626;
+padding:4px 6px;
+border-radius:6px;
+cursor:pointer;
+font-size:11px;
+color:white;
+margin-right:5px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
 <div class="card" onclick="openPage('products')">📦 المنتجات</div>
 <div class="card" onclick="openPage('sales')">🧾 البيع</div>
@@ -135,26 +152,20 @@ color:white;
 <div id="sales" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>🧾 البيع (تم التحديث)</h2>
+<h2>🧾 البيع</h2>
 </div>
 
-<!-- 🔎 SEARCH -->
-<input id="saleSearch" placeholder="ابحث عن المنتج..." oninput="render()">
+<input id="saleSearch" placeholder="ابحث عن المنتج..." oninput="renderSales()">
 
-<!-- 📦 PRODUCT SELECT -->
-<select id="saleProduct" onchange="render()"></select>
-
-<!-- 📦 STOCK SELECT -->
 <select id="saleStock"></select>
 
-<!-- 🔢 QTY -->
 <input id="saleQty" type="number" value="1">
 
 <button onclick="sell()">بيع</button>
 
-<table>
-<tbody id="salesTable"></tbody>
-</table>
+<!-- SALES LOG -->
+<div id="salesLog"></div>
+
 </div>
 
 <!-- STOCK -->
@@ -180,35 +191,26 @@ color:white;
 <div id="totals" style="margin-top:10px;background:#f3f4f6;padding:10px;border-radius:10px;"></div>
 </div>
 
-<!-- LOW STOCK -->
+<!-- LOW -->
 <div id="low" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>⚠ المنتجات الناقصة</h2>
+<h2>⚠ الناقص</h2>
 </div>
 
 <table>
-<thead>
-<tr>
-<th>المنتج</th>
-<th>الكمية</th>
-<th>الحالة</th>
-</tr>
-</thead>
 <tbody id="lowTable"></tbody>
 </table>
 </div>
 
 <script>
 
-/* DATA */
 let batches = JSON.parse(localStorage.getItem("batches")||"[]");
 let sales = JSON.parse(localStorage.getItem("sales")||"[]");
 
 if(!Array.isArray(batches)) batches=[];
 if(!Array.isArray(sales)) sales=[];
 
-/* NAV */
 function openPage(id){
 document.getElementById("dashboard").style.display="none";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -220,7 +222,6 @@ document.getElementById("dashboard").style.display="grid";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 }
 
-/* SAVE */
 function save(){
 localStorage.setItem("batches",JSON.stringify(batches));
 localStorage.setItem("sales",JSON.stringify(sales));
@@ -239,9 +240,9 @@ save();
 render();
 }
 
-/* DELETE */
+/* DELETE PRODUCT */
 function deleteProduct(id){
-batches = batches.filter(b=>b.id!==id);
+batches=batches.filter(b=>b.id!==id);
 save();
 render();
 }
@@ -249,30 +250,51 @@ render();
 /* SELL */
 function sell(){
 
-let id = +saleProduct.value;
-let qty = +saleQty.value;
+let id=+saleStock.value;
+let qty=+saleQty.value;
 
-let b = batches.find(x=>x.id===id);
+let b=batches.find(x=>x.id===id);
 if(!b || b.qty<qty) return;
 
-b.qty -= qty;
+b.qty-=qty;
 
 sales.push({
 name:b.name,
 qty,
-profit:(b.sell-b.buy)*qty
+profit:(b.sell-b.buy)*qty,
+time:new Date().toLocaleTimeString()
 });
 
 save();
 render();
 }
 
+/* DELETE SALE 🔥 NEW */
+function deleteSale(index){
+sales.splice(index,1);
+save();
+render();
+}
+
+/* SMART SEARCH */
+function renderSales(){
+
+let search=saleSearch.value.toLowerCase();
+
+let filtered=batches.filter(b=>
+b.name.toLowerCase().includes(search)
+);
+
+saleStock.innerHTML=filtered.map(b=>
+`<option value="${b.id}">
+${b.name} | stock ${b.qty}
+</option>`
+).join('');
+}
+
 /* RENDER */
 function render(){
 
-let search = saleSearch.value?.toLowerCase() || "";
-
-/* PRODUCTS TABLE */
 productTable.innerHTML="";
 batches.forEach(b=>{
 productTable.innerHTML+=`
@@ -285,7 +307,6 @@ productTable.innerHTML+=`
 </tr>`;
 });
 
-/* STOCK */
 stockTable.innerHTML="";
 batches.forEach(b=>{
 let capital=b.buy*b.qty;
@@ -301,7 +322,6 @@ stockTable.innerHTML+=`
 </tr>`;
 });
 
-/* LOW STOCK */
 lowTable.innerHTML="";
 batches.forEach(b=>{
 if(b.qty<=3){
@@ -314,21 +334,6 @@ lowTable.innerHTML+=`
 }
 });
 
-/* FILTERED PRODUCTS */
-let filtered = batches.filter(b=>b.name.toLowerCase().includes(search));
-
-saleProduct.innerHTML = filtered.map(b=>
-`<option value="${b.id}">${b.name} | stock ${b.qty}</option>`
-).join('');
-
-/* STOCK SELECT */
-let selected = batches.find(b=>b.id==saleProduct.value) || filtered[0];
-
-saleStock.innerHTML = selected
-? `<option>${selected.name} - stock: ${selected.qty}</option>`
-: "";
-
-/* TOTALS */
 let capital=batches.reduce((a,b)=>a+(b.buy*b.qty),0);
 let profit=batches.reduce((a,b)=>a+((b.sell-b.buy)*b.qty),0);
 
@@ -337,6 +342,14 @@ totals.innerHTML=`
 📈 الأرباح: ${profit.toFixed(2)} DA<br>
 💼 المجموع: ${(capital+profit).toFixed(2)} DA
 `;
+
+/* SALES LOG WITH DELETE */
+salesLog.innerHTML = sales.map((s,i)=>
+`<div style="padding:6px;border-bottom:1px solid #ddd">
+<span class="delSale" onclick="deleteSale(${i})">🗑</span>
+🧾 ${s.name} | x${s.qty} | 💰 ${s.profit} DA | ⏰ ${s.time}
+</div>`
+).join('');
 }
 
 render();
