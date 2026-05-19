@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>FULL POS SYSTEM FIXED</title>
+<title>FULL STOCK & PRODUCTS SYSTEM FIX</title>
 
 <style>
 *{
@@ -26,7 +26,7 @@ height:100vh;
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:12px;
-width:340px;
+width:360px;
 }
 
 .card{
@@ -38,7 +38,7 @@ cursor:pointer;
 border:1px solid #1f2937;
 }
 
-/* PAGE */
+/* PAGES */
 .page{
 display:none;
 width:100%;
@@ -50,6 +50,7 @@ padding:20px;
 display:block;
 }
 
+/* HEADER */
 .header{
 display:flex;
 justify-content:space-between;
@@ -71,6 +72,7 @@ background:#ef4444;
 color:white;
 }
 
+/* INPUT FIX */
 input,select{
 width:100%;
 padding:10px;
@@ -87,6 +89,7 @@ border:1px solid #22c55e;
 box-shadow:0 0 8px rgba(34,197,94,0.4);
 }
 
+/* TABLE */
 table{
 width:100%;
 margin-top:10px;
@@ -102,41 +105,25 @@ text-align:center;
 border-bottom:1px solid #1f2937;
 }
 
-/* ALERT */
-#alertBox{
-position:fixed;
-top:10px;
-right:10px;
-padding:10px 15px;
-border-radius:10px;
-display:none;
-z-index:9999;
-font-weight:bold;
-color:black;
-}
-
-/* BOX */
-.box{
-margin-top:10px;
-background:#111827;
-padding:10px;
-border-radius:10px;
-line-height:1.6;
+/* DELETE */
+.del{
+background:#ef4444;
+color:white;
+padding:5px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ALERT -->
-<div id="alertBox"></div>
-
 <!-- DASHBOARD -->
 <div id="dashboard">
 <div class="card" onclick="openPage('products')">📦 المنتجات</div>
 <div class="card" onclick="openPage('sales')">🧾 البيع</div>
 <div class="card" onclick="openPage('stock')">📊 المخزون</div>
-<div class="card" onclick="openPage('low')">⚠ الناقص</div>
 </div>
 
 <!-- PRODUCTS -->
@@ -150,7 +137,7 @@ line-height:1.6;
 <input id="pBuy" placeholder="سعر الشراء">
 <input id="pSell" placeholder="سعر البيع">
 <input id="pQty" placeholder="الكمية">
-<button onclick="addBatch()">إضافة</button>
+<button onclick="addProduct()">إضافة منتج</button>
 
 <table>
 <thead>
@@ -159,6 +146,7 @@ line-height:1.6;
 <th>الكمية</th>
 <th>شراء</th>
 <th>بيع</th>
+<th>حذف</th>
 </tr>
 </thead>
 <tbody id="productTable"></tbody>
@@ -172,8 +160,12 @@ line-height:1.6;
 <h2>🧾 البيع</h2>
 </div>
 
+<input id="searchInput" placeholder="🔎 بحث منتج" oninput="search()">
+
 <select id="saleSelect"></select>
+
 <input id="saleQty" type="number" value="1">
+
 <button onclick="sell()">بيع</button>
 
 <table>
@@ -185,7 +177,7 @@ line-height:1.6;
 <div id="stock" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>📊 المخزون + الأرباح</h2>
+<h2>📊 المخزون + الحسابات</h2>
 </div>
 
 <table>
@@ -195,38 +187,23 @@ line-height:1.6;
 <th>الكمية</th>
 <th>رأس المال</th>
 <th>الربح</th>
+<th>حذف</th>
 </tr>
 </thead>
 <tbody id="stockTable"></tbody>
 </table>
 
-<div class="box" id="totals"></div>
-</div>
-
-<!-- LOW STOCK -->
-<div id="low" class="page">
-<div class="header">
-<button class="back" onclick="back()">⬅ رجوع</button>
-<h2>⚠ المنتجات الناقصة</h2>
-</div>
-
-<table>
-<thead>
-<tr>
-<th>المنتج</th>
-<th>الكمية</th>
-<th>الحالة</th>
-</tr>
-</thead>
-<tbody id="lowTable"></tbody>
-</table>
+<div id="totals" style="margin-top:10px;background:#111827;padding:10px;border-radius:10px;"></div>
 </div>
 
 <script>
 
-/* DATA */
+/* DATA SAFE FIX */
 let batches = JSON.parse(localStorage.getItem("batches")||"[]");
 let sales = JSON.parse(localStorage.getItem("sales")||"[]");
+
+if(!Array.isArray(batches)) batches = [];
+if(!Array.isArray(sales)) sales = [];
 
 /* NAV */
 function openPage(id){
@@ -247,7 +224,7 @@ localStorage.setItem("sales",JSON.stringify(sales));
 }
 
 /* ADD PRODUCT */
-function addBatch(){
+function addProduct(){
 
 let name = pName.value.trim();
 let buy = +pBuy.value;
@@ -256,19 +233,46 @@ let qty = +pQty.value;
 
 if(!name || !buy || !sell || !qty) return;
 
-batches.push({name,buy,sell,qty});
+batches.push({
+id:Date.now(),
+name,
+buy,
+sell,
+qty
+});
 
 save();
 render();
 }
 
+/* DELETE PRODUCT */
+function deleteProduct(id){
+batches = batches.filter(b=>b.id!==id);
+save();
+render();
+}
+
+/* SEARCH */
+function search(){
+
+let val = searchInput.value.toLowerCase();
+
+let filtered = batches.filter(b=>b.name.toLowerCase().includes(val));
+
+saleSelect.innerHTML = filtered.map(b=>`
+<option value="${b.id}">
+${b.name} | qty:${b.qty}
+</option>
+`).join('');
+}
+
 /* SELL */
 function sell(){
 
-let i = saleSelect.value;
+let id = +saleSelect.value;
 let qty = +saleQty.value;
 
-let b = batches[i];
+let b = batches.find(x=>x.id===id);
 if(!b || b.qty < qty) return;
 
 b.qty -= qty;
@@ -283,63 +287,42 @@ save();
 render();
 }
 
-/* ALERT */
-function checkAlert(){
-
-let low = batches.filter(b=>b.qty<=3);
-let danger = batches.filter(b=>b.qty<=1);
-
-let box = document.getElementById("alertBox");
-
-if(low.length===0){
-box.style.display="none";
-return;
-}
-
-if(danger.length>0){
-box.style.background="#ef4444";
-box.innerHTML="🔴 خطر: "+danger.map(b=>b.name).join(" | ");
-}else{
-box.style.background="#facc15";
-box.innerHTML="🟡 نقص: "+low.map(b=>b.name).join(" | ");
-}
-
-box.style.display="block";
-}
-
-/* LOW STOCK */
-function renderLow(){
-
-lowTable.innerHTML = batches.map(b=>`
-<tr>
-<td>${b.name}</td>
-<td>${b.qty}</td>
-<td>${b.qty<=1?"🔴 خطر":"🟡 ناقص"}</td>
-</tr>
-`).join('');
-}
-
-/* RENDER */
+/* RENDER EVERYTHING (FIXED STRONG) */
 function render(){
 
-productTable.innerHTML = batches.map(b=>`
+/* PRODUCTS */
+productTable.innerHTML = "";
+batches.forEach(b=>{
+productTable.innerHTML += `
 <tr>
-<td>${b.name}</td>
-<td>${b.qty}</td>
-<td>${b.buy}</td>
-<td>${b.sell}</td>
+<td>${b.name || ""}</td>
+<td>${b.qty || 0}</td>
+<td>${b.buy || 0}</td>
+<td>${b.sell || 0}</td>
+<td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
 </tr>
-`).join('');
+`;
+});
 
-stockTable.innerHTML = batches.map(b=>`
+/* STOCK */
+stockTable.innerHTML = "";
+batches.forEach(b=>{
+
+let capital = (b.buy||0)*(b.qty||0);
+let profit = ((b.sell||0)-(b.buy||0))*(b.qty||0);
+
+stockTable.innerHTML += `
 <tr>
-<td>${b.name}</td>
-<td>${b.qty}</td>
-<td>${(b.buy*b.qty).toFixed(2)}</td>
-<td>${((b.sell-b.buy)*b.qty).toFixed(2)}</td>
+<td>${b.name || ""}</td>
+<td>${b.qty || 0}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${profit.toFixed(2)}</td>
+<td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
 </tr>
-`).join('');
+`;
+});
 
+/* SALES */
 salesTable.innerHTML = sales.map(s=>`
 <tr>
 <td>${s.name}</td>
@@ -348,12 +331,14 @@ salesTable.innerHTML = sales.map(s=>`
 </tr>
 `).join('');
 
-saleSelect.innerHTML = batches.map((b,i)=>`
-<option value="${i}">
-${b.name} | شراء:${b.buy} | بيع:${b.sell} | كمية:${b.qty}
+/* SELECT */
+saleSelect.innerHTML = batches.map(b=>`
+<option value="${b.id}">
+${b.name} | شراء:${b.buy} | بيع:${b.sell} | qty:${b.qty}
 </option>
 `).join('');
 
+/* TOTALS */
 let capital = batches.reduce((a,b)=>a+(b.buy*b.qty),0);
 let profit = batches.reduce((a,b)=>a+((b.sell-b.buy)*b.qty),0);
 
@@ -363,8 +348,6 @@ totals.innerHTML = `
 💼 المجموع: ${(capital+profit).toFixed(2)} DA
 `;
 
-renderLow();
-checkAlert();
 }
 
 render();
