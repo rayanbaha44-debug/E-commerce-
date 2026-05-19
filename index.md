@@ -89,6 +89,22 @@ cursor:pointer;
 font-size:12px;
 color:white;
 }
+
+/* 🔥 SALES LOG */
+#salesLog{
+margin-top:15px;
+background:#f3f4f6;
+padding:10px;
+border-radius:10px;
+max-height:220px;
+overflow:auto;
+}
+
+.saleItem{
+padding:8px;
+border-bottom:1px solid #ddd;
+font-size:14px;
+}
 </style>
 </head>
 
@@ -135,7 +151,6 @@ color:white;
 <h2>🧾 البيع</h2>
 </div>
 
-<!-- 🔎 SEARCH (FIXED) -->
 <input id="saleSearch" placeholder="ابحث عن المنتج..." oninput="renderSales()">
 
 <select id="saleStock"></select>
@@ -143,6 +158,9 @@ color:white;
 <input id="saleQty" type="number" value="1">
 
 <button onclick="sell()">بيع</button>
+
+<!-- 🔥 LOG تحت البيع -->
+<div id="salesLog"></div>
 
 </div>
 
@@ -236,10 +254,13 @@ if(!b || b.qty<qty) return;
 
 b.qty-=qty;
 
+let profit=(b.sell-b.buy)*qty;
+
 sales.push({
 name:b.name,
 qty,
-profit:(b.sell-b.buy)*qty,
+sellPrice:b.sell,
+profit,
 time:new Date().toLocaleTimeString()
 });
 
@@ -247,24 +268,23 @@ save();
 render();
 }
 
-/* 🔥 FIXED SEARCH (ALL MATCHING PRODUCTS) */
+/* SEARCH */
 function renderSales(){
 
-let search = saleSearch.value.toLowerCase();
+let search=saleSearch.value.toLowerCase();
 
-/* includes search (ALL RESULTS) */
-let filtered = batches.filter(b =>
+let filtered=batches.filter(b=>
 b.name.toLowerCase().includes(search)
 );
 
-saleStock.innerHTML = filtered.map(b=>
+saleStock.innerHTML=filtered.map(b=>
 `<option value="${b.id}">
 ${b.name} | شراء: ${b.buy} | بيع: ${b.sell} | stock: ${b.qty}
 </option>`
 ).join('');
 }
 
-/* MAIN RENDER */
+/* MAIN */
 function render(){
 
 productTable.innerHTML="";
@@ -306,6 +326,7 @@ lowTable.innerHTML+=`
 }
 });
 
+/* TOTALS */
 let capital=batches.reduce((a,b)=>a+(b.buy*b.qty),0);
 let profit=batches.reduce((a,b)=>a+((b.sell-b.buy)*b.qty),0);
 
@@ -315,7 +336,12 @@ totals.innerHTML=`
 💼 المجموع: ${(capital+profit).toFixed(2)} DA
 `;
 
-renderSales();
+/* 🔥 SALES LOG */
+salesLog.innerHTML = sales.slice().reverse().map(s=>
+`<div class="saleItem">
+⏰ ${s.time} | 📦 ${s.name} | 🔢 x${s.qty} | 💵 بيع: ${s.sellPrice} DA | 💰 ربح: ${s.profit} DA
+</div>`
+).join('');
 }
 
 render();
