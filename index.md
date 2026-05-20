@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
@@ -138,13 +137,11 @@ border-radius:12px;
 margin-bottom:12px;
 }
 </style>
-
 </head>
 
 <body>
 
 <!-- DASHBOARD -->
-
 <div id="dashboard">
 <div class="card" onclick="openPage('products')">📦 المنتجات</div>
 <div class="card" onclick="openPage('sales')">🧾 البيع</div>
@@ -154,7 +151,6 @@ margin-bottom:12px;
 </div>
 
 <!-- PRODUCTS -->
-
 <div id="products" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
@@ -183,7 +179,6 @@ margin-bottom:12px;
 </div>
 
 <!-- SALES -->
-
 <div id="sales" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
@@ -202,7 +197,6 @@ margin-bottom:12px;
 </div>
 
 <!-- STOCK -->
-
 <div id="stock" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
@@ -226,7 +220,6 @@ margin-bottom:12px;
 </div>
 
 <!-- LOW -->
-
 <div id="low" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
@@ -246,7 +239,6 @@ margin-bottom:12px;
 </div>
 
 <!-- PROFITS -->
-
 <div id="profits" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
@@ -414,7 +406,6 @@ let d = new Date(s.time);
 return d.getFullYear() === now.getFullYear();
 }).reduce((a,b)=>a+b.profit,0);
 
-
 dailyProfit.innerHTML = `💰 ${daily.toFixed(2)} DA`;
 monthlyProfit.innerHTML = `💰 ${monthly.toFixed(2)} DA`;
 yearlyProfit.innerHTML = `💰 ${yearly.toFixed(2)} DA`;
@@ -479,14 +470,29 @@ stockTable.innerHTML += `
 lowTable.innerHTML="";
 
 batches.forEach(b=>{
-if(b.qty <= 3){
+
+if(b.qty <= 10){
+
+let status = "";
+let color = "";
+
+if(b.qty <= 5){
+status = "🔴 خطر";
+color = "red";
+}
+else{
+status = "🟡 ناقص";
+color = "orange";
+}
+
 lowTable.innerHTML += `
-<tr>
+<tr style="color:${color};font-weight:bold;">
 <td>${b.name}</td>
 <td>${b.qty}</td>
-<td>${b.qty <= 1 ? "🔴 خطر" : "🟡 ناقص"}</td>
+<td>${status}</td>
 </tr>`;
 }
+
 });
 
 /* TOTALS */
