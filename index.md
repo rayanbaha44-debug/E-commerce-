@@ -179,12 +179,7 @@ margin-bottom:12px;
 
 <button onclick="addProduct()">إضافة</button>
 
-<!-- 🔥 البحث بعد الإضافة -->
-<input 
-id="productSearch" 
-placeholder="🔍 ابحث عن المنتج..." 
-oninput="renderProducts()"
->
+<input id="productSearch" placeholder="🔍 ابحث عن المنتج..." oninput="renderProducts()">
 
 <table>
 <thead>
@@ -388,20 +383,9 @@ let qty = +saleQty.value;
 
 let b = batches.find(x=>x.id===id);
 
-if(!b){
-alert("المنتج غير موجود");
-return;
-}
-
-if(qty <= 0){
-alert("أدخل كمية صحيحة");
-return;
-}
-
-if(b.qty < qty){
-alert("الستوك غير كافي");
-return;
-}
+if(!b) return;
+if(qty <= 0) return;
+if(b.qty < qty) return;
 
 b.qty = b.qty - qty;
 
@@ -412,6 +396,32 @@ sellPrice:b.sell,
 profit:(b.sell-b.buy)*qty,
 time:Date.now()
 });
+
+save();
+render();
+}
+
+/* ===================== FIXED EDIT SALE ===================== */
+function editSalePrice(index){
+
+let s = sales[index];
+if(!s) return;
+
+let newQty = prompt("عدل الكمية", s.qty);
+if(newQty === null) return;
+
+let newPrice = prompt("عدل سعر البيع", s.sellPrice);
+if(newPrice === null) return;
+
+newQty = +newQty;
+newPrice = +newPrice;
+
+let b = batches.find(x => x.name === s.name);
+let buyPrice = b ? b.buy : 0;
+
+s.qty = newQty;
+s.sellPrice = newPrice;
+s.profit = (newPrice - buyPrice) * newQty;
 
 save();
 render();
@@ -461,15 +471,11 @@ productTable.innerHTML += `
 <td>${b.sell}</td>
 
 <td>
-<span class="edit" onclick="editProduct(${b.id})">
-تعديل
-</span>
+<span class="edit" onclick="editProduct(${b.id})">تعديل</span>
 </td>
 
 <td>
-<span class="del" onclick="deleteProduct(${b.id})">
-حذف
-</span>
+<span class="del" onclick="deleteProduct(${b.id})">حذف</span>
 </td>
 
 </tr>
@@ -546,11 +552,9 @@ function render(){
 
 renderProducts();
 
-/* STOCK */
 stockTable.innerHTML="";
 
 batches.forEach(b=>{
-
 let capital = b.buy * b.qty;
 let profit = (b.sell - b.buy) * b.qty;
 
@@ -564,24 +568,13 @@ stockTable.innerHTML += `
 </tr>`;
 });
 
-/* LOW */
 lowTable.innerHTML="";
 
 batches.forEach(b=>{
-
 if(b.qty <= 10){
 
-let status = "";
-let color = "";
-
-if(b.qty <= 5){
-status = "🔴 خطر";
-color = "red";
-}
-else{
-status = "🟡 ناقص";
-color = "orange";
-}
+let status = b.qty <= 5 ? "🔴 خطر" : "🟡 ناقص";
+let color = b.qty <= 5 ? "red" : "orange";
 
 lowTable.innerHTML += `
 <tr style="color:${color};font-weight:bold;">
@@ -590,10 +583,8 @@ lowTable.innerHTML += `
 <td>${status}</td>
 </tr>`;
 }
-
 });
 
-/* TOTALS */
 let capital = batches.reduce((a,b)=>a+(b.buy*b.qty),0);
 let profit = batches.reduce((a,b)=>a+((b.sell-b.buy)*b.qty),0);
 
@@ -603,11 +594,10 @@ totals.innerHTML = `
 💼 المجموع: ${(capital+profit).toFixed(2)} DA
 `;
 
-/* SALES LOG */
+/* SALES LOG (UPDATED) */
 salesLog.innerHTML = sales.slice().reverse().map((s,reverseIndex)=>{
 
 let index = sales.length - 1 - reverseIndex;
-
 let date = new Date(s.time);
 
 return `
@@ -622,18 +612,17 @@ return `
 💰 ${s.profit} DA
 </div>
 
-<span
-onclick="deleteSale(${index})"
-style="
-background:#ef4444;
-color:white;
-padding:4px 8px;
-border-radius:6px;
-cursor:pointer;
-font-size:12px;
-">
+<div>
+<span onclick="editSalePrice(${index})"
+style="background:#3b82f6;color:white;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:12px;margin-right:5px;">
+تعديل
+</span>
+
+<span onclick="deleteSale(${index})"
+style="background:#ef4444;color:white;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:12px;">
 حذف
 </span>
+</div>
 
 </div>
 `;
