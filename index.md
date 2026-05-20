@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+لوحة التحكم
 <html lang="ar" dir="rtl">
 
 <head>
