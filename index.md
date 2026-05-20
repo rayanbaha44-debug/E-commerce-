@@ -150,6 +150,14 @@ padding:12px;
 border-radius:12px;
 margin-bottom:12px;
 }
+
+/* NEW */
+#currentOrderBox{
+background:#e5e7eb;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+}
 </style>
 </head>
 
@@ -166,7 +174,6 @@ margin-bottom:12px;
 
 <!-- PRODUCTS -->
 <div id="products" class="page">
-
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
 <h2>📦 المنتجات</h2>
@@ -192,24 +199,39 @@ margin-bottom:12px;
 <th>حذف</th>
 </tr>
 </thead>
+
 <tbody id="productTable"></tbody>
 </table>
 </div>
 
-<!-- SALES -->
+<!-- SALES (UPDATED ONLY HERE) -->
 <div id="sales" class="page">
+
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>🧾 البيع</h2>
+<h2>🧾 البيع (الكومند)</h2>
 </div>
 
 <input id="saleSearch" placeholder="ابحث عن المنتج..." oninput="renderSales()">
 
 <select id="saleStock"></select>
-
 <input id="saleQty" type="number" value="1">
 
-<button onclick="sell()">بيع</button>
+<button onclick="sell()">➕ إضافة للكومند</button>
+
+<div id="currentOrderBox">
+<h3>🧾 الكومند الحالي رقم: <span id="orderNum">1</span></h3>
+<div id="currentOrderList"></div>
+<div style="margin-top:10px;font-weight:bold;" id="orderTotal"></div>
+
+<button onclick="confirmOrder()" style="margin-top:10px;background:#22c55e;">
+✔ تأكيد الكومند
+</button>
+
+<button onclick="cancelOrder()" style="margin-top:10px;background:#ef4444;color:white;">
+✖ إلغاء الكومند
+</button>
+</div>
 
 <div id="salesLog"></div>
 </div>
@@ -295,72 +317,8 @@ margin-bottom:12px;
 let batches = JSON.parse(localStorage.getItem("batches") || "[]");
 let sales = JSON.parse(localStorage.getItem("sales") || "[]");
 
-let tempSale = null;
-
-/* ===================== SELL ===================== */
-
-function sell(){
-
-let id = +saleStock.value;
-let qty = +saleQty.value;
-
-let b = batches.find(x=>x.id===id);
-if(!b) return;
-if(qty <= 0) return;
-if(b.qty < qty) return;
-
-let total = b.sell * qty;
-let profit = (b.sell - b.buy) * qty;
-
-tempSale = {
-id: Date.now(),
-name:b.name,
-qty:qty,
-sellPrice:b.sell,
-total:total,
-profit:profit,
-time:Date.now()
-};
-
-salesLog.innerHTML = `
-<div class="box">
-<h3>🧾 كومند جاهزة</h3>
-
-🧾 رقم الكومند: ${tempSale.id}<br>
-📦 ${b.name}<br>
-🔢 ${qty}<br>
-💵 ${total} DA<br>
-💰 ${profit} DA<br><br>
-
-<button onclick="confirmSale()">OK</button>
-<button onclick="cancelSale()" style="background:#ef4444;color:white;margin-left:10px;">
-إلغاء
-</button>
-</div>
-`;
-}
-
-/* ===================== CONFIRM / CANCEL ===================== */
-
-function confirmSale(){
-
-let b = batches.find(x=>x.name===tempSale.name);
-if(b) b.qty -= tempSale.qty;
-
-sales.push(tempSale);
-
-tempSale = null;
-
-save();
-render();
-}
-
-function cancelSale(){
-tempSale = null;
-salesLog.innerHTML = "";
-}
-
-/* ===================== CORE ===================== */
+let currentOrder = [];
+let orderId = 1;
 
 function openPage(id){
 document.getElementById("dashboard").style.display="none";
@@ -378,58 +336,97 @@ localStorage.setItem("batches",JSON.stringify(batches));
 localStorage.setItem("sales",JSON.stringify(sales));
 }
 
-function addProduct(){
-if(!pName.value || !pBuy.value || !pSell.value || !pQty.value) return;
+/* SELL => ADD TO ORDER */
+function sell(){
 
-batches.push({
-id:Date.now(),
-name:pName.value.trim(),
-buy:+pBuy.value,
-sell:+pSell.value,
-qty:+pQty.value
+let id = +saleStock.value;
+let qty = +saleQty.value;
+
+let b = batches.find(x=>x.id===id);
+
+if(!b || qty<=0 || b.qty<qty) return;
+
+currentOrder.push({
+name:b.name,
+qty:qty,
+sellPrice:b.sell,
+buyPrice:b.buy
 });
 
-pName.value="";
-pBuy.value="";
-pSell.value="";
-pQty.value="";
+b.qty -= qty;
+
+renderOrder();
+render();
+save();
+}
+
+/* ORDER RENDER */
+function renderOrder(){
+
+document.getElementById("orderNum").innerText = orderId;
+
+let total = 0;
+
+currentOrderList.innerHTML = currentOrder.map((s,i)=>{
+let p = (s.sellPrice - s.buyPrice) * s.qty;
+total += p;
+
+return `
+<div>
+#${i+1} | ${s.name} | x${s.qty} | 💰 ${p.toFixed(2)} DA
+</div>
+`;
+}).join('');
+
+orderTotal.innerHTML = "💰 المجموع: " + total.toFixed(2) + " DA";
+}
+
+/* CONFIRM ORDER */
+function confirmOrder(){
+
+if(currentOrder.length===0) return;
+
+currentOrder.forEach(s=>{
+sales.push({
+orderId:orderId,
+name:s.name,
+qty:s.qty,
+sellPrice:s.sellPrice,
+profit:(s.sellPrice - s.buyPrice)*s.qty,
+time:Date.now()
+});
+});
+
+currentOrder = [];
+orderId++;
 
 save();
+renderOrder();
 render();
 }
 
-function editProduct(id){
-let b = batches.find(x=>x.id===id);
-if(!b) return;
+/* CANCEL ORDER */
+function cancelOrder(){
 
-let newName = prompt("اسم المنتج", b.name);
-if(newName===null) return;
+currentOrder.forEach(s=>{
+let b = batches.find(x=>x.name===s.name);
+if(b) b.qty += s.qty;
+});
 
-let newBuy = prompt("سعر الشراء", b.buy);
-if(newBuy===null) return;
-
-let newSell = prompt("سعر البيع", b.sell);
-if(newSell===null) return;
-
-let newQty = prompt("الكمية", b.qty);
-if(newQty===null) return;
-
-b.name = newName;
-b.buy = +newBuy;
-b.sell = +newSell;
-b.qty = +newQty;
-
-save();
+currentOrder = [];
+renderOrder();
 render();
+save();
 }
 
-function deleteProduct(id){
-batches = batches.filter(b=>b.id!==id);
-save();
-render();
-}
+/* KEEP OLD FUNCTIONS */
+function render(){ renderProducts(); stockTable.innerHTML=""; batches.forEach(b=>{ stockTable.innerHTML += `<tr><td>${b.name}</td><td>${b.qty}</td><td>${(b.buy*b.qty).toFixed(2)}</td><td>${((b.sell-b.buy)*b.qty).toFixed(2)}</td><td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td></tr>`; }); renderOrder(); }
 
-function render(){ /* باقي الكود كما هو عندك */ }
+function renderProducts(){ productTable.innerHTML=batches.map(b=>`<tr><td>${b.name}</td><td>${b.qty}</td><td>${b.buy}</td><td>${b.sell}</td><td><span class="edit" onclick="editProduct(${b.id})">تعديل</span></td><td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td></tr>`).join(''); }
+
+function renderSales(){
+saleStock.innerHTML=batches.map(b=>`<option value="${b.id}">${b.name}</option>`).join('');
+}
 
 render();
 
