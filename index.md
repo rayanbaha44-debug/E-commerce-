@@ -179,7 +179,12 @@ margin-bottom:12px;
 
 <button onclick="addProduct()">إضافة</button>
 
-<input id="productSearch" placeholder="🔍 ابحث عن المنتج..." oninput="renderProducts()">
+<!-- 🔥 البحث بعد الإضافة -->
+<input 
+id="productSearch" 
+placeholder="🔍 ابحث عن المنتج..." 
+oninput="renderProducts()"
+>
 
 <table>
 <thead>
@@ -243,7 +248,7 @@ margin-bottom:12px;
 <div id="low" class="page">
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
-<h2>⚠ الناقص</h2>
+<h2>⚠ المنتجات الناقصة</h2>
 </div>
 
 <table>
@@ -294,27 +299,11 @@ margin-bottom:12px;
 
 <script>
 
-/* 🔥 FIX 1: تنظيف البيانات القديمة باش ما يخلطش الاسم مع التاريخ */
-let batches = JSON.parse(localStorage.getItem("batches") || "[]").map(b=>({
-id:b.id,
-name:String(b.name||""),
-buy:+b.buy||0,
-sell:+b.sell||0,
-qty:+b.qty||0
-}));
+let batches = JSON.parse(localStorage.getItem("batches") || "[]");
+let sales = JSON.parse(localStorage.getItem("sales") || "[]");
 
-let sales = JSON.parse(localStorage.getItem("sales") || "[]").map(s=>({
-name:String(s.name||""),
-qty:+s.qty||0,
-sellPrice:+s.sellPrice||0,
-profit:+s.profit||0,
-time:s.time||Date.now()
-}));
-
-function save(){
-localStorage.setItem("batches",JSON.stringify(batches));
-localStorage.setItem("sales",JSON.stringify(sales));
-}
+if(!Array.isArray(batches)) batches=[];
+if(!Array.isArray(sales)) sales=[];
 
 function openPage(id){
 document.getElementById("dashboard").style.display="none";
@@ -325,6 +314,11 @@ document.getElementById(id).classList.add("active");
 function back(){
 document.getElementById("dashboard").style.display="grid";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+}
+
+function save(){
+localStorage.setItem("batches",JSON.stringify(batches));
+localStorage.setItem("sales",JSON.stringify(sales));
 }
 
 /* ADD PRODUCT */
@@ -353,12 +347,25 @@ render();
 function editProduct(id){
 
 let b = batches.find(x=>x.id===id);
+
 if(!b) return;
 
-b.name = prompt("اسم المنتج", b.name) || b.name;
-b.buy = +prompt("سعر الشراء", b.buy) || b.buy;
-b.sell = +prompt("سعر البيع", b.sell) || b.sell;
-b.qty = +prompt("الكمية", b.qty) || b.qty;
+let newName = prompt("اسم المنتج", b.name);
+if(newName===null) return;
+
+let newBuy = prompt("سعر الشراء", b.buy);
+if(newBuy===null) return;
+
+let newSell = prompt("سعر البيع", b.sell);
+if(newSell===null) return;
+
+let newQty = prompt("الكمية", b.qty);
+if(newQty===null) return;
+
+b.name = newName;
+b.buy = +newBuy;
+b.sell = +newSell;
+b.qty = +newQty;
 
 save();
 render();
@@ -366,7 +373,9 @@ render();
 
 /* DELETE PRODUCT */
 function deleteProduct(id){
+
 batches = batches.filter(b=>b.id!==id);
+
 save();
 render();
 }
@@ -379,9 +388,22 @@ let qty = +saleQty.value;
 
 let b = batches.find(x=>x.id===id);
 
-if(!b || b.qty < qty) return;
+if(!b){
+alert("المنتج غير موجود");
+return;
+}
 
-b.qty -= qty;
+if(qty <= 0){
+alert("أدخل كمية صحيحة");
+return;
+}
+
+if(b.qty < qty){
+alert("الستوك غير كافي");
+return;
+}
+
+b.qty = b.qty - qty;
 
 sales.push({
 name:b.name,
@@ -395,111 +417,231 @@ save();
 render();
 }
 
-/* PRODUCTS SEARCH */
-function renderProducts(){
+/* DELETE SALE + RESTORE STOCK */
+function deleteSale(index){
 
-let search = (productSearch.value||"").toLowerCase();
+let s = sales[index];
 
-productTable.innerHTML="";
-
-batches.filter(b=>b.name.toLowerCase().includes(search))
-.forEach(b=>{
-
-productTable.innerHTML += `
-<tr>
-<td>${b.name}</td>
-<td>${b.qty}</td>
-<td>${b.buy}</td>
-<td>${b.sell}</td>
-<td><span class="edit" onclick="editProduct(${b.id})">تعديل</span></td>
-<td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
-</tr>
-`;
-});
-
-}
-
-/* SALES SELECT */
-function renderSales(){
-saleStock.innerHTML = batches.map(b=>
-`<option value="${b.id}">
-${b.name} | ${b.qty}
-</option>`
-).join('');
-}
-
-/* 🔥 FIX 2: عرض البيع بدون أي تلصاق نصوص */
-salesLog.innerHTML = sales.slice().reverse().map((s,i)=>{
-
-let d = new Date(s.time);
-
-return `
-<div class="saleItem">
-
-<div>📦 ${String(s.name)}</div>
-<div>🔢 x${s.qty}</div>
-<div>💵 ${s.sellPrice} DA</div>
-<div>💰 ${s.profit} DA</div>
-<div>📅 ${isNaN(d) ? "--" : d.toLocaleString()}</div>
-
-<span onclick="deleteSale(${sales.length-1-i})"
-style="background:#ef4444;color:white;padding:4px 8px;border-radius:6px;cursor:pointer;">
-حذف</span>
-
-</div>
-`;
-
-}).join('');
-
-/* DELETE SALE */
-function deleteSale(i){
-let s = sales[i];
 if(!s) return;
 
-let b = batches.find(x=>x.name===s.name);
-if(b) b.qty += s.qty;
+let b = batches.find(x => x.name === s.name);
 
-sales.splice(i,1);
+if(b){
+b.qty += s.qty;
+}
+
+sales.splice(index,1);
+
 save();
 render();
 }
 
-/* MAIN */
+/* SMART PRODUCTS SEARCH */
+function renderProducts(){
+
+let search = productSearch.value.toLowerCase().trim();
+
+let filtered = batches.filter(b =>
+b.name.toLowerCase().includes(search)
+);
+
+productTable.innerHTML="";
+
+filtered.forEach(b=>{
+
+productTable.innerHTML += `
+<tr>
+
+<td>${b.name}</td>
+
+<td>${b.qty}</td>
+
+<td>${b.buy}</td>
+
+<td>${b.sell}</td>
+
+<td>
+<span class="edit" onclick="editProduct(${b.id})">
+تعديل
+</span>
+</td>
+
+<td>
+<span class="del" onclick="deleteProduct(${b.id})">
+حذف
+</span>
+</td>
+
+</tr>
+`;
+
+});
+
+}
+
+/* SALES SEARCH */
+function renderSales(){
+
+let search = saleSearch.value.toLowerCase();
+
+let filtered = batches.filter(b=>
+b.name.toLowerCase().includes(search)
+);
+
+saleStock.innerHTML = filtered.map(b=>
+`<option value="${b.id}">
+${b.name} | شراء: ${b.buy} | بيع: ${b.sell} | stock: ${b.qty}
+</option>`
+).join('');
+}
+
+/* PROFITS */
+function renderProfits(){
+
+let now = new Date();
+
+let daily = sales.filter(s=>{
+let d = new Date(s.time);
+return d.toDateString() === now.toDateString();
+}).reduce((a,b)=>a+b.profit,0);
+
+let monthly = sales.filter(s=>{
+let d = new Date(s.time);
+return d.getMonth() === now.getMonth()
+&& d.getFullYear() === now.getFullYear();
+}).reduce((a,b)=>a+b.profit,0);
+
+let yearly = sales.filter(s=>{
+let d = new Date(s.time);
+return d.getFullYear() === now.getFullYear();
+}).reduce((a,b)=>a+b.profit,0);
+
+dailyProfit.innerHTML = `💰 ${daily.toFixed(2)} DA`;
+monthlyProfit.innerHTML = `💰 ${monthly.toFixed(2)} DA`;
+yearlyProfit.innerHTML = `💰 ${yearly.toFixed(2)} DA`;
+}
+
+/* RANGE PROFITS */
+function calcProfitRange(){
+
+let from = new Date(fromDate.value || "2000-01-01");
+let to = new Date(toDate.value || "2100-01-01");
+
+to.setHours(23,59,59,999);
+
+let total = sales.filter(s=>{
+let d = new Date(s.time);
+return d >= from && d <= to;
+}).reduce((a,b)=>a+b.profit,0);
+
+rangeProfit.innerHTML = `
+📅 من: ${fromDate.value}<br>
+📅 إلى: ${toDate.value}<br><br>
+💰 الأرباح: ${total.toFixed(2)} DA
+`;
+}
+
+/* RENDER */
 function render(){
 
 renderProducts();
-renderSales();
 
+/* STOCK */
 stockTable.innerHTML="";
+
 batches.forEach(b=>{
+
+let capital = b.buy * b.qty;
+let profit = (b.sell - b.buy) * b.qty;
+
 stockTable.innerHTML += `
 <tr>
 <td>${b.name}</td>
 <td>${b.qty}</td>
-<td>${b.buy*b.qty}</td>
-<td>${(b.sell-b.buy)*b.qty}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${profit.toFixed(2)}</td>
 <td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
 </tr>`;
 });
 
-salesLog.innerHTML = sales.slice().reverse().map((s,i)=>{
+/* LOW */
+lowTable.innerHTML="";
 
-let d = new Date(s.time);
+batches.forEach(b=>{
+
+if(b.qty <= 10){
+
+let status = "";
+let color = "";
+
+if(b.qty <= 5){
+status = "🔴 خطر";
+color = "red";
+}
+else{
+status = "🟡 ناقص";
+color = "orange";
+}
+
+lowTable.innerHTML += `
+<tr style="color:${color};font-weight:bold;">
+<td>${b.name}</td>
+<td>${b.qty}</td>
+<td>${status}</td>
+</tr>`;
+}
+
+});
+
+/* TOTALS */
+let capital = batches.reduce((a,b)=>a+(b.buy*b.qty),0);
+let profit = batches.reduce((a,b)=>a+((b.sell-b.buy)*b.qty),0);
+
+totals.innerHTML = `
+💰 رأس المال: ${capital.toFixed(2)} DA<br>
+📈 الأرباح: ${profit.toFixed(2)} DA<br>
+💼 المجموع: ${(capital+profit).toFixed(2)} DA
+`;
+
+/* SALES LOG */
+salesLog.innerHTML = sales.slice().reverse().map((s,reverseIndex)=>{
+
+let index = sales.length - 1 - reverseIndex;
+
+let date = new Date(s.time);
 
 return `
 <div class="saleItem">
 
-<div>📦 ${String(s.name)}</div>
-<div>🔢 x${s.qty}</div>
-<div>💵 ${s.sellPrice} DA</div>
-<div>💰 ${s.profit} DA</div>
-<div>📅 ${isNaN(d) ? "--" : d.toLocaleString()}</div>
+<div>
+📅 ${date.toLocaleDateString()} |
+⏰ ${date.toLocaleTimeString()} |
+📦 ${s.name} |
+🔢 x${s.qty} |
+💵 ${s.sellPrice} DA |
+💰 ${s.profit} DA
+</div>
+
+<span
+onclick="deleteSale(${index})"
+style="
+background:#ef4444;
+color:white;
+padding:4px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+">
+حذف
+</span>
 
 </div>
 `;
 
 }).join('');
 
+renderSales();
+renderProfits();
 }
 
 render();
@@ -508,5 +650,3 @@ render();
 
 </body>
 </html>
-
-الكود هذا متنقص في ربو والو متفهمش ومتزيد والو غير لي نقولك انا دلي في قسم البيع زر خدف وتعديل وخانة بحث داكي بتاريخ والاسم خانة البحث تكون تحت زر اضافة ومتبدلي والو خلاف ومتنقصلي والو فالكود
