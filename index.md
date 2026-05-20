@@ -256,7 +256,7 @@ oninput="renderProducts()">
 <div class="header">
 
 <button class="back" onclick="back()">
-رجوع
+رجوع↩️
 </button>
 
 <h2>🛒البيع</h2>
@@ -313,7 +313,7 @@ OK
 <div class="header">
 
 <button class="back" onclick="back()">
-رجوع
+رجوع↩️
 </button>
 
 <h2>🏬المخزون</h2>
@@ -349,7 +349,7 @@ OK
 <div class="header">
 
 <button class="back" onclick="back()">
-رجوع
+رجوع↩️
 </button>
 
 <h2>⚠️المنتجات الناقصة</h2>
@@ -381,7 +381,7 @@ OK
 <div class="header">
 
 <button class="back" onclick="back()">
-رجوع
+رجوع↩️
 </button>
 
 <h2>💰الأرباح</h2>
@@ -646,7 +646,7 @@ cursor:pointer;
 font-size:12px;
 ">
 
-حذف
+حذف❌
 
 </span>
 
@@ -928,7 +928,7 @@ onclick="editProduct(${b.id})">
 <span class="del"
 onclick="deleteProduct(${b.id})">
 
-حذف
+حذف❌
 
 </span>
 
@@ -1129,7 +1129,7 @@ ${b.name}
 <span class="del"
 onclick="deleteProduct(${b.id})">
 
-حذف
+حذف❌
 
 </span>
 
@@ -1280,7 +1280,7 @@ cursor:pointer;
 font-size:12px;
 ">
 
-حذف
+حذف❌
 
 </span>
 
