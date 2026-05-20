@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -157,19 +158,19 @@ margin-bottom:12px;
 
 <!-- DASHBOARD -->
 <div id="dashboard">
-<div class="card" onclick="openPage('products')">📦 المنتجات</div>
-<div class="card" onclick="openPage('sales')">🧾 البيع</div>
-<div class="card" onclick="openPage('stock')">📊 المخزون</div>
-<div class="card" onclick="openPage('low')">⚠ الناقص</div>
-<div class="card" onclick="openPage('profits')">💰 الأرباح</div>
+<div class="card" onclick="openPage('products')"> المنتجات</div>
+<div class="card" onclick="openPage('sales')"> البيع</div>
+<div class="card" onclick="openPage('stock')"> المخزون</div>
+<div class="card" onclick="openPage('low')"> الناقص</div>
+<div class="card" onclick="openPage('profits')"> الأرباح</div>
 </div>
 
 <!-- PRODUCTS -->
 <div id="products" class="page">
 
 <div class="header">
-<button class="back" onclick="back()">⬅ رجوع</button>
-<h2>📦 المنتجات</h2>
+<button class="back" onclick="back()"> رجوع</button>
+<h2> المنتجات</h2>
 </div>
 
 <input id="pName" placeholder="اسم المنتج">
@@ -179,7 +180,7 @@ margin-bottom:12px;
 
 <button onclick="addProduct()">إضافة</button>
 
-<input id="productSearch" placeholder="🔍 ابحث عن المنتج..." oninput="renderProducts()">
+<input id="productSearch" placeholder=" ابحث عن المنتج..." oninput="renderProducts()">
 
 <table>
 <thead>
@@ -194,6 +195,7 @@ margin-bottom:12px;
 </thead>
 
 <tbody id="productTable"></tbody>
+
 </table>
 </div>
 
@@ -201,8 +203,12 @@ margin-bottom:12px;
 <div id="sales" class="page">
 
 <div class="header">
-<button class="back" onclick="back()">⬅ رجوع</button>
-<h2>🧾 البيع</h2>
+<button class="back" onclick="back()"> رجوع</button>
+<h2> البيع</h2>
+</div>
+
+<div class="box">
+<h3 id="cmdNumber">Commande #1</h3>
 </div>
 
 <input id="saleSearch" placeholder="ابحث عن المنتج..." oninput="renderSales()">
@@ -211,21 +217,31 @@ margin-bottom:12px;
 
 <input id="saleQty" type="number" value="1">
 
-<button onclick="sell()">بيع</button>
-<button onclick="newCommand()" style="background:#0ea5e9;">OK ➜ كومند جديدة</button>
+<button onclick="addToCommand()">إضافة للكوموند</button>
+
+<div class="box">
+
+<h3>منتجات الكوموند</h3>
+
+<div id="currentCommand"></div>
+
+<h3 id="commandTotal" style="margin-top:10px;">
+المجموع: 0 DA
+</h3>
+
+<button style="margin-top:10px;" onclick="confirmCommand()">OK</button>
+
+</div>
 
 <div id="salesLog"></div>
-
-<!-- المجموع -->
-<div class="box" id="salesTotalBox"></div>
 
 </div>
 
 <!-- STOCK -->
 <div id="stock" class="page">
 <div class="header">
-<button class="back" onclick="back()">⬅ رجوع</button>
-<h2>📊 المخزون</h2>
+<button class="back" onclick="back()"> رجوع</button>
+<h2> المخزون</h2>
 </div>
 
 <table>
@@ -247,8 +263,8 @@ margin-bottom:12px;
 <!-- LOW -->
 <div id="low" class="page">
 <div class="header">
-<button class="back" onclick="back()">⬅ رجوع</button>
-<h2>⚠ المنتجات الناقصة</h2>
+<button class="back" onclick="back()"> رجوع</button>
+<h2> المنتجات الناقصة</h2>
 </div>
 
 <table>
@@ -265,18 +281,36 @@ margin-bottom:12px;
 
 <!-- PROFITS -->
 <div id="profits" class="page">
-
 <div class="header">
-<button class="back" onclick="back()">⬅ رجوع</button>
-<h2>💰 الأرباح</h2>
+<button class="back" onclick="back()"> رجوع</button>
+<h2> الأرباح</h2>
 </div>
 
 <div class="box">
+<h3> الأرباح اليومية</h3>
 <div id="dailyProfit"></div>
+</div>
+
+<div class="box">
+<h3> الأرباح الشهرية</h3>
 <div id="monthlyProfit"></div>
+</div>
+
+<div class="box">
+<h3> الأرباح السنوية</h3>
 <div id="yearlyProfit"></div>
 </div>
 
+<div class="box">
+<h3> حساب الأرباح بين تاريخين</h3>
+
+<input type="date" id="fromDate">
+<input type="date" id="toDate">
+
+<button onclick="calcProfitRange()">حساب</button>
+
+<div id="rangeProfit" style="margin-top:10px;font-weight:bold;"></div>
+</div>
 </div>
 
 <script>
@@ -284,12 +318,12 @@ margin-bottom:12px;
 let batches = JSON.parse(localStorage.getItem("batches") || "[]");
 let sales = JSON.parse(localStorage.getItem("sales") || "[]");
 
-function save(){
-localStorage.setItem("batches",JSON.stringify(batches));
-localStorage.setItem("sales",JSON.stringify(sales));
-}
+if(!Array.isArray(batches)) batches=[];
+if(!Array.isArray(sales)) sales=[];
 
-/* OPEN / BACK */
+let currentCommandData = [];
+let commandNumber = JSON.parse(localStorage.getItem("commandNumber") || "1");
+
 function openPage(id){
 document.getElementById("dashboard").style.display="none";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -301,134 +335,435 @@ document.getElementById("dashboard").style.display="grid";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 }
 
+function save(){
+localStorage.setItem("batches",JSON.stringify(batches));
+localStorage.setItem("sales",JSON.stringify(sales));
+}
+
 /* ADD PRODUCT */
 function addProduct(){
+
 if(!pName.value || !pBuy.value || !pSell.value || !pQty.value) return;
 
 batches.push({
 id:Date.now(),
-name:pName.value,
+name:pName.value.trim(),
 buy:+pBuy.value,
 sell:+pSell.value,
 qty:+pQty.value
 });
 
+pName.value="";
+pBuy.value="";
+pSell.value="";
+pQty.value="";
+
 save();
 render();
 }
 
-/* SELL */
-function sell(){
+/* EDIT PRODUCT */
+function editProduct(id){
+
+let b = batches.find(x=>x.id===id);
+
+if(!b) return;
+
+let newName = prompt("اسم المنتج", b.name);
+if(newName===null) return;
+
+let newBuy = prompt("سعر الشراء", b.buy);
+if(newBuy===null) return;
+
+let newSell = prompt("سعر البيع", b.sell);
+if(newSell===null) return;
+
+let newQty = prompt("الكمية", b.qty);
+if(newQty===null) return;
+
+b.name = newName;
+b.buy = +newBuy;
+b.sell = +newSell;
+b.qty = +newQty;
+
+save();
+render();
+}
+
+/* DELETE PRODUCT */
+function deleteProduct(id){
+
+batches = batches.filter(b=>b.id!==id);
+
+save();
+render();
+}
+
+/* COMMAND SYSTEM */
+
+function updateCommandUI(){
+
+cmdNumber.innerHTML = `Commande #${commandNumber}`;
+
+currentCommand.innerHTML = currentCommandData.map((item,i)=>`
+<div class="saleItem">
+
+<div>
+${item.name} | x${item.qty} | ${item.sell} DA
+</div>
+
+<div>
+<span onclick="removeFromCommand(${i})"
+style="background:#ef4444;
+color:white;
+padding:4px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;">
+حذف
+</span>
+</div>
+
+</div>
+`).join('');
+
+let total = currentCommandData.reduce((a,b)=>a+(b.sell*b.qty),0);
+
+commandTotal.innerHTML = `المجموع: ${total.toFixed(2)} DA`;
+}
+
+/* ADD TO COMMAND */
+function addToCommand(){
 
 let id = +saleStock.value;
 let qty = +saleQty.value;
 
 let b = batches.find(x=>x.id===id);
-if(!b || qty<=0 || b.qty<qty) return;
 
-b.qty -= qty;
+if(!b) return;
+if(qty <= 0) return;
+if(b.qty < qty) return;
 
-sales.push({
+currentCommandData.push({
+id:b.id,
 name:b.name,
 qty:qty,
-sellPrice:b.sell,
-profit:(b.sell-b.buy)*qty,
-time:Date.now()
+buy:b.buy,
+sell:b.sell
 });
+
+updateCommandUI();
+}
+
+/* REMOVE ITEM */
+function removeFromCommand(index){
+
+currentCommandData.splice(index,1);
+
+updateCommandUI();
+}
+
+/* CONFIRM COMMAND */
+function confirmCommand(){
+
+if(currentCommandData.length===0) return;
+
+currentCommandData.forEach(item=>{
+
+let b = batches.find(x=>x.id===item.id);
+
+if(b){
+b.qty -= item.qty;
+}
+
+sales.push({
+name:item.name,
+qty:item.qty,
+sellPrice:item.sell,
+profit:(item.sell-item.buy)*item.qty,
+time:Date.now(),
+command:commandNumber
+});
+
+});
+
+commandNumber++;
+
+localStorage.setItem("commandNumber",commandNumber);
+
+currentCommandData = [];
 
 save();
 render();
+updateCommandUI();
 }
 
-/* NEW COMMAND BUTTON */
-function newCommand(){
-saleQty.value = 1;
-saleStock.selectedIndex = 0;
-}
+/* FIXED EDIT SALE */
+function editSalePrice(index){
 
-/* EDIT SALE */
-function editSalePrice(i){
-let s = sales[i];
+let s = sales[index];
+if(!s) return;
 
-let q = +prompt("الكمية",s.qty);
-let p = +prompt("السعر",s.sellPrice);
+let newQty = prompt("عدل الكمية", s.qty);
+if(newQty === null) return;
 
-let b = batches.find(x=>x.name===s.name);
+let newPrice = prompt("عدل سعر البيع", s.sellPrice);
+if(newPrice === null) return;
 
-s.qty=q;
-s.sellPrice=p;
-s.profit=(p-(b?b.buy:0))*q;
+newQty = +newQty;
+newPrice = +newPrice;
+
+let b = batches.find(x => x.name === s.name);
+let buyPrice = b ? b.buy : 0;
+
+s.qty = newQty;
+s.sellPrice = newPrice;
+s.profit = (newPrice - buyPrice) * newQty;
 
 save();
 render();
 }
 
 /* DELETE SALE */
-function deleteSale(i){
-let s = sales[i];
-let b = batches.find(x=>x.name===s.name);
-if(b) b.qty += s.qty;
+function deleteSale(index){
 
-sales.splice(i,1);
+let s = sales[index];
+
+if(!s) return;
+
+let b = batches.find(x => x.name === s.name);
+
+if(b){
+b.qty += s.qty;
+}
+
+sales.splice(index,1);
+
 save();
 render();
+}
+
+/* PRODUCTS SEARCH */
+function renderProducts(){
+
+let search = productSearch.value.toLowerCase().trim();
+
+let filtered = batches.filter(b =>
+b.name.toLowerCase().includes(search)
+);
+
+productTable.innerHTML="";
+
+filtered.forEach(b=>{
+
+productTable.innerHTML += `
+<tr>
+
+<td>${b.name}</td>
+<td>${b.qty}</td>
+<td>${b.buy}</td>
+<td>${b.sell}</td>
+
+<td>
+<span class="edit" onclick="editProduct(${b.id})">
+تعديل
+</span>
+</td>
+
+<td>
+<span class="del" onclick="deleteProduct(${b.id})">
+حذف
+</span>
+</td>
+
+</tr>
+`;
+
+});
+}
+
+/* SALES SEARCH */
+function renderSales(){
+
+let search = saleSearch.value.toLowerCase();
+
+let filtered = batches.filter(b=>
+b.name.toLowerCase().includes(search)
+);
+
+saleStock.innerHTML = filtered.map(b=>
+`<option value="${b.id}">
+${b.name} | شراء: ${b.buy} | بيع: ${b.sell} | stock: ${b.qty}
+</option>`
+).join('');
+}
+
+/* PROFITS */
+function renderProfits(){
+
+let now = new Date();
+
+let daily = sales.filter(s=>{
+let d = new Date(s.time);
+return d.toDateString() === now.toDateString();
+}).reduce((a,b)=>a+b.profit,0);
+
+let monthly = sales.filter(s=>{
+let d = new Date(s.time);
+return d.getMonth() === now.getMonth() &&
+d.getFullYear() === now.getFullYear();
+}).reduce((a,b)=>a+b.profit,0);
+
+let yearly = sales.filter(s=>{
+let d = new Date(s.time);
+return d.getFullYear() === now.getFullYear();
+}).reduce((a,b)=>a+b.profit,0);
+
+dailyProfit.innerHTML = `💰 ${daily.toFixed(2)} DA`;
+monthlyProfit.innerHTML = `💰 ${monthly.toFixed(2)} DA`;
+yearlyProfit.innerHTML = `💰 ${yearly.toFixed(2)} DA`;
+}
+
+/* RANGE PROFITS */
+function calcProfitRange(){
+
+let from = new Date(fromDate.value || "2000-01-01");
+let to = new Date(toDate.value || "2100-01-01");
+
+to.setHours(23,59,59,999);
+
+let total = sales.filter(s=>{
+let d = new Date(s.time);
+return d >= from && d <= to;
+}).reduce((a,b)=>a+b.profit,0);
+
+rangeProfit.innerHTML = `
+من: ${fromDate.value}<br>
+إلى: ${toDate.value}<br><br>
+الأرباح: ${total.toFixed(2)} DA
+`;
 }
 
 /* RENDER */
 function render(){
 
-/* PRODUCTS */
-productTable.innerHTML="";
-batches.forEach(b=>{
-productTable.innerHTML+=`
-<tr>
-<td>${b.name}</td>
-<td>${b.qty}</td>
-<td>${b.buy}</td>
-<td>${b.sell}</td>
-<td><span class="edit" onclick="editProduct(${b.id})">تعديل</span></td>
-<td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
-</tr>`;
-});
+renderProducts();
 
-/* STOCK */
 stockTable.innerHTML="";
+
 batches.forEach(b=>{
-stockTable.innerHTML+=`
+
+let capital = b.buy * b.qty;
+let profit = (b.sell - b.buy) * b.qty;
+
+stockTable.innerHTML += `
 <tr>
+
 <td>${b.name}</td>
 <td>${b.qty}</td>
-<td>${(b.buy*b.qty).toFixed(2)}</td>
-<td>${((b.sell-b.buy)*b.qty).toFixed(2)}</td>
-<td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
-</tr>`;
+<td>${capital.toFixed(2)}</td>
+<td>${profit.toFixed(2)}</td>
+
+<td>
+<span class="del" onclick="deleteProduct(${b.id})">
+حذف
+</span>
+</td>
+
+</tr>
+`;
 });
 
-/* SALES LOG + NUMBER */
-salesLog.innerHTML=sales.map((s,i)=>`
-<div class="saleItem">
-<div>
-📌 كومند #${i+1} | ${s.name} | x${s.qty} | ${s.sellPrice} | ${s.profit}
-</div>
-<div>
-<span class="edit" onclick="editSalePrice(${i})">تعديل</span>
-<span class="del" onclick="deleteSale(${i})">حذف</span>
-</div>
-</div>
-`).join('');
+lowTable.innerHTML="";
 
-/* TOTAL */
-let total = sales.reduce((a,b)=>a+b.profit,0);
+batches.forEach(b=>{
 
-salesTotalBox.innerHTML=`
-💰 مجموع الأرباح: ${total.toFixed(2)} DA
+if(b.qty <= 10){
+
+let status = b.qty <= 5 ? " خطر" : " ناقص";
+let color = b.qty <= 5 ? "red" : "orange";
+
+lowTable.innerHTML += `
+<tr style="color:${color};font-weight:bold;">
+
+<td>${b.name}</td>
+<td>${b.qty}</td>
+<td>${status}</td>
+
+</tr>
+`;
+}
+
+});
+
+let capital = batches.reduce((a,b)=>a+(b.buy*b.qty),0);
+
+let profit = batches.reduce((a,b)=>
+a+((b.sell-b.buy)*b.qty),0);
+
+totals.innerHTML = `
+رأس المال: ${capital.toFixed(2)} DA<br>
+الأرباح: ${profit.toFixed(2)} DA<br>
+المجموع: ${(capital+profit).toFixed(2)} DA
 `;
 
-/* SALES OPTIONS */
-saleStock.innerHTML=batches.map(b=>
-`<option value="${b.id}">${b.name}</option>`
-).join('');
+/* SALES LOG */
+salesLog.innerHTML = sales.slice().reverse().map((s,reverseIndex)=>{
 
+let index = sales.length - 1 - reverseIndex;
+
+let date = new Date(s.time);
+
+return `
+<div class="saleItem">
+
+<div>
+Commande #${s.command || 1} |
+${date.toLocaleDateString()} |
+${date.toLocaleTimeString()} |
+${s.name} |
+x${s.qty} |
+${s.sellPrice} DA |
+${s.profit} DA
+</div>
+
+<div>
+
+<span onclick="editSalePrice(${index})"
+style="background:#3b82f6;
+color:white;
+padding:4px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+margin-right:5px;">
+
+تعديل
+
+</span>
+
+<span onclick="deleteSale(${index})"
+style="background:#ef4444;
+color:white;
+padding:4px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;">
+
+حذف
+
+</span>
+
+</div>
+
+</div>
+`;
+
+}).join('');
+
+renderSales();
+renderProfits();
+updateCommandUI();
 }
 
 render();
@@ -437,3 +772,4 @@ render();
 
 </body>
 </html>
+```
