@@ -115,6 +115,15 @@ color:white;
 cursor:pointer;
 }
 
+.edit{
+background:#3b82f6;
+padding:5px 8px;
+border-radius:6px;
+font-size:12px;
+color:white;
+cursor:pointer;
+}
+
 #salesLog{
 margin-top:15px;
 background:#f3f4f6;
@@ -171,6 +180,7 @@ margin-bottom:12px;
 <th>الكمية</th>
 <th>شراء</th>
 <th>بيع</th>
+<th>تعديل</th>
 <th>حذف</th>
 </tr>
 </thead>
@@ -318,6 +328,34 @@ save();
 render();
 }
 
+/* EDIT PRODUCT */
+function editProduct(id){
+
+let b = batches.find(x=>x.id===id);
+
+if(!b) return;
+
+let newName = prompt("اسم المنتج", b.name);
+if(newName===null) return;
+
+let newBuy = prompt("سعر الشراء", b.buy);
+if(newBuy===null) return;
+
+let newSell = prompt("سعر البيع", b.sell);
+if(newSell===null) return;
+
+let newQty = prompt("الكمية", b.qty);
+if(newQty===null) return;
+
+b.name = newName;
+b.buy = +newBuy;
+b.sell = +newSell;
+b.qty = +newQty;
+
+save();
+render();
+}
+
 /* DELETE PRODUCT */
 function deleteProduct(id){
 
@@ -350,10 +388,8 @@ alert("الستوك غير كافي");
 return;
 }
 
-/* نقص الستوك */
 b.qty = b.qty - qty;
 
-/* تسجيل البيع */
 sales.push({
 name:b.name,
 qty:qty,
@@ -387,20 +423,17 @@ function renderProfits(){
 
 let now = new Date();
 
-/* DAILY */
 let daily = sales.filter(s=>{
 let d = new Date(s.time);
 return d.toDateString() === now.toDateString();
 }).reduce((a,b)=>a+b.profit,0);
 
-/* MONTHLY */
 let monthly = sales.filter(s=>{
 let d = new Date(s.time);
 return d.getMonth() === now.getMonth()
 && d.getFullYear() === now.getFullYear();
 }).reduce((a,b)=>a+b.profit,0);
 
-/* YEARLY */
 let yearly = sales.filter(s=>{
 let d = new Date(s.time);
 return d.getFullYear() === now.getFullYear();
@@ -444,7 +477,19 @@ productTable.innerHTML += `
 <td>${b.qty}</td>
 <td>${b.buy}</td>
 <td>${b.sell}</td>
-<td><span class="del" onclick="deleteProduct(${b.id})">حذف</span></td>
+
+<td>
+<span class="edit" onclick="editProduct(${b.id})">
+تعديل
+</span>
+</td>
+
+<td>
+<span class="del" onclick="deleteProduct(${b.id})">
+حذف
+</span>
+</td>
+
 </tr>`;
 });
 
