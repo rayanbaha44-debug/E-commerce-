@@ -168,23 +168,23 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <div id="dashboard">
 
 <div class="card" onclick="openPage('products')">
-المنتجات
+المنتجات📦
 </div>
 
 <div class="card" onclick="openPage('sales')">
-البيع
+البيع🛒
 </div>
 
 <div class="card" onclick="openPage('stock')">
-المخزون
+المخزون🏬
 </div>
 
 <div class="card" onclick="openPage('low')">
-الناقص
+الناقص⚠️
 </div>
 
 <div class="card" onclick="openPage('profits')">
-الأرباح
+الأرباح💰
 </div>
 
 <div class="card" onclick="exportData()">
