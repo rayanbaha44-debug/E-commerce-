@@ -1,4 +1,4 @@
-لوحة التحكم
+📊 لوحة معلومات / Dashboard
 <html lang="ar" dir="rtl">
 
 <head>
