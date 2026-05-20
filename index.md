@@ -137,6 +137,11 @@ overflow:auto;
 padding:8px;
 border-bottom:1px solid #ddd;
 font-size:14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
 }
 
 .box{
@@ -161,10 +166,17 @@ margin-bottom:12px;
 
 <!-- PRODUCTS -->
 <div id="products" class="page">
+
 <div class="header">
 <button class="back" onclick="back()">⬅ رجوع</button>
 <h2>📦 المنتجات</h2>
 </div>
+
+<input 
+id="productSearch" 
+placeholder="🔍 ابحث عن المنتج..." 
+oninput="renderProducts()"
+>
 
 <input id="pName" placeholder="اسم المنتج">
 <input id="pBuy" type="number" placeholder="سعر الشراء">
@@ -184,7 +196,9 @@ margin-bottom:12px;
 <th>حذف</th>
 </tr>
 </thead>
+
 <tbody id="productTable"></tbody>
+
 </table>
 </div>
 
@@ -402,7 +416,71 @@ save();
 render();
 }
 
-/* SEARCH */
+/* 🔥 DELETE SALE + RESTORE STOCK */
+function deleteSale(index){
+
+let s = sales[index];
+
+if(!s) return;
+
+/* رجوع الكمية للستوك */
+let b = batches.find(x => x.name === s.name);
+
+if(b){
+b.qty += s.qty;
+}
+
+/* حذف عملية البيع */
+sales.splice(index,1);
+
+save();
+render();
+}
+
+/* SMART PRODUCTS SEARCH */
+function renderProducts(){
+
+let search = productSearch.value.toLowerCase().trim();
+
+let filtered = batches.filter(b =>
+b.name.toLowerCase().includes(search)
+);
+
+productTable.innerHTML="";
+
+filtered.forEach(b=>{
+
+productTable.innerHTML += `
+<tr>
+
+<td>${b.name}</td>
+
+<td>${b.qty}</td>
+
+<td>${b.buy}</td>
+
+<td>${b.sell}</td>
+
+<td>
+<span class="edit" onclick="editProduct(${b.id})">
+تعديل
+</span>
+</td>
+
+<td>
+<span class="del" onclick="deleteProduct(${b.id})">
+حذف
+</span>
+</td>
+
+</tr>
+`;
+
+});
+
+}
+
+/* SALES SEARCH */
 function renderSales(){
 
 let search = saleSearch.value.toLowerCase();
@@ -467,31 +545,7 @@ rangeProfit.innerHTML = `
 /* RENDER */
 function render(){
 
-/* PRODUCTS */
-productTable.innerHTML="";
-
-batches.forEach(b=>{
-productTable.innerHTML += `
-<tr>
-<td>${b.name}</td>
-<td>${b.qty}</td>
-<td>${b.buy}</td>
-<td>${b.sell}</td>
-
-<td>
-<span class="edit" onclick="editProduct(${b.id})">
-تعديل
-</span>
-</td>
-
-<td>
-<span class="del" onclick="deleteProduct(${b.id})">
-حذف
-</span>
-</td>
-
-</tr>`;
-});
+renderProducts();
 
 /* STOCK */
 stockTable.innerHTML="";
@@ -551,15 +605,38 @@ totals.innerHTML = `
 `;
 
 /* SALES LOG */
-salesLog.innerHTML = sales.slice().reverse().map(s=>
-`<div class="saleItem">
+salesLog.innerHTML = sales.slice().reverse().map((s,reverseIndex)=>{
+
+let index = sales.length - 1 - reverseIndex;
+
+return `
+<div class="saleItem">
+
+<div>
 ⏰ ${new Date(s.time).toLocaleString()} |
 📦 ${s.name} |
 🔢 x${s.qty} |
 💵 ${s.sellPrice} DA |
 💰 ${s.profit} DA
-</div>`
-).join('');
+</div>
+
+<span
+onclick="deleteSale(${index})"
+style="
+background:#ef4444;
+color:white;
+padding:4px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+">
+حذف
+</span>
+
+</div>
+`;
+
+}).join('');
 
 renderSales();
 renderProfits();
