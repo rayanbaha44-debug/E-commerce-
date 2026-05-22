@@ -189,9 +189,6 @@
         .edit { background: #1f2937; color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: none; }
         .edit:hover { background: #3b82f6; color: white; }
 
-        .price-btn { background: #1f2937; color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: none; }
-        .price-btn:hover { background: var(--warning-gradient); color: white; }
-
         label {
             display: block;
             font-size: 14px;
@@ -367,6 +364,32 @@
             border-color: rgba(255, 255, 255, 0.3) !important;
         }
 
+        /* نافذة التعديل المنبثقة التفاعلية */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #1f2937;
+            padding: 30px;
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 550px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #090d16; }
         ::-webkit-scrollbar-thumb { background: #374151; border-radius: 5px; }
@@ -415,9 +438,43 @@
         </div>
         <div style="overflow-x: auto;">
             <table>
-                <thead><tr><th>الباركود</th><th>اسم المنتج</th><th>الكمية الحالية</th><th>الشراء (DA)</th><th>البيع الافتراضي (DA)</th><th>تعديل الأسعار</th><th>تعديل كمية</th><th>حذف</th></tr></thead>
+                <thead><tr><th>الباركود</th><th>اسم المنتج</th><th>الكمية الحالية</th><th>الشراء (DA)</th><th>البيع الافتراضي (DA)</th><th>تعديل شامل</th><th>حذف</th></tr></thead>
                 <tbody id="productTable"></tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل المنتج الشاملة المنبثقة -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--primary);"><i class="fa-solid fa-pen-to-square"></i> نافذة التعديل الشامل للمنتج</h3>
+            <input type="hidden" id="editProductId">
+            <div style="margin-bottom: 12px;">
+                <label>الباركود / الرفرونس (Ref):</label>
+                <input id="editProductRef">
+            </div>
+            <div style="margin-bottom: 12px;">
+                <label>اسم المنتج:</label>
+                <input id="editProductName">
+            </div>
+            <div class="flex-inputs" style="margin-bottom: 12px;">
+                <div>
+                    <label>سعر الشراء (DA):</label>
+                    <input id="editProductBuy" type="number" step="0.01">
+                </div>
+                <div>
+                    <label>سعر البيع (DA):</label>
+                    <input id="editProductSell" type="number" step="0.01">
+                </div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label>الكمية الحالية في المخزن:</label>
+                <input id="editProductQty" type="number" step="0.01">
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="back" onclick="closeEditModal()">إلغاء</button>
+                <button onclick="saveProductEdits()" style="background: var(--success-gradient);"><i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات</button>
+            </div>
         </div>
     </div>
 
@@ -763,49 +820,64 @@
                     <td>${b.qty}</td>
                     <td>${b.buy.toFixed(2)}</td>
                     <td>${b.sell.toFixed(2)}</td>
-                    <td><button class="price-btn" onclick="editProductPrices(${b.id})"><i class="fa-solid fa-tags"></i> تعديل الأسعار</button></td>
-                    <td><button class="edit" onclick="editProductQty(${b.id})"><i class="fa-solid fa-pen"></i> كمية</button></td>
+                    <td><button class="edit" onclick="openEditModal(${b.id})"><i class="fa-solid fa-pen-to-square"></i> تعديل شامل</button></td>
                     <td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i> حذف</button></td>
                 </tr>`;
             });
             document.getElementById('productTable').innerHTML = html;
         }
 
-        /* دالة تعديل أسعار الشراء والبيع المضافة حديثاً */
-        function editProductPrices(id) {
+        /* دوال نافذة التعديل الشامل والكامل للمنتج */
+        function openEditModal(id) {
             let p = batches.find(x => x.id === id);
             if(!p) return;
 
-            let newBuy = prompt(`أدخل سعر الشراء الجديد للمنتج (${p.name}):`, p.buy);
-            if(newBuy === null) return; 
+            document.getElementById('editProductId').value = p.id;
+            document.getElementById('editProductRef').value = p.ref;
+            document.getElementById('editProductName').value = p.name;
+            document.getElementById('editProductBuy').value = p.buy;
+            document.getElementById('editProductSell').value = p.sell;
+            document.getElementById('editProductQty').value = p.qty;
 
-            let newSell = prompt(`أدخل سعر البيع الجديد للمنتج (${p.name}):`, p.sell);
-            if(newSell === null) return;
-
-            let numBuy = Number(newBuy) || 0;
-            let numSell = Number(newSell) || 0;
-
-            if(numSell < numBuy) {
-                playErrorSound();
-                if(!confirm("تنبيه: سعر البيع أقل من سعر الشراء (خسارة)، هل تريد الاستمرار بحفظ هذه الأسعار على أي حال؟")) return;
-            }
-
-            p.buy = numBuy;
-            p.sell = numSell;
-            save(); 
-            render();
-            playBeepSound();
-            alert("تم تحديث أسعار الشراء والبيع بنجاح!");
+            document.getElementById('editModal').classList.add('active');
         }
 
-        function editProductQty(id) {
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        function saveProductEdits() {
+            let id = Number(document.getElementById('editProductId').value);
             let p = batches.find(x => x.id === id);
             if(!p) return;
-            let newQty = prompt(`أدخل الكمية الجديدة للمنتج (${p.name}):`, p.qty);
-            if(newQty !== null) {
-                p.qty = Number(newQty) || 0;
-                save(); render();
+
+            let newRef = document.getElementById('editProductRef').value.trim();
+            let newName = document.getElementById('editProductName').value.trim();
+            let newBuy = Number(document.getElementById('editProductBuy').value) || 0;
+            let newSell = Number(document.getElementById('editProductSell').value) || 0;
+            let newQty = Number(document.getElementById('editProductQty').value) || 0;
+
+            if(!newRef || !newName) {
+                playErrorSound();
+                return alert("لا يمكن ترك حقول الباركود أو اسم المنتج فارغة!");
             }
+
+            // التحقق من أن الباركود الجديد غير محجوز لمنتج آخر
+            if(newRef !== p.ref && batches.some(b => b.ref === newRef)) {
+                playErrorSound();
+                return alert("الباركود الجديد الذي أدخلته مستخدم بالفعل لمنتج آخر!");
+            }
+
+            p.ref = newRef;
+            p.name = newName;
+            p.buy = newBuy;
+            p.sell = newSell;
+            p.qty = newQty;
+
+            save();
+            render();
+            closeEditModal();
+            playBeepSound();
         }
 
         function deleteProduct(id) {
