@@ -26,13 +26,13 @@
     --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
     
     /* ألوان الخلفية الاحترافية الفخمة */
-    --bg-app: #090d16; /* خلفية داكنة جداً لراحة العين وعمق التصميم */
+    --bg-app: #090d16; 
     --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
     --surface: #1f2937; 
     --surface-card: rgba(22, 30, 49, 0.8);
     
-    --text-main: #ffffff; /* نصوص بيضاء ناصعة */
-    --text-muted: #9ca3af; /* نصوص ثانوية رمادية */
+    --text-main: #ffffff; 
+    --text-muted: #9ca3af; 
     --border: rgba(255, 255, 255, 0.08);
     
     --radius-xl: 24px;
@@ -124,7 +124,7 @@ body {
 
 .card:hover i { transform: scale(1.15) rotate(3deg); }
 
-/* الصفحات والحاويات الرئيسية (Glassmorphism Effect) */
+/* الصفحات والحاويات الرئيسية */
 .page {
     display: none;
     width: 100%;
@@ -246,7 +246,7 @@ input:focus, select:focus {
 .flex-inputs { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
 .flex-inputs > div { flex: 1; }
 
-/* ================= الجداول المتطورة فائقة التباين والوضوح ================= */
+/* ================= الجداول المتطورة فائدة التباين والوضوح ================= */
 table {
     width: 100%;
     margin-top: 25px;
@@ -256,12 +256,14 @@ table {
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    table-layout: auto;
 }
 
 th, td { 
-    padding: 18px 20px; 
+    padding: 18px 15px; 
     text-align: center; 
     font-size: 15px; 
+    vertical-align: middle;
 }
 
 th { 
@@ -269,34 +271,41 @@ th {
     color: #9ca3af; 
     font-weight: 700; 
     border-bottom: 2px solid rgba(255, 255, 255, 0.15); 
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 td { 
-    background-color: #1f2937; /* خلفية داكنة واضحة جداً لحمل النصوص البيضاء */
+    background-color: #1f2937; 
     border-bottom: 1px solid rgba(255, 255, 255, 0.06); 
-    color: #ffffff; /* نص أبيض ناصع لأعلى درجة وضوح للقرائة */
+    color: #ffffff; 
     font-weight: 600;
 }
 
-/* تأثير عند تمرير الماوس على السطر في الجدول لقراءة أسهل */
+/* تأثير حركي لقراءة أسهل */
 tr:hover td {
-    background-color: #2563eb; /* تظليل أزرق مريح عند الوقوف بالماوس */
+    background-color: #2563eb; 
     color: #ffffff !important;
     transition: background 0.15s ease;
 }
 
-/* تخصيص كود الباركود ليظهر بلون مميز وواضح */
+/* تخصيص وحماية كود الباركود / الرفرونس عند الكتابة الطويلة جداً */
 td code {
     background: rgba(0, 0, 0, 0.4);
-    padding: 4px 10px;
-    border-radius: 6px;
-    color: #38bdf8; /* لون أزرق سماوي مضيء ومميز للباركود */
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: #38bdf8; 
     font-family: monospace;
     font-size: 14px;
     border: 1px solid rgba(56, 189, 248, 0.2);
     font-weight: 700;
+    
+    /* الخصائص السحرية لمنع خروج الرفرونس الطويل */
+    display: inline-block;
+    max-width: 180px;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+    text-align: center;
 }
 
 tr:hover td code {
@@ -346,11 +355,18 @@ tr:last-child td { border-bottom: none; }
 .profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 8px;}
 .profit-card .amount { font-size: 24px; font-weight: 800; }
 
-/* ألوان السلع الناقصة بالتدرج المتناسق مع الوضع المظلم */
+/* ألوان السلع الناقصة الفاقعة والمتوافقة مع الحماية من النصوص الطويلة */
 .stock-empty { background-color: #ef4444 !important; color: #ffffff !important; }
 .stock-danger { background-color: rgba(239, 68, 68, 0.3) !important; color: #ffffff !important; }
 .stock-warning { background-color: rgba(245, 158, 11, 0.3) !important; color: #ffffff !important; }
 .stock-notice { background-color: rgba(59, 130, 246, 0.3) !important; color: #ffffff !important; }
+
+/* حماية إضافية لأكواد الباركود داخل قائمة السلع الناقصة لمنع تغيير ألوانها بشكل مشوه */
+.stock-empty td code, .stock-danger td code, .stock-warning td code, .stock-notice td code {
+    color: #ffffff !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
 
 /* تجميل شريط التمرير */
 ::-webkit-scrollbar { width: 10px; }
@@ -489,7 +505,7 @@ tr:last-child td { border-bottom: none; }
     </div>
     <div style="overflow-x: auto;">
         <table>
-            <thead><tr><th>اسم المنتج</th><th>الكمية المتبقية</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
+            <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية المتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
             <tbody id="lowTable"></tbody>
         </table>
     </div>
@@ -587,6 +603,7 @@ function openPage(id){
 
 function back(){ document.getElementById("dashboard").style.display="grid"; document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); }
 
+// نغمة بسيطة لإضافة مادة للسلة
 function playBeepSound() {
     try {
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -599,6 +616,50 @@ function playBeepSound() {
         gainNode.connect(audioCtx.destination);
         oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1);
     } catch (e) { console.log("Audio error"); }
+}
+
+// رنين الكاسة الاحترافي الفخم عند نجاح عملية البيع
+function playCashRegisterSound() {
+    try {
+        let AudioContext = window.AudioContext || window.webkitAudioContext;
+        let ctx = new AudioContext();
+        let now = ctx.currentTime;
+        
+        let osc1 = ctx.createOscillator();
+        let gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(1400, now);
+        gain1.gain.setValueAtTime(0.25, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.4);
+        
+        let osc2 = ctx.createOscillator();
+        let gain2 = ctx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(880, now + 0.02);
+        gain2.gain.setValueAtTime(0.15, now + 0.02);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.02);
+        osc2.stop(now + 0.3);
+
+        let osc3 = ctx.createOscillator();
+        let gain3 = ctx.createGain();
+        osc3.type = 'sawtooth';
+        osc3.frequency.setValueAtTime(300, now + 0.08);
+        osc3.frequency.linearRampToValueAtTime(120, now + 0.25);
+        gain3.gain.setValueAtTime(0.1, now + 0.08);
+        gain3.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc3.connect(gain3);
+        gain3.connect(ctx.destination);
+        osc3.start(now + 0.08);
+        osc3.stop(now + 0.3);
+        
+    } catch (e) { console.log("Cash sound error: ", e); }
 }
 
 function updateDefaultSalePriceField(){
@@ -734,6 +795,9 @@ function confirmCommand(){
             profit: (item.sell - item.buy) * item.qty, time: uniqueTime + index, command: commandNumber
         });
     });
+    
+    playCashRegisterSound();
+    
     commandNumber++; currentCommandData=[]; save(); render(); renderSalesOptions();
 }
 
@@ -879,6 +943,7 @@ function render(){
 
     calculateFilteredProfit();
 
+    // السلع الناقصة - متجاوبة مع الرفرونس الطويل
     let lowItems = batches.filter(b => b.qty <= 15); lowItems.sort((a, b) => a.qty - b.qty);
     document.getElementById('lowTable').innerHTML = lowItems.map(b => {
         let rowClass = "", statusText = "";
@@ -886,9 +951,16 @@ function render(){
         else if (b.qty <= 5) { rowClass = "stock-danger"; statusText = "نقص حاد جداً (1-5 قطع) 🚨"; } 
         else if (b.qty <= 10) { rowClass = "stock-warning"; statusText = "نقص متوسط (6-10 قطع) ⚠️"; } 
         else if (b.qty <= 15) { rowClass = "stock-notice"; statusText = "بداية نقص (11-15 قطعة) ℹ️"; }
-        return `<tr class="${rowClass}"><td><b style="color:white;">${b.name}</b></td><td><b>${b.qty} قطعة</b></td><td><b>${statusText}</b></td></tr>`;
+        return `
+        <tr class="${rowClass}">
+            <td><code>${b.ref}</code></td>
+            <td><b style="color:white;">${b.name}</b></td>
+            <td><b>${b.qty} قطعة</b></td>
+            <td style="font-weight: 700;">${b.buy.toFixed(2)} DA</td>
+            <td><b>${statusText}</b></td>
+        </tr>`;
     }).join("");
-    if(lowItems.length === 0) document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success); font-weight:700; padding:20px;">🎉 كل السلع متوفرة بكميات ممتازة</td></tr>`;
+    if(lowItems.length === 0) document.getElementById('lowTable').innerHTML = `<tr><td colspan="5" style="color:var(--success); font-weight:700; padding:20px;">🎉 كل السلع متوفرة بكميات ممتازة</td></tr>`;
     
     document.getElementById('cmdNumberInput').value = commandNumber;
 }
