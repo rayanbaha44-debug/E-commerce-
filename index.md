@@ -1,4 +1,4 @@
-📊 لوحة معلومات / Dashboard
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
@@ -103,6 +103,9 @@ background:white;
 border-radius:10px;
 overflow:hidden;
 box-shadow:0 2px 10px rgba(0,0,0,.05);
+display:block;
+overflow-x:auto;
+white-space:nowrap;
 }
 
 th,td{
@@ -221,6 +224,12 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 إضافة
 </button>
 
+<input type="file" id="importFile" hidden>
+
+<button onclick="document.getElementById('importFile').click()">
+استيراد البيانات
+</button>
+
 <input id="productSearch"
 placeholder="ابحث عن المنتج أو الرفيرونس..."
 oninput="renderProducts()">
@@ -328,7 +337,7 @@ OK
 <th>المنتج</th>
 <th>الكمية</th>
 <th>رأس المال</th>
-<th>الربح</th>
+<th>القيمة المتوقعة</th>
 <th>حذف</th>
 </tr>
 
@@ -434,6 +443,36 @@ style="margin-top:10px;font-weight:bold;">
 
 <script>
 
+const pRef = document.getElementById("pRef");
+const pName = document.getElementById("pName");
+const pBuy = document.getElementById("pBuy");
+const pSell = document.getElementById("pSell");
+const pQty = document.getElementById("pQty");
+
+const saleStock = document.getElementById("saleStock");
+const saleQty = document.getElementById("saleQty");
+
+const productTable = document.getElementById("productTable");
+const stockTable = document.getElementById("stockTable");
+const lowTable = document.getElementById("lowTable");
+const totals = document.getElementById("totals");
+const salesLog = document.getElementById("salesLog");
+
+const currentCommand = document.getElementById("currentCommand");
+const commandTotal = document.getElementById("commandTotal");
+const cmdNumber = document.getElementById("cmdNumber");
+
+const productSearch = document.getElementById("productSearch");
+const saleSearch = document.getElementById("saleSearch");
+
+const dailyProfit = document.getElementById("dailyProfit");
+const monthlyProfit = document.getElementById("monthlyProfit");
+const yearlyProfit = document.getElementById("yearlyProfit");
+
+const fromDate = document.getElementById("fromDate");
+const toDate = document.getElementById("toDate");
+const rangeProfit = document.getElementById("rangeProfit");
+
 let batches = JSON.parse(localStorage.getItem("batches") || "[]");
 let sales = JSON.parse(localStorage.getItem("sales") || "[]");
 
@@ -445,8 +484,6 @@ let currentCommandData = [];
 let commandNumber = JSON.parse(
 localStorage.getItem("commandNumber") || "1"
 );
-
-/* SAVE */
 
 function save(){
 
@@ -462,8 +499,6 @@ JSON.stringify(sales)
 
 }
 
-/* OPEN PAGE */
-
 function openPage(id){
 
 document.getElementById("dashboard").style.display="none";
@@ -476,8 +511,6 @@ document.getElementById(id)
 
 }
 
-/* BACK */
-
 function back(){
 
 document.getElementById("dashboard")
@@ -487,8 +520,6 @@ document.querySelectorAll(".page")
 .forEach(p=>p.classList.remove("active"));
 
 }
-
-/* ADD PRODUCT */
 
 function addProduct(){
 
@@ -509,6 +540,11 @@ if(
 +pQty.value <= 0
 ){
 alert("القيم غير صالحة");
+return;
+}
+
+if(batches.some(b=>b.ref===pRef.value.trim())){
+alert("الرفيرونس موجود مسبقًا");
 return;
 }
 
@@ -539,8 +575,6 @@ save();
 render();
 
 }
-
-/* EDIT PRODUCT */
 
 function editProduct(id){
 
@@ -582,13 +616,9 @@ return;
 }
 
 b.ref = newRef.trim();
-
 b.name = newName.trim();
-
 b.buy = newBuy;
-
 b.sell = newSell;
-
 b.qty = newQty;
 
 save();
@@ -597,9 +627,12 @@ render();
 
 }
 
-/* DELETE PRODUCT */
-
 function deleteProduct(id){
+
+if(sales.some(s => s.id === id)){
+alert("لا يمكن حذف منتج لديه مبيعات");
+return;
+}
 
 if(!confirm("هل أنت متأكد من حذف المنتج؟"))
 return;
@@ -611,8 +644,6 @@ save();
 render();
 
 }
-
-/* UPDATE COMMAND UI */
 
 function updateCommandUI(){
 
@@ -665,8 +696,6 @@ commandTotal.innerHTML =
 `المجموع: ${total.toFixed(2)} DA`;
 
 }
-
-/* ADD TO COMMAND */
 
 function addToCommand(){
 
@@ -727,8 +756,6 @@ updateCommandUI();
 
 }
 
-/* REMOVE ITEM */
-
 function removeFromCommand(index){
 
 currentCommandData.splice(index,1);
@@ -736,8 +763,6 @@ currentCommandData.splice(index,1);
 updateCommandUI();
 
 }
-
-/* CONFIRM COMMAND */
 
 function confirmCommand(){
 
@@ -752,7 +777,7 @@ let b = batches.find(x=>x.id===item.id);
 
 if(b){
 
-b.qty -= item.qty;
+b.qty = Math.max(0, b.qty - item.qty);
 
 }
 
@@ -765,6 +790,8 @@ ref:item.ref,
 name:item.name,
 
 qty:item.qty,
+
+buyPrice:item.buy,
 
 sellPrice:item.sell,
 
@@ -795,8 +822,6 @@ render();
 updateCommandUI();
 
 }
-
-/* EDIT SALE */
 
 function editSalePrice(index){
 
@@ -840,15 +865,13 @@ s.qty = newQty;
 s.sellPrice = newPrice;
 
 s.profit =
-(newPrice - b.buy) * newQty;
+(newPrice - s.buyPrice) * newQty;
 
 save();
 
 render();
 
 }
-
-/* DELETE SALE */
 
 function deleteSale(index){
 
@@ -867,15 +890,42 @@ b.qty += s.qty;
 
 }
 
-sales.splice(index,1);
+let deletedCommand = s.command;
+
+sales = sales.filter(
+sale => sale.command !== deletedCommand
+);
+
+let commands = [...new Set(
+sales.map(s=>s.command)
+)].sort((a,b)=>a-b);
+
+commands.forEach((cmd,i)=>{
+
+sales.forEach(s=>{
+
+if(s.command === cmd){
+
+s.command = i + 1;
+
+}
+
+});
+
+});
+
+commandNumber = commands.length + 1;
+
+localStorage.setItem(
+"commandNumber",
+commandNumber
+);
 
 save();
 
 render();
 
 }
-
-/* PRODUCTS SEARCH */
 
 function renderProducts(){
 
@@ -894,11 +944,11 @@ let filtered = batches.filter(b=>
 
 );
 
-productTable.innerHTML="";
+let html = "";
 
 filtered.forEach(b=>{
 
-productTable.innerHTML += `
+html += `
 
 <tr>
 
@@ -940,9 +990,9 @@ onclick="deleteProduct(${b.id})">
 
 });
 
-}
+productTable.innerHTML = html;
 
-/* SALES SEARCH */
+}
 
 function renderSales(){
 
@@ -958,6 +1008,15 @@ let filtered = batches.filter(b=>
 (b.ref && b.ref.toLowerCase().includes(search))
 
 );
+
+if(filtered.length===0){
+
+saleStock.innerHTML =
+"<option>لا توجد نتائج</option>";
+
+return;
+
+}
 
 saleStock.innerHTML = filtered.map(b=>`
 
@@ -978,8 +1037,6 @@ stock: ${b.qty}
 `).join('');
 
 }
-
-/* PROFITS */
 
 function renderProfits(){
 
@@ -1024,8 +1081,6 @@ yearlyProfit.innerHTML =
 
 }
 
-/* RANGE PROFITS */
-
 function calcProfitRange(){
 
 let from = new Date(
@@ -1059,8 +1114,6 @@ ${total.toFixed(2)} DA
 
 }
 
-/* EXPORT DATA */
-
 function exportData(){
 
 let data = {
@@ -1091,24 +1144,48 @@ a.click();
 
 }
 
-/* RENDER */
+function importData(e){
+
+let file = e.target.files[0];
+
+if(!file) return;
+
+let reader = new FileReader();
+
+reader.onload = function(){
+
+let data = JSON.parse(reader.result);
+
+batches = data.batches || [];
+sales = data.sales || [];
+commandNumber = data.commandNumber || 1;
+
+save();
+render();
+
+};
+
+reader.readAsText(file);
+
+}
+
+document.getElementById("importFile")
+.addEventListener("change", importData);
 
 function render(){
 
 renderProducts();
 
-/* STOCK */
-
-stockTable.innerHTML="";
+let stockHTML = "";
 
 batches.forEach(b=>{
 
 let capital = b.buy * b.qty;
 
-let profit =
+let expected =
 (b.sell - b.buy) * b.qty;
 
-stockTable.innerHTML += `
+stockHTML += `
 
 <tr>
 
@@ -1122,7 +1199,7 @@ ${b.name}
 
 <td>${capital.toFixed(2)}</td>
 
-<td>${profit.toFixed(2)}</td>
+<td>${expected.toFixed(2)}</td>
 
 <td>
 
@@ -1141,9 +1218,9 @@ onclick="deleteProduct(${b.id})">
 
 });
 
-/* LOW STOCK */
+stockTable.innerHTML = stockHTML;
 
-lowTable.innerHTML="";
+let lowHTML = "";
 
 batches.forEach(b=>{
 
@@ -1155,7 +1232,7 @@ b.qty <= 5 ? "خطر" : "ناقص";
 let color =
 b.qty <= 5 ? "red" : "orange";
 
-lowTable.innerHTML += `
+lowHTML += `
 
 <tr
 style="
@@ -1181,15 +1258,20 @@ ${b.name}
 
 });
 
-/* TOTALS */
+lowTable.innerHTML = lowHTML;
 
 let capital = batches.reduce(
 (a,b)=>a+(b.buy*b.qty),
 0
 );
 
-let profit = batches.reduce(
+let futureProfit = batches.reduce(
 (a,b)=>a+((b.sell-b.buy)*b.qty),
+0
+);
+
+let realProfit = sales.reduce(
+(a,b)=>a+b.profit,
 0
 );
 
@@ -1199,16 +1281,14 @@ totals.innerHTML = `
 ${capital.toFixed(2)} DA
 <br>
 
-الأرباح:
-${profit.toFixed(2)} DA
+الأرباح المحققة:
+${realProfit.toFixed(2)} DA
 <br>
 
-المجموع:
-${(capital+profit).toFixed(2)} DA
+الأرباح المتوقعة:
+${futureProfit.toFixed(2)} DA
 
 `;
-
-/* SALES LOG */
 
 salesLog.innerHTML =
 sales.slice().reverse().map((s,reverseIndex)=>{
