@@ -24,7 +24,6 @@
             --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
             
-            /* خلفية فاتحة ونقية */
             --bg-app: #f8fafc; 
             --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             --surface: #ffffff; 
@@ -331,13 +330,15 @@
         .order-item-line {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            font-size: 14px;
-            border-bottom: 1px solid #f8fafc;
-            color: #334155;
+            align-items: center;
+            padding: 12px 5px;
+            font-size: 14.5px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
         }
 
-        .badge-qty { background: #f1f5f9; color: #b45309; padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 12px; border: 1px solid #fde68a; }
+        .badge-qty { background: #eff6ff; color: #1e40af; padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 13px; border: 1px solid #bfdbfe; margin-right: 5px; }
 
         .profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
         .profit-card { background: #ffffff; padding: 25px; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
@@ -348,14 +349,14 @@
         .profit-card p { color: var(--text-muted); font-size: 13.5px; font-weight: 700; margin-bottom: 8px;}
         .profit-card .amount { font-size: 22px; font-weight: 800; }
 
-        /* ستايل التنبيهات في المخزن ليتناسب مع الخلفية الفاتحة */
+        /* ستايل التنبيهات في المخزن */
         .stock-empty { background-color: #fee2e2 !important; color: #991b1b !important; }
         .stock-empty td { background-color: #fee2e2 !important; color: #991b1b !important; }
         
         .stock-danger { background-color: #fef3c7 !important; color: #92400e !important; }
         .stock-danger td { background-color: #fef3c7 !important; color: #92400e !important; }
         
-        .stock-warning { background-color: #fffbp; color: #92400e !important; } /* تم استخدام لون برتقالي خفيف */
+        .stock-warning { background-color: #fff7ed !important; color: #92400e !important; } 
         .stock-warning td { background-color: #fff7ed !important; color: #c2410c !important; }
         
         .stock-notice { background-color: #eff6ff !important; color: #1e40af !important; }
@@ -869,7 +870,7 @@
         function addToCommand() {
             let select = document.getElementById("saleStock");
             if(!select || !select.value) {
-                alert("الرجاء اختيار منتج أولاً. إذا كانت القائمة فارغة قم بإضافة منتجات للمخزن.");
+                alert("الرجاء اختيار منتج أولاً.");
                 return;
             }
 
@@ -890,6 +891,7 @@
             let exist = currentCommandData.find(x => x.productId === b.id);
             if(exist) {
                 exist.qty += qty;
+                exist.sellPrice = sellPrice; // تحديث السعر في حال تم تعديله
             } else {
                 currentCommandData.push({
                     productId: b.id,
@@ -916,10 +918,15 @@
                 let div = document.createElement("div");
                 div.className = "order-item-line";
                 div.innerHTML = `
-                    <span>${item.name} <span class="badge-qty">x${item.qty}</span></span>
-                    <span>${subTotal.toFixed(2)} DA 
-                        <button class="del" style="padding: 4px 8px; margin-right: 10px; font-size:11px;" onclick="removeFromCurrentCommand(${index})"><i class="fa-solid fa-xmark"></i></button>
-                    </span>
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="color: var(--text-main); font-weight: 700;">${item.name}</span>
+                        <span style="font-size: 12px; color: var(--text-muted);">${item.sellPrice.toFixed(2)} DA للقطعة</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="badge-qty">x${item.qty}</span>
+                        <span style="color: var(--text-main); font-weight: 800; min-width: 90px; text-align: left;">${subTotal.toFixed(2)} DA</span>
+                        <button class="del" style="padding: 5px 9px; font-size:11px; border-radius:6px;" onclick="removeFromCurrentCommand(${index})"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
                 `;
                 container.appendChild(div);
             });
@@ -1277,7 +1284,7 @@
                         document.getElementById('cmdNumberInput').value = commandNumber;
                         alert("✅ تم استيراد النسخة الاحتياطية وتحديث النظام بنجاح!");
                     } else {
-                        alert("❌ خطأ: الملف لا يحتوي على هيكلة برمجية صحيحة لنظام الـ POS.");
+                        alert("❌ خطأ: الملف لا يحتوي على هيكلة برمجية صحيحةلنظام الـ POS.");
                     }
                 } catch(err) {
                     alert("❌ فشل الاستيراد: محتوى الملف غير متوافق أو تالف.");
