@@ -696,7 +696,6 @@
 
         function render() {
             renderProducts();
-            // قمنا بإلغاء استدعاء renderSalesOptions من هنا لمنع تصفير السعر عشوائياً عند بناء النظام الخلفي
             renderCurrentCommand();
             renderSalesLog();
             renderStockReport();
@@ -841,7 +840,6 @@
             localStorage.setItem("commandNumber", commandNumber);
         }
 
-        // بناء قائمة المنتجات بواجهة البيع وتثبيت السعر بشكل فوري وصارم
         function renderSalesOptions() {
             let search = document.getElementById("saleSearch").value.toLowerCase();
             let select = document.getElementById("saleStock");
@@ -858,22 +856,22 @@
                 select.appendChild(opt);
             });
 
-            // تأمين الحساب المباشر فوراً دون انتظار استقرار اختيار المتصفح
             if (filtered.length > 0) {
                 select.value = filtered[0].id; 
-                priceInput.value = filtered[0].sell; // حقن السعر مباشرة من المصفوفة الأساسية
+                priceInput.value = filtered[0].sell; 
             } else {
                 priceInput.value = "";
             }
         }
 
-        // تحديث السعر بشكل صارم عند تغيير السلعة يدوياً
+        // تم إصلاح الدالة هنا بالكامل لقراءة القيمة الحالية المحددة فوراً بدون تضارب
         function updateDefaultSalePriceField() {
             let select = document.getElementById("saleStock");
             let priceInput = document.getElementById("salePriceInput");
             
             if(select && select.value) {
-                let selectedProduct = batches.find(x => x.id === select.value);
+                let currentSelectedId = select.value;
+                let selectedProduct = batches.find(x => x.id === currentSelectedId);
                 if(selectedProduct) {
                     priceInput.value = selectedProduct.sell;
                 } else {
@@ -1004,7 +1002,7 @@
             currentCommandData = [];
             save();
             render();
-            renderSalesOptions(); // تحديث القائمة بعد الشراء ليعود السعر طبيعياً للسلعة الموالية
+            renderSalesOptions(); 
         }
 
         function renderSalesLog() {
