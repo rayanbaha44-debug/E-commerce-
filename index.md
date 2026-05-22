@@ -985,11 +985,11 @@ function renderLowStockPage() {
         } else if (b.qty === 2) {
             riskScore = 13; statusText = "⚠️ قطعتين فقط بالمحل!"; bgColor = "rgba(239, 68, 68, 0.6)";
         } else if (b.qty === 3) {
-            riskScore = 12; statusText = "📦 نقص حاد جداً"; bgColor = "rgba(244, 63, 94, 0.6)";
+            riskScore = 12; statusText = "🚨 نقص حاد جداً"; bgColor = "rgba(244, 63, 94, 0.6)";
         } else if (b.qty === 4) {
-            riskScore = 11; statusText = "📦 نقص حاد بالمخزن"; bgColor = "rgba(249, 115, 22, 0.7)";
+            riskScore = 11; statusText = "🚨 نقص حاد بالمخزن"; bgColor = "rgba(249, 115, 22, 0.7)";
         } else if (b.qty === 5) {
-            riskScore = 10; statusText = "📦 نقص حاد ملحوظ"; bgColor = "rgba(249, 115, 22, 0.55)";
+            riskScore = 10; statusText = "🚨 نقص حاد ملحوظ"; bgColor = "rgba(249, 115, 22, 0.55)";
         } else if (b.qty === 6) {
             riskScore = 9; statusText = "🔔 إنذار متوسط الدرجة"; bgColor = "rgba(245, 158, 11, 0.65)";
         } else if (b.qty === 7) {
