@@ -199,6 +199,14 @@ table{
 th, td{ padding: 18px; text-align: center; border-bottom: 1px solid var(--border); font-size: 15px; }
 th { background-color: #f8fafc; color: var(--text-muted); font-weight: 700; }
 
+/* الـ Tfoot المطور للمجاميع أسفل الجدول */
+tfoot tr td {
+    padding: 20px;
+    font-size: 16px;
+    font-weight: 800;
+    border-top: 2px solid #cbd5e1;
+}
+
 /* الصناديق الفرعية */
 .box{
     background: #f8fafc;
@@ -227,18 +235,19 @@ th { background-color: #f8fafc; color: var(--text-muted); font-weight: 700; }
 .badge-qty { background: #fef3c7; color: #d97706; padding: 5px 10px; border-radius: 8px; font-weight: 700; }
 
 /* كروت الأرباح */
-.profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; }
+.profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
 .profit-card { background: var(--surface); padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-md); }
 .profit-card.success { border-right-color: var(--success); }
 .profit-card.dark { border-right-color: var(--text-main); }
+.profit-card.filter { border-right-color: #a855f7; background: #faf5ff; } /* كارت بنفسجي للفلترة */
 .profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 5px;}
-.profit-card .amount { font-size: 26px; font-weight: 800; }
+.profit-card .amount { font-size: 24px; font-weight: 800; }
 
-/* ألوان التدريج المخصصة لجدول النواقص */
-.stock-empty { background-color: #27272a !important; color: #ffffff !important; } /* 0 قطعة - رمادي غامق */
-.stock-danger { background-color: #fee2e2 !important; color: #991b1b !important; } /* 1-5 قطع - أحمر خفيف */
-.stock-warning { background-color: #ffedd5 !important; color: #9a3412 !important; } /* 6-10 قطع - برتقالي خفيف */
-.stock-notice { background-color: #e0f2fe !important; color: #075985 !important; } /* 11-15 قطعة - أزرق خفيف */
+/* ألوان التدريج لجدول النواقص */
+.stock-empty { background-color: #27272a !important; color: #ffffff !important; }
+.stock-danger { background-color: #fee2e2 !important; color: #991b1b !important; }
+.stock-warning { background-color: #ffedd5 !important; color: #9a3412 !important; }
+.stock-notice { background-color: #e0f2fe !important; color: #075985 !important; }
 </style>
 </head>
 
@@ -277,9 +286,7 @@ th { background-color: #f8fafc; color: var(--text-muted); font-weight: 700; }
 
     <table>
         <thead>
-            <tr>
-                <th>الباركود</th><th>اسم المنتج</th><th>الكمية</th><th>الشراء</th><th>البيع</th><th>تعديل</th><th>حذف</th>
-            </tr>
+            <tr><th>الباركود</th><th>اسم المنتج</th><th>الكمية</th><th>الشراء</th><th>البيع</th><th>تعديل</th><th>حذف</th></tr>
         </thead>
         <tbody id="productTable"></tbody>
     </table>
@@ -313,7 +320,7 @@ th { background-color: #f8fafc; color: var(--text-muted); font-weight: 700; }
     <div id="salesLog"></div>
 </div>
 
-<!-- STOCK -->
+<!-- STOCK (تم تحديث الجدول لإدراج المجموع والموجي في الأسفل بالكامل ملون) -->
 <div id="stock" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
@@ -324,41 +331,60 @@ th { background-color: #f8fafc; color: var(--text-muted); font-weight: 700; }
             <tr><th>اسم المنتج</th><th>القطع المتبقية</th><th>رأس المال المستثمر</th><th>الأرباح المتوقعة</th><th>إجراء</th></tr>
         </thead>
         <tbody id="stockTable"></tbody>
+        <tfoot id="stockTableFoot"></tfoot>
     </table>
-    <div id="totals" class="box" style="margin-top:25px; line-height: 2.2; background: #fff;"></div>
 </div>
 
-<!-- LOW (تم تحديث هذه الصفحة بالترتيب اللوني والتصاعدي) -->
+<!-- LOW -->
 <div id="low" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
-        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> كشف السلع الناقصة بالتدرج (من الأكثر نقصاً إلى 15 قطعة)</h2>
+        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> كشف السلع الناقصة بالتدرج</h2>
     </div>
     <table>
-        <thead>
-            <tr><th>اسم المنتج</th><th>الكمية المتبقية</th><th>حالة خطورة المخزون</th></tr>
-        </thead>
+        <thead><tr><th>اسم المنتج</th><th>الكمية المتبقية</th><th>حالة خطورة المخزون</th></tr></thead>
         <tbody id="lowTable"></tbody>
     </table>
 </div>
 
-<!-- PROFITS -->
+<!-- PROFITS (تمت إضافة ميزة الفرز التاريخي المخصص من وإلى هنا) -->
 <div id="profits" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
         <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية</h2>
     </div>
+
+    <!-- فرز أرباح مخصصة بالتاريخ -->
+    <div class="box" style="background: #fff; border: 1px solid var(--border);">
+        <h3 style="margin-bottom: 12px; font-size:16px; color: #a855f7;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
+        <div class="flex-inputs">
+            <div style="flex:1;">
+                <label style="font-size:13px; font-weight:700; color:var(--text-muted);">من تاريخ 📅:</label>
+                <input type="date" id="filterFrom" onchange="calculateFilteredProfit()">
+            </div>
+            <div style="flex:1;">
+                <label style="font-size:13px; font-weight:700; color:var(--text-muted);">إلى تاريخ 🏁:</label>
+                <input type="date" id="filterTo" onchange="calculateFilteredProfit()">
+            </div>
+        </div>
+    </div>
+
     <div class="profit-grid">
+        <!-- كارت الفلترة المخصصة -->
+        <div class="profit-card filter" style="grid-column: span 2 / span 2;">
+            <p>🎯 أرباح الفترة المحددة أعلاه</p>
+            <div id="filteredProfit" class="amount" style="color: #a855f7;">0.00 DA 💰</div>
+        </div>
         <div class="profit-card success">
-            <p>أرباح اليوم الحالي</p>
+            <p>💵 أرباح اليوم الحالي</p>
             <div id="dailyProfit" class="amount" style="color: var(--success);">0.00 DA</div>
         </div>
         <div class="profit-card">
-            <p>أرباح الشهر الحالي</p>
+            <p>📈 أرباح الشهر الحالي</p>
             <div id="monthlyProfit" class="amount" style="color: var(--primary);">0.00 DA</div>
         </div>
-        <div class="profit-card dark">
-            <p>أرباح السنة الإجمالية</p>
+        <div class="profit-card dark" style="grid-column: span 2 / span 2;">
+            <p>👑 أرباح السنة الإجمالية</p>
             <div id="yearlyProfit" class="amount" style="color: var(--text-main);">0.00 DA</div>
         </div>
     </div>
@@ -370,6 +396,14 @@ let batches = JSON.parse(localStorage.getItem("batches") || "[]");
 let sales = JSON.parse(localStorage.getItem("sales") || "[]");
 let commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
 let currentCommandData = [];
+
+// تعيين تاريخ اليوم كقيمة افتراضية للفلترة تسهيلاً للمستخدم
+window.onload = function() {
+    let todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('filterFrom').value = todayStr;
+    document.getElementById('filterTo').value = todayStr;
+    render();
+};
 
 function save(){
     localStorage.setItem("batches", JSON.stringify(batches));
@@ -388,10 +422,7 @@ function openPage(id){
     window.scrollTo(0, 0);
 }
 
-function back(){
-    document.getElementById("dashboard").style.display="grid";
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-}
+function back(){ document.getElementById("dashboard").style.display="grid"; document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); }
 
 function addProduct(){
     let ref = document.getElementById('pRef').value.trim();
@@ -513,11 +544,8 @@ function deleteSaleByTime(saleTime){
     if(!s) return;
     
     let b = batches.find(x => x.id === s.id); 
-    if(b) {
-        b.qty += s.qty; 
-    } else {
-        batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty });
-    }
+    if(b) { b.qty += s.qty; } 
+    else { batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }); }
     
     sales = sales.filter(x => x.time !== saleTime);
     save(); render(); renderSalesOptions();
@@ -539,13 +567,35 @@ function renderProducts(){
     </tr>`).join("");
 }
 
+/* ================= الميزة المطلوبة: حساب فرز الأرباح المخصصة بالتاريخ ================= */
+function calculateFilteredProfit(){
+    let fromVal = document.getElementById('filterFrom').value;
+    let toVal = document.getElementById('filterTo').value;
+    if(!fromVal || !toVal) return;
+
+    // تحويل التواريخ لبداية ونهاية اليوم بالملي ثانية
+    let startTime = new Date(fromVal + "T00:00:00").getTime();
+    let endTime = new Date(toVal + "T23:59:59").getTime();
+    let totalFilteredProfit = 0;
+
+    sales.forEach(s => {
+        let t = s.time || Date.now();
+        if(t >= startTime && t <= endTime){
+            totalFilteredProfit += s.profit;
+        }
+    });
+
+    document.getElementById('filteredProfit').innerHTML = totalFilteredProfit.toFixed(2) + " DA 💰";
+}
+
 function render(){
     renderProducts();
-    let totalCapital = 0, totalValue = 0;
+    let totalCapital = 0, totalValue = 0, totalPieces = 0;
 
+    // بناء سطور المنتجات في الجرد
     document.getElementById('stockTable').innerHTML = batches.map(b=>{
         let capital = b.buy * b.qty; let expectedProfit = (b.sell - b.buy) * b.qty;
-        totalCapital += capital; totalValue += (b.sell * b.qty);
+        totalCapital += capital; totalValue += (b.sell * b.qty); totalPieces += b.qty;
         return `
         <tr>
             <td><b>${b.name}</b></td>
@@ -556,9 +606,15 @@ function render(){
         </tr>`;
     }).join("");
 
-    document.getElementById('totals').innerHTML = `
-        <p><strong>إجمالي رأس المال في المخزن:</strong> ${totalCapital.toFixed(2)} DA</p>
-        <p><strong>صافي الأرباح المنتظرة:</strong> ${(totalValue - totalCapital).toFixed(2)} DA</p>`;
+    /* ================= الميزة المطلوبة: إدراج المجموع أسفل جدول المخزون الكلي بالكامل ملون ومع موجي ================= */
+    document.getElementById('stockTableFoot').innerHTML = `
+        <tr style="background: #f8fafc;">
+            <td style="color: var(--text-main); font-weight:800; text-align:right;">📦 إجمالي المخزون المتبقي الكلي:</td>
+            <td style="color: #0284c7; background: #e0f2fe; font-weight:800;">${totalPieces} قطعة 🛍️</td>
+            <td style="color: #b91c1c; background: #fee2e2; font-weight:800;">${totalCapital.toFixed(2)} DA 💰</td>
+            <td style="color: #047857; background: #d1fae5; font-weight:800;">${(totalValue - totalCapital).toFixed(2)} DA 💵</td>
+            <td></td>
+        </tr>`;
 
     document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s)=>{
         return `
@@ -569,7 +625,7 @@ function render(){
         </div>`;
     }).join("");
 
-    // حساب المبيعات اليومية والشهرية
+    // احتساب أرباح الفترات القياسية
     let now = new Date(), dProfit = 0, mProfit = 0, yProfit = 0;
     let startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
     let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
@@ -582,46 +638,29 @@ function render(){
         if(t >= startOfYear) yProfit += s.profit;
     });
 
-    document.getElementById('dailyProfit').innerHTML = dProfit.toFixed(2) + " DA";
-    document.getElementById('monthlyProfit').innerHTML = mProfit.toFixed(2) + " DA";
-    document.getElementById('yearlyProfit').innerHTML = yProfit.toFixed(2) + " DA";
+    document.getElementById('dailyProfit').innerHTML = dProfit.toFixed(2) + " DA 💵";
+    document.getElementById('monthlyProfit').innerHTML = mProfit.toFixed(2) + " DA 📈";
+    document.getElementById('yearlyProfit').innerHTML = yProfit.toFixed(2) + " DA 👑";
 
-    /* ================= منطق السلع الناقصة الجديد المطور ================= */
-    // 1. جلب السلع التي كميتها 15 أو أقل
+    // تفعيل حساب الفلترة التلقائية الحالية
+    calculateFilteredProfit();
+
+    // السلع الناقصة
     let lowItems = batches.filter(b => b.qty <= 15);
-    
-    // 2. ترتيب تصاعدي (من الأكثر نقصاً 0 فما فوق لتبدأ هي الأولى)
     lowItems.sort((a, b) => a.qty - b.qty);
 
-    // 3. بناء الجدول وتوزيع الألوان التدريجية
     document.getElementById('lowTable').innerHTML = lowItems.map(b => {
-        let rowClass = "";
-        let statusText = "";
+        let rowClass = "", statusText = "";
+        if (b.qty === 0) { rowClass = "stock-empty"; statusText = "منتهي تماماً (0 قطع) ❌"; } 
+        else if (b.qty <= 5) { rowClass = "stock-danger"; statusText = "نقص حاد جداً (1-5 قطع) 🚨"; } 
+        else if (b.qty <= 10) { rowClass = "stock-warning"; statusText = "نقص متوسط (6-10 قطع) ⚠️"; } 
+        else if (b.qty <= 15) { rowClass = "stock-notice"; statusText = "بداية نقص (11-15 قطعة) ℹ️"; }
 
-        if (b.qty === 0) {
-            rowClass = "stock-empty";
-            statusText = "منتهي تماماً (0 قطع) ❌";
-        } else if (b.qty <= 5) {
-            rowClass = "stock-danger";
-            statusText = "نقص حاد جداً (1-5 قطع) 🚨";
-        } else if (b.qty <= 10) {
-            rowClass = "stock-warning";
-            statusText = "نقص متوسط (6-10 قطع) ⚠️";
-        } else if (b.qty <= 15) {
-            rowClass = "stock-notice";
-            statusText = "بداية نقص (11-15 قطعة) ℹ️";
-        }
-
-        return `
-        <tr class="${rowClass}">
-            <td><b>${b.name}</b></td>
-            <td><b>${b.qty} قطعة متبقية</b></td>
-            <td><b>${statusText}</b></td>
-        </tr>`;
+        return `<tr class="${rowClass}"><td><b>${b.name}</b></td><td><b>${b.qty} قطعة</b></td><td><b>${statusText}</b></td></tr>`;
     }).join("");
     
     if(lowItems.length === 0){
-        document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success); font-weight:700; padding:30px;"><i class="fa-solid fa-circle-check"></i> كل السلع متوفرة بكميات ممتازة (+15 قطعة) 🎉</td></tr>`;
+        document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success); font-weight:700; padding:30px;">🎉 كل السلع متوفرة بكميات ممتازة (+15 قطعة)</td></tr>`;
     }
     
     document.getElementById('cmdNumber').innerHTML = "Commande #" + commandNumber;
@@ -635,8 +674,6 @@ function exportData(){
     linkElement.setAttribute('download', 'pos_premium_backup.json');
     linkElement.click();
 }
-
-render();
 </script>
 </body>
 </html>
