@@ -24,8 +24,8 @@ color:black;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
-overflow:hidden;
+min-height:100vh; 
+padding: 20px 0; 
 }
 
 #dashboard{
@@ -55,9 +55,10 @@ transform:scale(1.03);
 .page{
 display:none;
 width:100%;
-height:100vh;
+max-width: 450px; 
+min-height:100vh;
 padding:20px;
-overflow:auto;
+padding-bottom: 80px; 
 }
 
 .page.active{
@@ -224,7 +225,7 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <h3 id="cmdNumber">Commande #1</h3>
 </div>
 
-<input id="saleSearch" placeholder="بحث باسم المنتج لتصفية القائمة..." oninput="renderSalesOptions()">
+<input id="saleSearch" placeholder="ابحث باسم المنتج أو الرفيرونس..." oninput="renderSalesOptions()">
 
 <select id="saleStock"></select>
 <input id="saleQty" type="number" step="0.01" value="1">
@@ -317,12 +318,17 @@ function openPage(id){
 document.getElementById("dashboard").style.display="none";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.getElementById(id).classList.add("active");
-if(id === 'sales') renderSalesOptions();
+if(id === 'sales') {
+document.getElementById('saleSearch').value = ''; 
+renderSalesOptions();
+}
+window.scrollTo(0, 0);
 }
 
 function back(){
 document.getElementById("dashboard").style.display="grid";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+window.scrollTo(0, 0);
 }
 
 /* ================= PRODUCT ================= */
@@ -390,11 +396,14 @@ render();
 /* ================= COMMAND ================= */
 
 function renderSalesOptions(){
-let searchVal = document.getElementById('saleSearch').value.toLowerCase();
-let filtered = batches.filter(b => b.name.toLowerCase().includes(searchVal) || b.ref.toLowerCase().includes(searchVal));
+let searchVal = document.getElementById('saleSearch').value.toLowerCase().trim();
+let filtered = batches.filter(b => 
+b.name.toLowerCase().includes(searchVal) || 
+b.ref.toLowerCase().includes(searchVal)
+);
 
 let saleStock = document.getElementById('saleStock');
-saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">${b.name} (${b.qty} قطعة) - ${b.sell.toFixed(2)} DA</option>`).join("");
+saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">[${b.ref}] ${b.name} (${b.qty} قطعة) - ${b.sell.toFixed(2)} DA</option>`).join("");
 }
 
 function addToCommand(){
@@ -425,6 +434,23 @@ ex.qty += qty;
 currentCommandData.push({...b, qty});
 }
 
+updateCommandUI();
+}
+
+/* تعديل سعر منتج معين داخل الكوموند قبل التأكيد */
+function editCommandItemPrice(idx) {
+let item = currentCommandData[idx];
+if(!item) return;
+
+let newPrice = prompt(`تعديل سعر بيع [${item.name}] لهذا الكوموند الحالى فقط:`, item.sell);
+if(newPrice === null || newPrice.trim() === "") return;
+
+if(isNaN(newPrice) || +newPrice < 0) {
+alert("الرجاء إدخال سعر صحيح");
+return;
+}
+
+item.sell = +newPrice;
 updateCommandUI();
 }
 
@@ -473,9 +499,20 @@ if(b){
 b.qty += s.qty;
 }
 
+let deletedCommandNumber = s.command;
+
 sales.splice(index,1);
+
+if (deletedCommandNumber === commandNumber - 1) {
+    let matchingSales = sales.filter(x => x.command === deletedCommandNumber);
+    if (matchingSales.length === 0) {
+        commandNumber = Math.max(1, commandNumber - 1);
+    }
+}
+
 save();
 render();
+renderSalesOptions();
 }
 
 /* ================= CART ================= */
@@ -489,10 +526,13 @@ let total=0;
 currentCommand.innerHTML = currentCommandData.map((i,idx)=>{
 total += i.sell*i.qty;
 return `
-<div style="display:flex; justify-content:space-between; margin:5px 0; background:#f3f4f6; padding:5px; border-radius:5px;">
-<span>${i.name} x${i.qty}</span>
-<span>${(i.sell*i.qty).toFixed(2)} DA</span>
-<span onclick="removeFromCommand(${idx})" style="cursor:pointer;">❌</span>
+<div style="display:flex; justify-content:space-between; align-items:center; margin:6px 0; background:#f3f4f6; padding:8px; border-radius:8px;">
+<span style="font-weight:500;">${i.name} x${i.qty}</span>
+<span style="color:#2563eb; font-weight:bold;">${(i.sell*i.qty).toFixed(2)} DA</span>
+<div style="display:flex; gap:8px;">
+<span onclick="editCommandItemPrice(${idx})" style="cursor:pointer; background:#3b82f6; color:white; padding:2px 6px; border-radius:4px; font-size:12px;">✏️ سعر</span>
+<span onclick="removeFromCommand(${idx})" style="cursor:pointer; background:#ef4444; color:white; padding:2px 6px; border-radius:4px; font-size:12px;">❌</span>
+</div>
 </div>`;
 }).join("");
 
@@ -555,7 +595,7 @@ document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s,i)=>
 let idx = sales.length-1-i;
 return `
 <div class="saleItem">
-<span><strong>#${s.command}</strong> - ${s.name} x${s.qty}</span>
+<span><strong>#${s.command}</strong> - [${s.ref}] ${s.name} x${s.qty}</span>
 <span>الربح: ${s.profit.toFixed(2)} DA</span>
 <span onclick="deleteSale(${idx})" style="cursor:pointer;">❌</span>
 </div>`;
@@ -590,6 +630,8 @@ document.getElementById('lowTable').innerHTML = lowItems.map(b => `
 if(lowItems.length === 0){
 document.getElementById('lowTable').innerHTML = `<tr><td colspan="3">لا توجد نواقص بحمد الله 🎉</td></tr>`;
 }
+
+document.getElementById('cmdNumber').innerHTML = "Commande #" + commandNumber;
 }
 
 /* ================= EXPORT & IMPORT ================= */
