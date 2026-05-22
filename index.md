@@ -336,7 +336,7 @@ tfoot tr td {
     </table>
 </div>
 
-<!-- EXPENSES (قسم المصاريف الجديد المضاف) -->
+<!-- EXPENSES -->
 <div id="expenses" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
@@ -396,7 +396,7 @@ tfoot tr td {
 /* ================= SYSTEM LOGIC ================= */
 let batches = JSON.parse(localStorage.getItem("batches") || "[]");
 let sales = JSON.parse(localStorage.getItem("sales") || "[]");
-let expenses = JSON.parse(localStorage.getItem("expenses") || "[]"); // مصفوفة المصاريف الجديدة
+let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
 let commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
 let currentCommandData = [];
 
@@ -424,6 +424,27 @@ function openPage(id){
 }
 
 function back(){ document.getElementById("dashboard").style.display="grid"; document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); }
+
+/* دالة إنتاج نغمة الباركود الاحترافية تلقائياً دون ملفات خارجية */
+function playBeepSound() {
+    try {
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let oscillator = audioCtx.createOscillator();
+        let gainNode = audioCtx.createGain();
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime); // تردد حاد ومميز مثل قارئ الكود
+        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime); // مستوى صوت متناسق ومريح للأذن
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.1); // مدة رنة قصيرة جداً وسريعة (0.1 ثانية)
+    } catch (e) {
+        console.log("Audio API not supported or blocked by browser user gesture.");
+    }
+}
 
 function addProduct(){
     let ref = document.getElementById('pRef').value.trim();
@@ -483,6 +504,8 @@ function addToCommand(){
         if(b.qty < ex.qty + qty){ alert("المجموع يتجاوز المتاح"); return; }
         ex.qty += qty;
     } else { currentCommandData.push({...b, qty}); }
+    
+    playBeepSound(); // تشغيل الصوت فور الإضافة الناجحة للسلة 🔊
     updateCommandUI();
 }
 
@@ -546,7 +569,6 @@ function deleteSaleByTime(saleTime){
     save(); render(); renderSalesOptions();
 }
 
-/* ================= منطق قسم المصاريف الجديد ================= */
 function addExpense(){
     let title = document.getElementById('expTitle').value.trim();
     let amount = document.getElementById('expAmount').value;
@@ -635,7 +657,6 @@ function render(){
         return `<div class="saleItem"><span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} <span class="badge-qty">x${s.qty}</span></span><span>الربح: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span><button class="del" onclick="deleteSaleByTime(${s.time})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash-can"></i> حذف وإرجاع</button></div>`;
     }).join("");
 
-    // عرض قائمة وسجل المصاريف
     let totalExpensesSum = 0;
     document.getElementById('expensesLog').innerHTML = [...expenses].reverse().map(e => {
         totalExpensesSum += e.amount;
@@ -648,7 +669,6 @@ function render(){
     }).join("");
     if(expenses.length === 0) document.getElementById('expensesLog').innerHTML = "<p style='text-align:center; padding:15px; color:var(--text-muted);'>لا توجد مصاريف مقيدة حالياً 🌟</p>";
 
-    // حساب تقارير الأرباح والمصاريف التلقائية (اليوم، الشهر، السنة)
     let now = new Date(), dProfit = 0, mProfit = 0, yProfit = 0;
     let dExp = 0, mExp = 0;
 
@@ -656,7 +676,6 @@ function render(){
     let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
     let startOfYear = new Date(now.getFullYear(), 0, 1).getTime();
 
-    // 1. حساب فائدة المبيعات
     sales.forEach(s => {
         let t = s.time || Date.now();
         if(t >= startOfDay) dProfit += s.profit;
@@ -664,14 +683,12 @@ function render(){
         if(t >= startOfYear) yProfit += s.profit;
     });
 
-    // 2. حساب المصاريف لكل فترة وخصمها
     expenses.forEach(e => {
         let expTime = new Date(e.date + "T12:00:00").getTime();
         if(expTime >= startOfDay) dExp += e.amount;
         if(expTime >= startOfMonth) mExp += e.amount;
     });
 
-    // الأرباح الصافية الحقيقية = أرباح السلعة - مصاريف الفترة
     document.getElementById('dailyProfit').innerHTML = (dProfit - dExp).toFixed(2) + " DA 💵";
     document.getElementById('monthlyProfit').innerHTML = (mProfit - mExp).toFixed(2) + " DA 📈";
     document.getElementById('totalExpensesYear').innerHTML = totalExpensesSum.toFixed(2) + " DA 💸";
@@ -679,7 +696,6 @@ function render(){
 
     calculateFilteredProfit();
 
-    // السلع الناقصة
     let lowItems = batches.filter(b => b.qty <= 15);
     lowItems.sort((a, b) => a.qty - b.qty);
     document.getElementById('lowTable').innerHTML = lowItems.map(b => {
