@@ -364,7 +364,6 @@
             border-color: rgba(255, 255, 255, 0.3) !important;
         }
 
-        /* نافذة التعديل المنبثقة التفاعلية */
         .modal {
             display: none;
             position: fixed;
@@ -407,11 +406,12 @@
         <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
         <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
         
-        <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
-        <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد نسخة من الكمبيوتر</div>
+        <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية (Text)</div>
+        <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد ملف من الكمبيوتر (أي صيغة)</div>
     </div>
 
-    <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importData(event)">
+    <!-- تم إلغاء حصر الامتداد بـ .json ليقبل أي ملف نصي حتى لو تم حفظه بصيغة txt -->
+    <input type="file" id="importFileInput" style="display: none;" onchange="importData(event)">
 
     <!-- صفحة إدارة المنتجات -->
     <div id="products" class="page">
@@ -674,593 +674,608 @@
             document.getElementById(id).classList.add("active");
             if(id === 'sales') { 
                 document.getElementById('saleSearch').value = ''; 
-                renderSalesOptions(); 
-                renderCurrentCommand();
-                renderSalesLog();
+                renderSalesOptions();
             }
+        }
+
+        function back(){
+            document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+            document.getElementById("dashboard").style.display="grid";
             render();
-            window.scrollTo(0, 0);
-        }
-
-        function back(){ 
-            document.getElementById("dashboard").style.display="grid"; 
-            document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); 
-        }
-
-        function playBeepSound() {
-            try {
-                let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                let oscillator = audioCtx.createOscillator();
-                let gainNode = audioCtx.createGain();
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1);
-            } catch (e) { console.log("Audio error"); }
-        }
-
-        function playErrorSound() {
-            try {
-                let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                let now = audioCtx.currentTime;
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.linearRampToValueAtTime(80, now + 0.3);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.3);
-            } catch (e) { console.log("Audio error"); }
-        }
-
-        function playCashRegisterSound() {
-            try {
-                let ctx = new (window.AudioContext || window.webkitAudioContext)();
-                let now = ctx.currentTime;
-                let osc1 = ctx.createOscillator();
-                let gain1 = ctx.createGain();
-                osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(1400, now);
-                gain1.gain.setValueAtTime(0.25, now);
-                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-                osc1.connect(gain1); gain1.connect(ctx.destination);
-                osc1.start(now); osc1.stop(now + 0.4);
-            } catch (e) { console.log("Cash sound error: ", e); }
-        }
-
-        function checkRefUniqueness() {
-            let refField = document.getElementById('pRef');
-            let refVal = refField.value.trim();
-            if(!refVal) { refField.classList.remove('input-error'); return; }
-            let isDuplicate = batches.some(b => b.ref === refVal);
-            if(isDuplicate) refField.classList.add('input-error');
-            else refField.classList.remove('input-error');
-        }
-
-        function checkPriceValidity() {
-            let buyField = document.getElementById('pBuy');
-            let sellField = document.getElementById('pSell');
-            let buyVal = Number(buyField.value) || 0;
-            let sellVal = Number(sellField.value) || 0;
-            
-            if(sellField.value !== "" && sellVal < buyVal) sellField.classList.add('input-error');
-            else sellField.classList.remove('input-error');
-        }
-
-        function updateDefaultSalePriceField(){
-            let saleStock = document.getElementById('saleStock');
-            if(!saleStock.value) return;
-            let b = batches.find(x => x.id === Number(saleStock.value));
-            if(b) { document.getElementById('salePriceInput').value = b.sell; }
-        }
-
-        function updateCommandNumberManual() {
-            let inputVal = document.getElementById('cmdNumberInput').value;
-            if(inputVal && Number(inputVal) >= 1) {
-                commandNumber = Math.floor(Number(inputVal));
-                localStorage.setItem("commandNumber", commandNumber);
-            }
-        }
-
-        function resetCommandNumber() {
-            if(confirm("هل أنت متأكد من تصفير عداد الطلبيات والبدء من 1؟")) {
-                commandNumber = 1; 
-                document.getElementById('cmdNumberInput').value = commandNumber; 
-                save();
-            }
         }
 
         function render() {
             renderProducts();
             renderSalesOptions();
-            renderStock();
-            renderLowStock();
+            renderCurrentCommand();
+            renderSalesLog();
+            renderStockReport();
+            renderLowStockReport();
             renderExpensesLog();
             calculateProfits();
         }
 
-        /* إدارة المنتجات والمخزن */
+        /* ================= PRODUCTS MANAGEMENT ================= */
+        function checkRefUniqueness() {
+            let refInput = document.getElementById("pRef");
+            let isDuplicate = batches.some(b => b.ref === refInput.value.trim());
+            if (isDuplicate && refInput.value.trim() !== "") {
+                refInput.classList.add("input-error");
+            } else {
+                refInput.classList.remove("input-error");
+            }
+        }
+
+        function checkPriceValidity() {
+            let buy = parseFloat(document.getElementById("pBuy").value) || 0;
+            let sell = parseFloat(document.getElementById("pSell").value) || 0;
+            let sellInput = document.getElementById("pSell");
+            if (sell < buy && sell > 0) {
+                sellInput.classList.add("input-error");
+            } else {
+                sellInput.classList.remove("input-error");
+            }
+        }
+
         function addProduct() {
-            let ref = document.getElementById('pRef').value.trim();
-            let name = document.getElementById('pName').value.trim();
-            let buy = Number(document.getElementById('pBuy').value) || 0;
-            let sell = Number(document.getElementById('pSell').value) || 0;
-            let qty = Number(document.getElementById('pQty').value) || 0;
+            let ref = document.getElementById("pRef").value.trim();
+            let name = document.getElementById("pName").value.trim();
+            let buy = parseFloat(document.getElementById("pBuy").value) || 0;
+            let sell = parseFloat(document.getElementById("pSell").value) || 0;
+            let qty = parseFloat(document.getElementById("pQty").value) || 0;
 
-            if(!ref || !name) { playErrorSound(); return alert("الرجاء ملء حقول الباركود واسم المنتج!"); }
-            if(batches.some(b => b.ref === ref)) { playErrorSound(); return alert("الباركود مستعمل مسبقاً، يرجى اختيار باركود فريد!"); }
+            if (!ref || !name || buy <= 0 || sell <= 0) {
+                alert("الرجاء ملء جميع الحقول ببيانات صحيحة.");
+                return;
+            }
 
-            let product = { id: Date.now(), ref, name, buy, sell, qty };
-            batches.push(product);
+            if (batches.some(b => b.ref === ref)) {
+                alert("الباركود هذا مسجل مسبقاً لمنتج آخر! يجب أن يكون فريداً.");
+                return;
+            }
+
+            batches.push({ id: Date.now().toString(), ref, name, buy, sell, qty });
             save();
             render();
-            
-            document.getElementById('pRef').value = '';
-            document.getElementById('pName').value = '';
-            document.getElementById('pBuy').value = '';
-            document.getElementById('pSell').value = '';
-            document.getElementById('pQty').value = '';
-            playBeepSound();
+
+            document.getElementById("pRef").value = "";
+            document.getElementById("pName").value = "";
+            document.getElementById("pBuy").value = "";
+            document.getElementById("pSell").value = "";
+            document.getElementById("pQty").value = "";
         }
 
         function renderProducts() {
-            let query = document.getElementById('productSearch').value.toLowerCase();
-            let html = '';
-            let filtered = batches.filter(b => b.name.toLowerCase().includes(query) || b.ref.toLowerCase().includes(query));
+            let search = document.getElementById("productSearch").value.toLowerCase();
+            let tbody = document.getElementById("productTable");
+            tbody.innerHTML = "";
+
+            let filtered = batches.filter(b => b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search));
 
             filtered.forEach(b => {
-                html += `<tr>
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
                     <td><code>${b.ref}</code></td>
                     <td>${b.name}</td>
                     <td>${b.qty}</td>
                     <td>${b.buy.toFixed(2)}</td>
                     <td>${b.sell.toFixed(2)}</td>
-                    <td><button class="edit" onclick="openEditModal(${b.id})"><i class="fa-solid fa-pen-to-square"></i> تعديل شامل</button></td>
-                    <td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i> حذف</button></td>
-                </tr>`;
+                    <td><button class="edit" onclick="openEditModal('${b.id}')"><i class="fa-solid fa-pen"></i> تعديل</button></td>
+                    <td><button class="del" onclick="deleteProduct('${b.id}')"><i class="fa-solid fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
             });
-            document.getElementById('productTable').innerHTML = html;
-        }
-
-        /* دوال نافذة التعديل الشامل والكامل للمنتج */
-        function openEditModal(id) {
-            let p = batches.find(x => x.id === id);
-            if(!p) return;
-
-            document.getElementById('editProductId').value = p.id;
-            document.getElementById('editProductRef').value = p.ref;
-            document.getElementById('editProductName').value = p.name;
-            document.getElementById('editProductBuy').value = p.buy;
-            document.getElementById('editProductSell').value = p.sell;
-            document.getElementById('editProductQty').value = p.qty;
-
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.remove('active');
-        }
-
-        function saveProductEdits() {
-            let id = Number(document.getElementById('editProductId').value);
-            let p = batches.find(x => x.id === id);
-            if(!p) return;
-
-            let newRef = document.getElementById('editProductRef').value.trim();
-            let newName = document.getElementById('editProductName').value.trim();
-            let newBuy = Number(document.getElementById('editProductBuy').value) || 0;
-            let newSell = Number(document.getElementById('editProductSell').value) || 0;
-            let newQty = Number(document.getElementById('editProductQty').value) || 0;
-
-            if(!newRef || !newName) {
-                playErrorSound();
-                return alert("لا يمكن ترك حقول الباركود أو اسم المنتج فارغة!");
-            }
-
-            // التحقق من أن الباركود الجديد غير محجوز لمنتج آخر
-            if(newRef !== p.ref && batches.some(b => b.ref === newRef)) {
-                playErrorSound();
-                return alert("الباركود الجديد الذي أدخلته مستخدم بالفعل لمنتج آخر!");
-            }
-
-            p.ref = newRef;
-            p.name = newName;
-            p.buy = newBuy;
-            p.sell = newSell;
-            p.qty = newQty;
-
-            save();
-            render();
-            closeEditModal();
-            playBeepSound();
         }
 
         function deleteProduct(id) {
             if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً من المخزن؟")) {
-                batches = batches.filter(x => x.id !== id);
-                save(); render();
+                batches = batches.filter(b => b.id !== id);
+                save();
+                render();
             }
         }
 
-        /* واجهة البيع السريعة */
+        function openEditModal(id) {
+            let b = batches.find(x => x.id === id);
+            if(!b) return;
+            document.getElementById("editProductId").value = b.id;
+            document.getElementById("editProductRef").value = b.ref;
+            document.getElementById("editProductName").value = b.name;
+            document.getElementById("editProductBuy").value = b.buy;
+            document.getElementById("editProductSell").value = b.sell;
+            document.getElementById("editProductQty").value = b.qty;
+            document.getElementById("editModal").classList.add("active");
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").classList.remove("active");
+        }
+
+        function saveProductEdits() {
+            let id = document.getElementById("editProductId").value;
+            let ref = document.getElementById("editProductRef").value.trim();
+            let name = document.getElementById("editProductName").value.trim();
+            let buy = parseFloat(document.getElementById("editProductBuy").value) || 0;
+            let sell = parseFloat(document.getElementById("editProductSell").value) || 0;
+            let qty = parseFloat(document.getElementById("editProductQty").value) || 0;
+
+            if(!ref || !name || buy <= 0 || sell <= 0) {
+                alert("الرجاء التحقق من البيانات المدخلة.");
+                return;
+            }
+
+            let index = batches.findIndex(x => x.id === id);
+            if(index !== -1) {
+                if(batches.some((x, i) => x.ref === ref && i !== index)) {
+                    alert("الباركود مستعمل مع منتج آخر!");
+                    return;
+                }
+                batches[index] = { id, ref, name, buy, sell, qty };
+                save();
+                closeEditModal();
+                render();
+            }
+        }
+
+        /* ================= QUICK SALES INTERFACE ================= */
+        function updateCommandNumberManual() {
+            let val = parseInt(document.getElementById("cmdNumberInput").value) || 1;
+            commandNumber = val;
+            localStorage.setItem("commandNumber", commandNumber);
+        }
+
+        function resetCommandNumber() {
+            commandNumber = 1;
+            document.getElementById("cmdNumberInput").value = 1;
+            localStorage.setItem("commandNumber", commandNumber);
+        }
+
         function renderSalesOptions() {
-            let query = document.getElementById('saleSearch').value.toLowerCase();
-            let select = document.getElementById('saleStock');
-            select.innerHTML = '';
+            let search = document.getElementById("saleSearch").value.toLowerCase();
+            let select = document.getElementById("saleStock");
+            select.innerHTML = "";
+
+            let filtered = batches.filter(b => b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search));
             
-            let filtered = batches.filter(b => b.name.toLowerCase().includes(query) || b.ref.toLowerCase().includes(query));
             filtered.forEach(b => {
-                let option = document.createElement('option');
-                option.value = b.id;
-                option.textContent = `${b.name} (المتوفر: ${b.qty} قطعة | السعر: ${b.sell} DA)`;
-                select.appendChild(option);
+                let opt = document.createElement("option");
+                opt.value = b.id;
+                opt.textContent = `${b.name} [البارcode: ${b.ref}] (المخزون: ${b.qty})`;
+                select.appendChild(opt);
             });
+
             updateDefaultSalePriceField();
         }
 
-        function addToCommand() {
-            let select = document.getElementById('saleStock');
-            if(!select.value) return;
-            let id = Number(select.value);
-            let qty = Number(document.getElementById('saleQty').value) || 1;
-            let price = Number(document.getElementById('salePriceInput').value) || 0;
-
-            let p = batches.find(x => x.id === id);
-            if(!p) return;
-
-            let existing = currentCommandData.find(x => x.id === id);
-            if(existing) {
-                existing.qty += qty;
-                existing.price = price;
+        function updateDefaultSalePriceField() {
+            let select = document.getElementById("saleStock");
+            if(select.value) {
+                let b = batches.find(x => x.id === select.value);
+                if(b) document.getElementById("salePriceInput").value = b.sell;
             } else {
-                currentCommandData.push({ id: p.id, ref: p.ref, name: p.name, qty, price, buy: p.buy });
+                document.getElementById("salePriceInput").value = "";
+            }
+        }
+
+        function addToCommand() {
+            let select = document.getElementById("saleStock");
+            if(!select.value) return;
+
+            let b = batches.find(x => x.id === select.value);
+            let qty = parseFloat(document.getElementById("saleQty").value) || 1;
+            let sellPrice = parseFloat(document.getElementById("salePriceInput").value) || 0;
+
+            if(qty <= 0 || sellPrice <= 0) {
+                alert("الرجاء إدخال كمية وسعر بيع صحيحين.");
+                return;
             }
 
-            playBeepSound();
+            if(editingOrderNumber === null && qty > b.qty) {
+                alert(`الكمية المطلوبة أكبر من المخزون المتوفر الحالي (${b.qty})`);
+                return;
+            }
+
+            let exist = currentCommandData.find(x => x.productId === b.id);
+            if(exist) {
+                exist.qty += qty;
+            } else {
+                currentCommandData.push({
+                    productId: b.id,
+                    name: b.name,
+                    buyPrice: b.buy, 
+                    sellPrice: sellPrice,
+                    qty: qty
+                });
+            }
+
             renderCurrentCommand();
+            document.getElementById("saleQty").value = "1";
         }
 
         function renderCurrentCommand() {
-            let container = document.getElementById('currentCommand');
-            container.innerHTML = '';
+            let container = document.getElementById("currentCommand");
+            container.innerHTML = "";
             let total = 0;
 
             currentCommandData.forEach((item, index) => {
-                let subtotal = item.qty * item.price;
-                total += subtotal;
-                container.innerHTML += `<div class="order-item-line">
+                let subTotal = item.sellPrice * item.qty;
+                total += subTotal;
+
+                let div = document.createElement("div");
+                div.className = "order-item-line";
+                div.innerHTML = `
                     <span>${item.name} <span class="badge-qty">x${item.qty}</span></span>
-                    <span>${subtotal.toFixed(2)} DA 
-                        <i class="fa-solid fa-circle-xmark" style="color:var(--danger); cursor:pointer; margin-right:10px;" onclick="removeFromCommand(${index})"></i>
+                    <span>${subTotal.toFixed(2)} DA 
+                        <button class="del" style="padding: 4px 8px; margin-right: 10px; font-size:11px;" onclick="removeFromCurrentCommand(${index})"><i class="fa-solid fa-xmark"></i></button>
                     </span>
-                </div>`;
+                `;
+                container.appendChild(div);
             });
 
-            document.getElementById('commandTotal').textContent = total.toFixed(2) + ' DA';
+            document.getElementById("commandTotal").textContent = total.toFixed(2) + " DA";
         }
 
-        function removeFromCommand(index) {
+        function removeFromCurrentCommand(index) {
             currentCommandData.splice(index, 1);
             renderCurrentCommand();
         }
 
         function confirmCommand() {
-            if(currentCommandData.length === 0) { playErrorSound(); return alert("سلة التسوق فارغة حالياً!"); }
+            if(currentCommandData.length === 0) {
+                alert("سلة التسوق فارغة حالياً.");
+                return;
+            }
 
+            let total = currentCommandData.reduce((acc, curr) => acc + (curr.sellPrice * curr.qty), 0);
             let todayStr = new Date().toISOString().split('T')[0];
 
             if(editingOrderNumber !== null) {
-                let oldSales = sales.filter(x => x.command === editingOrderNumber);
-                oldSales.forEach(os => {
-                    let p = batches.find(b => b.id === os.id);
-                    if(p) p.qty += os.qty;
-                });
-                sales = sales.filter(x => x.command !== editingOrderNumber);
-                commandNumber = editingOrderNumber;
-            }
-
-            for(let item of currentCommandData) {
-                let p = batches.find(b => b.id === item.id);
-                if(p) { p.qty -= item.qty; }
-                
+                let oldOrder = sales.find(s => s.orderNumber === editingOrderNumber);
+                if(oldOrder) {
+                    oldOrder.items.forEach(oldItem => {
+                        let p = batches.find(x => x.id === oldItem.productId);
+                        if(p) p.qty += oldItem.qty;
+                    });
+                }
+                sales = sales.filter(s => s.orderNumber !== editingOrderNumber);
                 sales.push({
-                    command: commandNumber,
-                    id: item.id,
-                    ref: item.ref,
-                    name: item.name,
-                    qty: item.qty,
-                    price: item.price,
-                    buy: item.buy,
-                    date: todayStr
+                    orderNumber: editingOrderNumber,
+                    date: todayStr,
+                    items: [...currentCommandData],
+                    total: total
                 });
-            }
-
-            playCashRegisterSound();
-            alert(`تم حفظ وتأكيد الطلبية بنجاح برقم: #${commandNumber}`);
-
-            if(editingOrderNumber !== null) {
+                alert(`تم حفظ وتحديث الفاتورة المعدلة رقم ${editingOrderNumber} بنجاح.`);
                 editingOrderNumber = null;
-                commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
             } else {
+                sales.push({
+                    orderNumber: commandNumber,
+                    date: todayStr,
+                    items: [...currentCommandData],
+                    total: total
+                });
+                
+                currentCommandData.forEach(item => {
+                    let p = batches.find(x => x.id === item.productId);
+                    if(p) p.qty -= item.qty;
+                });
+
                 commandNumber++;
+                document.getElementById("cmdNumberInput").value = commandNumber;
             }
 
             currentCommandData = [];
-            document.getElementById('cmdNumberInput').value = commandNumber;
-            document.getElementById('searchOrderNumber').value = '';
             save();
             render();
-            renderCurrentCommand();
-            renderSalesLog();
         }
 
         function renderSalesLog() {
-            let container = document.getElementById('salesLog');
-            container.innerHTML = '';
-            
-            let grouped = {};
-            sales.forEach(s => {
-                if(!grouped[s.command]) grouped[s.command] = { total: 0, date: s.date, items: [] };
-                grouped[s.command].total += (s.price * s.qty);
-                grouped[s.command].items.push(s);
-            });
+            let container = document.getElementById("salesLog");
+            container.innerHTML = "";
 
-            let keys = Object.keys(grouped).sort((a,b) => b - a);
-            keys.forEach(cmdId => {
-                let g = grouped[cmdId];
-                container.innerHTML += `<div class="order-card">
-                    <div class="order-card-header">
-                        <span style="font-weight:800; color:var(--primary);">الطلب #${cmdId}</span>
-                        <span style="font-size:13px; color:var(--text-muted);">${g.date}</span>
+            let sortedSales = [...sales].sort((a,b) => b.orderNumber - a.orderNumber);
+
+            sortedSales.forEach(s => {
+                let div = document.createElement("div");
+                div.className = "order-card";
+                
+                let itemsHtml = s.items.map(i => `
+                    <div style="font-size: 13px; display:flex; justify-content:space-between; opacity: 0.9; margin-top:4px;">
+                        <span>- ${i.name} (x${i.qty})</span>
+                        <span>${(i.sellPrice * i.qty).toFixed(2)} DA</span>
                     </div>
-                    <div style="font-size:14px; font-weight:700; margin-bottom:10px;">المجموع الإجمالي: ${g.total.toFixed(2)} DA</div>
-                    <button class="edit" style="padding:5px 12px; font-size:12px;" onclick="loadOrderToEditDirect(${cmdId})"><i class="fa-solid fa-edit"></i> تعديل</button>
-                    <button class="del" style="padding:5px 12px; font-size:12px; margin-right:5px;" onclick="deleteOrder(${cmdId})"><i class="fa-solid fa-trash"></i> إلغاء وحذف</button>
-                </div>`;
+                `).join('');
+
+                div.innerHTML = `
+                    <div class="order-card-header">
+                        <span style="font-weight:800; color:var(--primary);">طلب رقم #${s.orderNumber}</span>
+                        <span style="font-size:12px; color:var(--text-muted);">${s.date}</span>
+                    </div>
+                    <div>${itemsHtml}</div>
+                    <div style="margin-top:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:800; color:var(--success);">إجمالي: ${s.total.toFixed(2)} DA</span>
+                        <button class="edit" style="padding: 6px 12px; font-size: 12px;" onclick="prepareEditOldOrder(${s.orderNumber})"><i class="fa-solid fa-pen"></i> تعديل</button>
+                    </div>
+                `;
+                container.appendChild(div);
             });
+        }
+
+        function prepareEditOldOrder(num) {
+            let s = sales.find(x => x.orderNumber === num);
+            if(!s) return;
+            editingOrderNumber = num;
+            currentCommandData = [...s.items];
+            renderCurrentCommand();
+            alert(`تم جلب الطلب رقم ${num} إلى السلة. عند التأكيد سيتم استبدال البيانات والخصم التفاعلي.`);
         }
 
         function loadOrderToEdit() {
-            let orderNum = Number(document.getElementById('searchOrderNumber').value);
-            if(!orderNum || orderNum < 1) return alert("يرجى إدخال رقم طلبية صحيح لجلبه.");
-            loadOrderToEditDirect(orderNum);
-        }
-
-        function loadOrderToEditDirect(orderNum) {
-            let orderItems = sales.filter(x => x.command === orderNum);
-            if(orderItems.length === 0) return alert("لم يتم العثور على أي طلبية تحمل الرقم #" + orderNum);
-            if(currentCommandData.length > 0) {
-                if(!confirm("السلة الحالية تحتوي على منتجات، هل تريد تفريغها وجلب الطلبية القديمة للتعديل؟")) return;
+            let num = parseInt(document.getElementById("searchOrderNumber").value);
+            if(!num) return;
+            let s = sales.find(x => x.orderNumber === num);
+            if(!s) {
+                alert("لم يتم العثور على أي فاتورة بهذا الرقم.");
+                return;
             }
-
-            currentCommandData = orderItems.map(x => ({
-                id: x.id, ref: x.ref, name: x.name, qty: x.qty, price: x.price, buy: x.buy
-            }));
-            
-            editingOrderNumber = orderNum;
-            document.getElementById('cmdNumberInput').value = orderNum;
-            renderCurrentCommand();
-            alert(`جاري تعديل الفاتورة رقم #${orderNum} الآن بنجاح.`);
+            prepareEditOldOrder(num);
         }
 
-        function deleteOrder(orderNum) {
-            if(confirm(`هل أنت متأكد من إلغاء وحذف الطلبية #${orderNum} بالكامل؟ سيتم إرجاع سلعها للمخزن تلقائياً.`)) {
-                let orderItems = sales.filter(x => x.command === orderNum);
-                orderItems.forEach(os => {
-                    let p = batches.find(b => b.id === os.id);
-                    if(p) p.qty += os.qty;
-                });
-                sales = sales.filter(x => x.command !== orderNum);
-                save(); render(); renderSalesLog();
-            }
-        }
+        /* ================= INVENTORY & CAPITALS REPORT ================= */
+        function renderStockReport() {
+            let tbody = document.getElementById("stockTable");
+            tbody.innerHTML = "";
 
-        /* جرد المخزون الكلي */
-        function renderStock() {
-            let html = '';
             let totalPieces = 0;
             let totalCapital = 0;
             let totalExpectedProfit = 0;
 
             batches.forEach(b => {
-                let cap = b.qty * b.buy;
-                let prof = (b.sell - b.buy) * b.qty;
-                
-                totalPieces += b.qty;
-                totalCapital += cap;
-                totalExpectedProfit += prof;
+                let capital = b.buy * b.qty;
+                let expectedProfit = (b.sell - b.buy) * b.qty;
 
-                html += `<tr>
-                    <td>${b.name}</td>
-                    <td><span class="badge-qty" style="color:#fff;">${b.qty} قطعة</span></td>
-                    <td>${cap.toFixed(2)} DA</td>
-                    <td style="color:var(--success); font-weight:700;">${prof.toFixed(2)} DA</td>
-                    <td><button class="edit" style="padding:6px 12px;" onclick="addStockManual(${b.id})"><i class="fa-solid fa-plus"></i> توريد سريع</button></td>
-                </tr>`;
+                totalPieces += b.qty;
+                totalCapital += capital;
+                totalExpectedProfit += expectedProfit;
+
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="text-align: right; font-weight:700;">${b.name}</td>
+                    <td><span class="badge-qty" style="color:#fff;">${b.qty}</span></td>
+                    <td>${capital.toFixed(2)} DA</td>
+                    <td style="color:var(--success);">${expectedProfit.toFixed(2)} DA</td>
+                    <td><button class="edit" onclick="openPage('products'); openEditModal('${b.id}');">توريد / تعديل</button></td>
+                `;
+                tbody.appendChild(tr);
             });
 
-            document.getElementById('stockTable').innerHTML = html;
-            document.getElementById('topStockPieces').textContent = totalPieces + ' قطعة';
-            document.getElementById('topStockCapital').textContent = totalCapital.toFixed(2) + ' DA';
-            document.getElementById('topStockProfit').textContent = totalExpectedProfit.toFixed(2) + ' DA';
+            document.getElementById("topStockPieces").textContent = totalPieces + " قطعة";
+            document.getElementById("topStockCapital").textContent = totalCapital.toFixed(2) + " DA";
+            document.getElementById("topStockProfit").textContent = totalExpectedProfit.toFixed(2) + " DA";
         }
 
-        function addStockManual(id) {
-            let p = batches.find(x => x.id === id);
-            if(!p) return;
-            let addQty = prompt(`أدخل كمية التوريد والسلع الجديدة المضافة للمخزن من المنتج (${p.name}):`, "10");
-            if(addQty) {
-                p.qty += (Number(addQty) || 0);
-                save(); render();
-            }
-        }
+        /* ================= LOW STOCK & WARNINGS ================= */
+        function renderLowStockReport() {
+            let tbody = document.getElementById("lowTable");
+            tbody.innerHTML = "";
 
-        /* جرد السلع الناقصة بالتدرج */
-        function renderLowStock() {
-            let html = '';
             batches.forEach(b => {
-                let statusClass = '';
-                let statusText = '';
-                
-                if(b.qty === 0) { statusClass = 'stock-empty'; statusText = '⚠️ نافذ تماماً (0 قطع)'; }
-                else if(b.qty <= 5) { statusClass = 'stock-danger'; statusText = '🚨 خطورة قصوى (أقل من 5)'; }
-                else if(b.qty <= 15) { statusClass = 'stock-warning'; statusText = '⚡ تنبيه متوسط (أقل من 15)'; }
-                else if(b.qty <= 30) { statusClass = 'stock-notice'; statusText = '📦 بداية نقص (أقل من 30)'; }
-                else return;
+                let statusClass = "";
+                let txt = "";
 
-                html += `<tr class="${statusClass}">
+                if(b.qty === 0) {
+                    statusClass = "stock-empty";
+                    txt = "نفد بالكامل 🛑";
+                } else if(b.qty <= 5) {
+                    statusClass = "stock-danger";
+                    txt = "حالة حرجة جداً ⚠️";
+                } else if(b.qty <= 15) {
+                    statusClass = "stock-warning";
+                    txt = "ناقص بالمحل 📉";
+                } else if(b.qty <= 30) {
+                    statusClass = "stock-notice";
+                    txt = "مخزون متوسط مقارب للنفاذ";
+                } else {
+                    return;
+                }
+
+                let tr = document.createElement("tr");
+                tr.className = statusClass;
+                tr.innerHTML = `
                     <td><code>${b.ref}</code></td>
                     <td>${b.name}</td>
-                    <td style="font-weight:900;">${b.qty} قطعة</td>
+                    <td><strong>${b.qty}</strong></td>
                     <td>${b.buy.toFixed(2)} DA</td>
-                    <td style="font-weight:800;">${statusText}</td>
-                </tr>`;
+                    <td><strong>${txt}</strong></td>
+                `;
+                tbody.appendChild(tr);
             });
-            document.getElementById('lowTable').innerHTML = html;
         }
 
-        /* إدارة المصاريف الكلية */
+        /* ================= EXPENSES MANAGEMENT ================= */
         function addExpense() {
-            let title = document.getElementById('expTitle').value.trim();
-            let amount = Number(document.getElementById('expAmount').value) || 0;
-            let date = document.getElementById('expDate').value;
+            let title = document.getElementById("expTitle").value.trim();
+            let amount = parseFloat(document.getElementById("expAmount").value) || 0;
+            let date = document.getElementById("expDate").value;
 
-            if(!title || amount <= 0 || !date) { playErrorSound(); return alert("يرجى ملء جميع بيانات المصروف بطريقة صحيحة!"); }
+            if(!title || amount <= 0 || !date) {
+                alert("الرجاء إدخال بيانات صحيحة للقيد المصرفي.");
+                return;
+            }
 
-            expenses.push({ id: Date.now(), title, amount, date });
-            save(); render();
+            expenses.push({
+                id: Date.now().toString(),
+                title, amount, date
+            });
 
-            document.getElementById('expTitle').value = '';
-            document.getElementById('expAmount').value = '';
-            playBeepSound();
+            save();
+            render();
+
+            document.getElementById("expTitle").value = "";
+            document.getElementById("expAmount").value = "";
         }
 
         function renderExpensesLog() {
-            let container = document.getElementById('expensesLog');
-            container.innerHTML = '';
-            
+            let container = document.getElementById("expensesLog");
+            container.innerHTML = "";
+
             let sorted = [...expenses].sort((a,b) => new Date(b.date) - new Date(a.date));
+
             sorted.forEach(e => {
-                container.innerHTML += `<div class="order-card" style="border-right: 5px solid var(--danger);">
-                    <div class="order-card-header">
-                        <span style="font-weight:800; color:var(--danger);">${e.title}</span>
-                        <span style="font-size:13px; color:var(--text-muted);">${e.date}</span>
-                    </div>
+                let div = document.createElement("div");
+                div.className = "order-card";
+                div.style.borderRight = "5px solid var(--danger)";
+                div.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:16px; font-weight:800; color:#ff8a8a;">${e.amount.toFixed(2)} DA</span>
-                        <button class="del" style="padding:4px 10px; font-size:11px;" onclick="deleteExpense(${e.id})"><i class="fa-solid fa-trash"></i> حذف</button>
+                        <div>
+                            <h4 style="color:#fff;">${e.title}</h4>
+                            <span style="font-size:12px; color:var(--text-muted);">${e.date}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="font-size:18px; font-weight:800; color:var(--danger);">${e.amount.toFixed(2)} DA</span>
+                            <button class="del" style="padding:6px 10px;" onclick="deleteExpense('${e.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
-                </div>`;
+                `;
+                container.appendChild(div);
             });
         }
 
         function deleteExpense(id) {
-            if(confirm("هل أنت متأكد من حذف هذا المصروف نهائياً من الدفاتر؟")) {
+            if(confirm("هل أنت متأكد من حذف وإلغاء تقييد هذا المصروف؟")) {
                 expenses = expenses.filter(x => x.id !== id);
-                save(); render();
+                save();
+                render();
             }
         }
 
-        /* الحسابات والتقارير المالية والأرباح */
+        /* ================= FINANCIAL PROFITS REPORTS ================= */
         function calculateProfits() {
             let todayStr = new Date().toISOString().split('T')[0];
-            let thisMonthStr = todayStr.substring(0, 7);
-            let thisYearStr = todayStr.substring(0, 4);
+            let currentMonthStr = todayStr.substring(0, 7);
 
-            let dailyProfit = 0;
-            let monthlyProfit = 0;
-            let yearlyProfit = 0;
-            let totalExpensesYear = 0;
+            let daily = 0;
+            let monthly = 0;
+            let yearlyExpenses = 0;
+            let totalSalesProfitYear = 0;
 
             sales.forEach(s => {
-                let profitItem = (s.price - s.buy) * s.qty;
-                if(s.date === todayStr) dailyProfit += profitItem;
-                if(s.date.startsWith(thisMonthStr)) monthlyProfit += profitItem;
-                if(s.date.startsWith(thisYearStr)) yearlyProfit += profitItem;
+                let orderProfit = 0;
+                s.items.forEach(i => {
+                    orderProfit += (i.sellPrice - i.buyPrice) * i.qty;
+                });
+
+                if(s.date === todayStr) daily += orderProfit;
+                if(s.date.substring(0,7) === currentMonthStr) monthly += orderProfit;
+                
+                totalSalesProfitYear += orderProfit;
             });
 
             expenses.forEach(e => {
-                if(e.date.startsWith(thisYearStr)) {
-                    totalExpensesYear += e.amount;
-                    if(e.date === todayStr) dailyProfit -= e.amount;
-                    if(e.date.startsWith(thisMonthStr)) monthlyProfit -= e.amount;
-                }
+                yearlyExpenses += e.amount;
+                if(e.date === todayStr) daily -= e.amount;
+                if(e.date.substring(0,7) === currentMonthStr) monthly -= e.amount;
             });
 
-            yearlyProfit = yearlyProfit - totalExpensesYear;
+            let netYearly = totalSalesProfitYear - yearlyExpenses;
 
-            document.getElementById('dailyProfit').textContent = dailyProfit.toFixed(2) + ' DA';
-            document.getElementById('monthlyProfit').textContent = monthlyProfit.toFixed(2) + ' DA';
-            document.getElementById('totalExpensesYear').textContent = totalExpensesYear.toFixed(2) + ' DA 💸';
-            document.getElementById('yearlyProfit').textContent = yearlyProfit.toFixed(2) + ' DA';
+            document.getElementById("dailyProfit").textContent = daily.toFixed(2) + " DA";
+            document.getElementById("monthlyProfit").textContent = monthly.toFixed(2) + " DA";
+            document.getElementById("totalExpensesYear").textContent = yearlyExpenses.toFixed(2) + " DA 💸";
+            document.getElementById("yearlyProfit").textContent = netYearly.toFixed(2) + " DA";
 
             calculateFilteredProfit();
         }
 
         function calculateFilteredProfit() {
-            let from = document.getElementById('filterFrom').value;
-            let to = document.getElementById('filterTo').value;
+            let from = document.getElementById("filterFrom").value;
+            let to = document.getElementById("filterTo").value;
+
             if(!from || !to) return;
 
             let dFrom = new Date(from);
             let dTo = new Date(to);
-            let filteredProfit = 0;
 
+            let salesProfit = 0;
             sales.forEach(s => {
-                let dStr = new Date(s.date);
-                if(dStr >= dFrom && dStr <= dTo) {
-                    filteredProfit += (s.price - s.buy) * s.qty;
+                let d = new Date(s.date);
+                if(d >= dFrom && d <= dTo) {
+                    s.items.forEach(i => {
+                        salesProfit += (i.sellPrice - i.buyPrice) * i.qty;
+                    });
                 }
             });
 
+            let filterExp = 0;
             expenses.forEach(e => {
-                let dStr = new Date(e.date);
-                if(dStr >= dFrom && dStr <= dTo) {
-                    filteredProfit -= e.amount;
+                let d = new Date(e.date);
+                if(d >= dFrom && d <= dTo) {
+                    filterExp += e.amount;
                 }
             });
 
-            document.getElementById('filteredProfit').textContent = filteredProfit.toFixed(2) + ' DA 💰';
+            let finalNet = salesProfit - filterExp;
+            document.getElementById("filteredProfit").textContent = finalNet.toFixed(2) + " DA 💰";
         }
 
-        /* حزمة الاستيراد والتصدير */
+        /* ================= MIGRATED & ENHANCED BACKUP SYSTEM ================= */
+        // تم تعديل التصدير ليخرج بصيغة ملف نصي مرن ومقروء بدلاً من إجبار المتصفح على JSON فقط
         function exportData() {
-            let dataStr = JSON.stringify({ batches, sales, expenses, commandNumber });
-            let blob = new Blob([dataStr], { type: "application/json" });
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = `POS_Backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
+            let backupObject = {
+                batches, 
+                sales, 
+                expenses, 
+                commandNumber
+            };
+            
+            let dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObject));
+            let downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            // سيتم تحميله كملف نصي عادي متوافق مع كافة أنظمة ويندوز والهواتف
+            downloadAnchor.setAttribute("download", `POS_DATA_BACKUP_${new Date().toISOString().split('T')[0]}.txt`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
         }
 
         function triggerImport() {
-            document.getElementById('importFileInput').click();
+            document.getElementById("importFileInput").click();
         }
 
+        // دالة الاستيراد الذكية الفائقة: تقبل أي ملف (.txt، .json، إلخ) وتقوم بفلترة البيانات برمجياً
         function importData(event) {
             let file = event.target.files[0];
             if (!file) return;
+
             let reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    let imported = JSON.parse(e.target.result);
-                    if(imported.batches && imported.sales && imported.expenses) {
-                        batches = imported.batches;
-                        sales = imported.sales;
-                        expenses = imported.expenses;
+                    // تنظيف النص بالكامل من أي فراغات عشوائية في البداية والنهاية قد يسببها محرر النصوص
+                    let cleanRawText = e.target.result.trim();
+                    
+                    let imported = JSON.parse(cleanRawText);
+                    
+                    // التحقق الهيكلي الصارم لضمان عدم إدخال ملفات تالفة أو غريبة
+                    if (imported && (imported.batches || imported.sales || imported.expenses)) {
+                        
+                        batches = imported.batches || [];
+                        sales = imported.sales || [];
+                        expenses = imported.expenses || [];
                         commandNumber = imported.commandNumber || 1;
-                        save(); render();
-                        alert("تم استيراد واسترجاع قاعدة البيانات والنسخة الاحتياطية بنجاح تام 👑!");
-                    } else { alert("الملف المرفوع غير متوافق أو تالف!"); }
-                } catch(err) { alert("فشل في قراءة الملف، تأكد من اختيار ملف .json صحيح."); }
+                        
+                        save();
+                        render();
+                        alert("✅ تم استيراد وقراءة النسخة الاحتياطية بنجاح وتحديث المتجر فورا!");
+                    } else {
+                        alert("❌ خطأ: هذا الملف نصي عادي ولكنه لا يحتوي على الهيكلة البرمجية الخاصة بنظام الـ POS.");
+                    }
+                } catch(err) {
+                    alert("❌ فشل الاستيراد: محتوى الملف غير متوافق أو تالف برمجياً، يرجى رفع الملف الأصلي الذي قمت بتصديره من الزر الأخضر.");
+                }
             };
             reader.readAsText(file);
+            
+            // تصفير المدخل لكي يسمح برفع نفس الملف مجدداً إذا دعت الحاجة
+            event.target.value = "";
         }
     </script>
 </body>
