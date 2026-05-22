@@ -840,7 +840,7 @@
             localStorage.setItem("commandNumber", commandNumber);
         }
 
-        // تم إصلاح الدالة: تدمج تصفية البحث وتحديث السعر بشكل تفاعلي مرن
+        // تم إصلاح الاختفاء والفراغ: تحديث حقل السعر فوراً ومباشرة دون انتظار المتصفح ليمنع الفراغ نهائياً
         function renderSalesOptions() {
             let search = document.getElementById("saleSearch").value.toLowerCase();
             let select = document.getElementById("saleStock");
@@ -855,18 +855,15 @@
                 select.appendChild(opt);
             });
 
-            // تحديث السعر الافتراضي فوراً بناءً على المنتج الأول المتاح في الفرز
+            // تحديث السعر مباشرة من أول منتج في المصفوفة المفلترة لحل مشكلة الفراغ
             if(filtered.length > 0) {
-                let initialProduct = batches.find(x => x.id === select.value);
-                if(initialProduct) {
-                    document.getElementById("salePriceInput").value = initialProduct.sell;
-                }
+                document.getElementById("salePriceInput").value = filtered[0].sell;
             } else {
                 document.getElementById("salePriceInput").value = "";
             }
         }
 
-        // تم إصلاح الدالة: لتعديل السعر ديناميكياً عند اختيار منتج مختلف من القائمة يدويًا
+        // تحديث السعر عند تغيير السلعة يدوياً من القائمة المنسدلة
         function updateDefaultSalePriceField() {
             let select = document.getElementById("saleStock");
             if(select && select.value) {
