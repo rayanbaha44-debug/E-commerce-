@@ -510,7 +510,7 @@
                     </div>
                     <div style="margin-bottom: 18px;">
                         <label>المنتج المستهدف حالياً:</label>
-                        <select id="saleStock" onchange="updateDefaultSalePriceField()"></select>
+                        <select id="saleStock"></select>
                     </div>
                     
                     <div class="flex-inputs">
@@ -581,7 +581,7 @@
         </div>
         <div style="overflow-x: auto;">
             <table>
-                <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية المتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
+                <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية Mتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
                 <tbody id="lowTable"></tbody>
             </table>
         </div>
@@ -666,6 +666,10 @@
             document.getElementById('filterTo').value = todayStr;
             document.getElementById('expDate').value = todayStr;
             document.getElementById('cmdNumberInput').value = commandNumber;
+
+            // ربط حدث التغيير لـ select مباشرة برمجياً لضمان تغيير السعر فوراً ودون أي تأخير
+            document.getElementById("saleStock").addEventListener("change", updateDefaultSalePriceField);
+
             render();
         };
 
@@ -840,7 +844,6 @@
             localStorage.setItem("commandNumber", commandNumber);
         }
 
-        // تم إصلاح الاختفاء والفراغ: تحديث حقل السعر فوراً ومباشرة دون انتظار المتصفح ليمنع الفراغ نهائياً
         function renderSalesOptions() {
             let search = document.getElementById("saleSearch").value.toLowerCase();
             let select = document.getElementById("saleStock");
@@ -855,7 +858,7 @@
                 select.appendChild(opt);
             });
 
-            // تحديث السعر مباشرة من أول منتج في المصفوفة المفلترة لحل مشكلة الفراغ
+            // تحديث السعر الافتراضي مع أول خيار يظهر مباشرة
             if(filtered.length > 0) {
                 document.getElementById("salePriceInput").value = filtered[0].sell;
             } else {
@@ -863,7 +866,7 @@
             }
         }
 
-        // تحديث السعر عند تغيير السلعة يدوياً من القائمة المنسدلة
+        // دالة تحديث السعر الفورية والمؤكدة عند تبديل المنتج المستهدف يدوياً من الـ select
         function updateDefaultSalePriceField() {
             let select = document.getElementById("saleStock");
             if(select && select.value) {
@@ -1293,7 +1296,7 @@
                         document.getElementById('cmdNumberInput').value = commandNumber;
                         alert("✅ تم استيراد النسخة الاحتياطية وتحديث النظام بنجاح!");
                     } else {
-                        alert("❌ خطأ: الملف لا يحتوي على هيكلة برمجية صحيحةلنظام الـ POS.");
+                        alert("❌ خطأ: الملف لا يحتوي على هيكلة برمجية صحيحة لنظام الـ POS.");
                     }
                 } catch(err) {
                     alert("❌ فشل الاستيراد: محتوى الملف غير متوافق أو تالف.");
