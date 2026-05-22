@@ -190,9 +190,9 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 
 <input id="pRef" placeholder="الرفيرونس">
 <input id="pName" placeholder="اسم المنتج">
-<input id="pBuy" type="number" placeholder="سعر الشراء">
-<input id="pSell" type="number" placeholder="سعر البيع">
-<input id="pQty" type="number" placeholder="الكمية">
+<input id="pBuy" type="number" step="0.01" placeholder="سعر الشراء (مثال: 221.77)">
+<input id="pSell" type="number" step="0.01" placeholder="سعر البيع (مثال: 250.50)">
+<input id="pQty" type="number" step="0.01" placeholder="الكمية">
 
 <button onclick="addProduct()">إضافة</button>
 
@@ -227,7 +227,7 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <input id="saleSearch" placeholder="بحث باسم المنتج لتصفية القائمة..." oninput="renderSalesOptions()">
 
 <select id="saleStock"></select>
-<input id="saleQty" type="number" value="1">
+<input id="saleQty" type="number" step="0.01" value="1">
 
 <button onclick="addToCommand()">إضافة للكوموند</button>
 
@@ -317,7 +317,6 @@ function openPage(id){
 document.getElementById("dashboard").style.display="none";
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.getElementById(id).classList.add("active");
-// رندرة مخصصة عند فتح صفحات معينة لتحديث البيانات فوراً
 if(id === 'sales') renderSalesOptions();
 }
 
@@ -349,7 +348,6 @@ sell: +sell,
 qty: +qty
 });
 
-// تفريغ الحقول بعد الإضافة
 document.getElementById('pRef').value = '';
 document.getElementById('pName').value = '';
 document.getElementById('pBuy').value = '';
@@ -396,7 +394,7 @@ let searchVal = document.getElementById('saleSearch').value.toLowerCase();
 let filtered = batches.filter(b => b.name.toLowerCase().includes(searchVal) || b.ref.toLowerCase().includes(searchVal));
 
 let saleStock = document.getElementById('saleStock');
-saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">${b.name} (${b.qty} قطعة) - ${b.sell} DA</option>`).join("");
+saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">${b.name} (${b.qty} قطعة) - ${b.sell.toFixed(2)} DA</option>`).join("");
 }
 
 function addToCommand(){
@@ -493,11 +491,12 @@ total += i.sell*i.qty;
 return `
 <div style="display:flex; justify-content:space-between; margin:5px 0; background:#f3f4f6; padding:5px; border-radius:5px;">
 <span>${i.name} x${i.qty}</span>
+<span>${(i.sell*i.qty).toFixed(2)} DA</span>
 <span onclick="removeFromCommand(${idx})" style="cursor:pointer;">❌</span>
 </div>`;
 }).join("");
 
-commandTotal.innerHTML = "المجموع: " + total + " DA";
+commandTotal.innerHTML = "المجموع: " + total.toFixed(2) + " DA";
 cmdNumber.innerHTML = "Commande #" + commandNumber;
 }
 
@@ -517,8 +516,8 @@ document.getElementById('productTable').innerHTML = filtered.map(b=>`
 <td>${b.ref}</td>
 <td>${b.name}</td>
 <td>${b.qty}</td>
-<td>${b.buy}</td>
-<td>${b.sell}</td>
+<td>${b.buy.toFixed(2)}</td>
+<td>${b.sell.toFixed(2)}</td>
 <td><button class="edit" onclick="editProduct(${b.id})">تعديل</button></td>
 <td><button class="del" onclick="deleteProduct(${b.id})">حذف</button></td>
 </tr>
@@ -526,10 +525,8 @@ document.getElementById('productTable').innerHTML = filtered.map(b=>`
 }
 
 function render(){
-/* 1. رندرة المنتجات الأساسية */
 renderProducts();
 
-/* 2. رندرة المخزون والمالية */
 let totalCapital = 0;
 let totalValue = 0;
 
@@ -543,29 +540,27 @@ return `
 <tr>
 <td>${b.name}</td>
 <td>${b.qty}</td>
-<td>${capital} DA</td>
-<td>${expectedProfit} DA</td>
+<td>${capital.toFixed(2)} DA</td>
+<td>${expectedProfit.toFixed(2)} DA</td>
 <td><button class="del" onclick="deleteProduct(${b.id})">حذف</button></td>
 </tr>`;
 }).join("");
 
 document.getElementById('totals').innerHTML = `
-<p><strong>إجمالي رأس المال الحالي:</strong> ${totalCapital} DA</p>
-<p><strong>القيمة الإجمالية للسلع عند البيع:</strong> ${totalValue} DA</p>
+<p><strong>إجمالي رأس المال الحالي:</strong> ${totalCapital.toFixed(2)} DA</p>
+<p><strong>القيمة الإجمالية للسلع عند البيع:</strong> ${totalValue.toFixed(2)} DA</p>
 `;
 
-/* 3. رندرة سجل المبيعات */
 document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s,i)=>{
 let idx = sales.length-1-i;
 return `
 <div class="saleItem">
 <span><strong>#${s.command}</strong> - ${s.name} x${s.qty}</span>
-<span>الربح: ${s.profit} DA</span>
+<span>الربح: ${s.profit.toFixed(2)} DA</span>
 <span onclick="deleteSale(${idx})" style="cursor:pointer;">❌</span>
 </div>`;
 }).join("");
 
-/* 4. حساب الأرباح الذكي حسب الوقت */
 let now = new Date();
 let startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
@@ -580,11 +575,10 @@ if(t >= startOfMonth) mProfit += (s.profit || 0);
 if(t >= startOfYear) yProfit += (s.profit || 0);
 });
 
-document.getElementById('dailyProfit').innerHTML = dProfit + " DA";
-document.getElementById('monthlyProfit').innerHTML = mProfit + " DA";
-document.getElementById('yearlyProfit').innerHTML = yProfit + " DA";
+document.getElementById('dailyProfit').innerHTML = dProfit.toFixed(2) + " DA";
+document.getElementById('monthlyProfit').innerHTML = mProfit.toFixed(2) + " DA";
+document.getElementById('yearlyProfit').innerHTML = yProfit.toFixed(2) + " DA";
 
-/* 5. رندرة النواقص (المنتجات الأقل من 5 قطع) */
 let lowItems = batches.filter(b => b.qty <= 5);
 document.getElementById('lowTable').innerHTML = lowItems.map(b => `
 <tr style="background: ${b.qty === 0 ? '#fee2e2' : '#fef3c7'}">
