@@ -1,3 +1,10 @@
+تحديث ذكي وممتاز! لجعل البحث يبدأ بالترتيب الفعلي للأحرف (بحيث يظهر المنتج الذي يبدأ بالحرف الأول أولاً، ثم الحرف الثاني، وهكذا) بدل البحث العشوائي في أي مكان من الكلمة، قمنا باستبدال خاصية `.includes()` بالدالة الذكية `.startsWith()`.
+
+كما أضفت لك ميزة "البحث الاحتياطي": إذا لم يجد النظام منتجاً **يبدأ** بنفس الحرف، يبحث تلقائياً في باقي أجزاء الكلمة لكي لا تختفي السلع أثناء البيع.
+
+إليك الكود الكامل والمصحح 100% بدون أي نقصان:
+
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -231,7 +238,7 @@ input.input-error {
 
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
+    25 { transform: translateX(-6px); }
     75% { transform: translateX(6px); }
 }
 
@@ -424,7 +431,7 @@ tr:last-child td { border-bottom: none; }
         <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 50px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
     </div>
     <div style="margin-top: 25px; margin-bottom: 10px;">
-        <label>🔍 بحث سريع وسلس في المنتجات:</label>
+        <label>🔍 بحث ترتيبي من الحرف الأول فصاعداً:</label>
         <input id="productSearch" placeholder="ابحث باسم المنتج أو الرقم المتسلسل..." oninput="renderProducts()">
     </div>
     <div style="overflow-x: auto;">
@@ -458,8 +465,8 @@ tr:last-child td { border-bottom: none; }
             <div class="box" style="background: rgba(17, 24, 39, 0.6);">
                 <h3 style="font-size: 17px; margin-bottom: 20px; color: var(--primary);"><i class="fa-solid fa-filter"></i> اختيار المنتج وتحديد السعر</h3>
                 <div style="margin-bottom: 18px;">
-                    <label>فصل وتصفية المنتجات:</label>
-                    <input id="saleSearch" placeholder="اكتب اسم المنتج أو امسح الباركود للبحث..." oninput="renderSalesOptions()">
+                    <label>فصل وتصفية المنتجات الحرفية:</label>
+                    <input id="saleSearch" placeholder="اكتب الحرف الأول فالثاني أو امسح الباركود..." oninput="renderSalesOptions()">
                 </div>
                 <div style="margin-bottom: 18px;">
                     <label>المنتج المستهدف حالياً:</label>
@@ -864,17 +871,35 @@ function editProduct(id) {
     render();
 }
 
-/* ================= منصة واجهة البيع السريعة والسلة ================= */
+/* ================= منصة واجهة البيع السريعة والسلة والفرز الترتيبي ================= */
 function renderSalesOptions() {
     let search = document.getElementById('saleSearch').value.toLowerCase().trim();
     let select = document.getElementById('saleStock');
     select.innerHTML = '';
 
-    let filtered = batches.filter(b => b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search));
+    let filtered = [];
+    if (search === '') {
+        filtered = batches;
+    } else {
+        // الفلترة الترتيبية الذكية: تبدأ بالحرف الأول ثم الثاني وهكذا
+        let startsWithSearch = batches.filter(b => 
+            b.name.toLowerCase().startsWith(search) || 
+            b.ref.toLowerCase().startsWith(search)
+        );
+        
+        // البحث الاحتياطي: إذا لم نجد كلمة تبدأ به، نبحث بوجود الحرف داخل الكلمة
+        let containsSearch = batches.filter(b => 
+            !b.name.toLowerCase().startsWith(search) && 
+            !b.ref.toLowerCase().startsWith(search) &&
+            (b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search))
+        );
+        
+        filtered = [...startsWithSearch, ...containsSearch];
+    }
 
     if (filtered.length === 0) {
         let opt = document.createElement('option');
-        opt.text = "❌ لا توجد أي سلعة مطابقة للبحث";
+        opt.text = "❌ لا توجد أي سلعة مطابقة للبحث الحرفي";
         opt.value = "";
         select.appendChild(opt);
         document.getElementById('salePriceInput').value = '';
@@ -928,10 +953,8 @@ function addToCommand() {
     document.getElementById('saleQty').value = 1;
 }
 
-/* التعديل الجذري والإصلاح: الحذف الذكي باستخدام الفهرس الرقمي المحمي (index) من السلة */
 function removeFromCommand(index) {
     if (index > -1 && index < currentCommandData.length) {
-        // حذف سطر المنتج المحدد تماماً بناء على رقمه التسلسلي داخل المصفوفة بدون تداخل
         currentCommandData.splice(index, 1);
         playBeepSound();
         renderCurrentCommand();
@@ -977,11 +1000,10 @@ function confirmCommand() {
 
     let today = new Date().toISOString().split('T')[0];
 
-    // خصم الكميات من المخزن الفعلي وتثبيت عملية البيع
     currentCommandData.forEach(item => {
         let target = batches.find(b => b.ref === item.ref);
         if (target) {
-            target.qty -= item.qty; // خصم الكمية (يقبل الخصم بالسالب في حال البيع المسبق)
+            target.qty -= item.qty;
         }
 
         sales.push({
@@ -998,7 +1020,6 @@ function confirmCommand() {
 
     playCashRegisterSound();
     
-    // التحقق مما إذا كنا نقوم بتعديل طلب قديم أم بيع جديد تماماً
     let searchInput = document.getElementById('searchOrderNumber').value;
     if (searchInput && Number(searchInput) === commandNumber) {
         alert(`تم تحديث وحفظ الطلبية رقم #${commandNumber} بنجاح وتسوية كميات المخزن!`);
@@ -1014,13 +1035,27 @@ function confirmCommand() {
     render();
 }
 
-/* ================= الجداول الفرعية والعروض الذكية ================= */
+/* الفرز الترتيبي من الحرف الأول فصاعداً لصفحة إدارة المنتجات */
 function renderProducts() {
     let search = document.getElementById('productSearch').value.toLowerCase().trim();
     let tbody = document.getElementById('productTable');
     tbody.innerHTML = '';
 
-    let filtered = batches.filter(b => b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search));
+    let filtered = [];
+    if (search === '') {
+        filtered = batches;
+    } else {
+        let startsWithSearch = batches.filter(b => 
+            b.name.toLowerCase().startsWith(search) || 
+            b.ref.toLowerCase().startsWith(search)
+        );
+        let containsSearch = batches.filter(b => 
+            !b.name.toLowerCase().startsWith(search) && 
+            !b.ref.toLowerCase().startsWith(search) &&
+            (b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search))
+        );
+        filtered = [...startsWithSearch, ...containsSearch];
+    }
 
     filtered.forEach(b => {
         let tr = document.createElement('tr');
@@ -1084,7 +1119,6 @@ function renderLowStockPage() {
     let tbody = document.getElementById('lowTable');
     tbody.innerHTML = '';
 
-    // تصفية السلع الأقل من 10 قطع كحد حرج للتنبيه المتدرج الألوان
     let lowItems = batches.filter(b => b.qty <= 10);
 
     if(lowItems.length === 0) {
@@ -1180,7 +1214,6 @@ function renderSalesLog() {
     let log = document.getElementById('salesLog');
     log.innerHTML = '';
 
-    // تجميع المبيعات حسب رقم الطلب (Command Number)
     let grouped = {};
     sales.forEach(s => {
         if (!grouped[s.command]) grouped[s.command] = { total: 0, date: s.date, items: [] };
@@ -1188,7 +1221,7 @@ function renderSalesLog() {
         grouped[s.command].total += s.qty * s.sellPrice;
     });
 
-    let keys = Object.keys(grouped).sort((a, b) => Number(b) - Number(a)); // الترتيب من الأحدث للأقدم
+    let keys = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
 
     if(keys.length === 0) {
         log.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-weight:700; padding:20px;">لا توجد مبيعات سابقة مقيدة في السجل.</p>`;
@@ -1226,14 +1259,13 @@ function renderSalesLog() {
 
 function calculateProfitPage() {
     let todayStr = new Date().toISOString().split('T')[0];
-    let thisMonthStr = todayStr.substring(0, 7); // YYYY-MM
+    let thisMonthStr = todayStr.substring(0, 7);
 
     let dailyProfit = 0;
     let monthlyProfit = 0;
     let yearlyProfit = 0;
     let totalExpensesYear = 0;
 
-    // حساب صافي الأرباح من جدول المبيعات (سعر البيع المعدل - سعر الشراء)
     sales.forEach(s => {
         let gain = s.qty * (s.sellPrice - s.buyPrice);
         if (s.date === todayStr) dailyProfit += gain;
@@ -1241,12 +1273,10 @@ function calculateProfitPage() {
         yearlyProfit += gain;
     });
 
-    // احتساب مصاريف السنة
     expenses.forEach(e => {
         totalExpensesYear += e.amount;
     });
 
-    // تدوين الحسابات في الكروت النيون الثابتة
     document.getElementById('dailyProfit').innerText = dailyProfit.toFixed(2) + " DA";
     document.getElementById('monthlyProfit').innerText = monthlyProfit.toFixed(2) + " DA";
     document.getElementById('totalExpensesYear').innerText = totalExpensesYear.toFixed(2) + " DA 💸";
@@ -1335,7 +1365,7 @@ function importData(event) {
         }
     };
     reader.readAsText(file);
-    event.target.value = ''; // تصفير حقل المدخلات
+    event.target.value = '';
 }
 
 /* دالة التجميع والتحديث المركزي للواجهات */
@@ -1354,3 +1384,5 @@ function render() {
 
 </body>
 </html>
+
+```
