@@ -345,7 +345,7 @@ tr:last-child td { border-bottom: none; }
 
 .badge-qty { background: #111827; color: #f59e0b; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.3); }
 
-/* كروت شبكة تقارير الأرباح النيون */
+/* كروت شبكة تقارير الأرباح والمخزون النيون */
 .profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
 .profit-card { background: #1f2937; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
 .profit-card.success { border-right-color: var(--success); }
@@ -494,6 +494,23 @@ tr:last-child td { border-bottom: none; }
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
         <h2><i class="fa-solid fa-warehouse" style="color:var(--primary);"></i> كشف وجرد المخزون الكلي</h2>
     </div>
+
+    <!-- بطاقات الإحصاءات العلوية المضافة حديثاً للمخزون للرؤية السريعة فور الدخول -->
+    <div class="profit-grid" style="margin-top: 0; margin-bottom: 30px;">
+        <div class="profit-card" style="border-right-color: var(--primary);">
+            <p>📦 إجمالي السلع المتوفرة بالمخزن</p>
+            <div id="topStockPieces" class="amount" style="color: #60a5fa;">0 قطعة</div>
+        </div>
+        <div class="profit-card" style="border-right-color: var(--danger);">
+            <p>💰 إجمالي رأس المال المستثمر (الشراء)</p>
+            <div id="topStockCapital" class="amount" style="color: #fca5a5;">0.00 DA</div>
+        </div>
+        <div class="profit-card success" style="border-right-color: var(--success);">
+            <p>📈 صافي الأرباح المتوقعة عند البيع</p>
+            <div id="topStockProfit" class="amount" style="color: var(--success);">0.00 DA</div>
+        </div>
+    </div>
+
     <div style="overflow-x: auto;">
         <table>
             <thead><tr><th>اسم المنتج</th><th>القطع المتبقية</th><th>رأس المال المستثمر</th><th>الأرباح المتوقعة</th><th>إجراء</th></tr></thead>
@@ -879,6 +896,11 @@ function render(){
             <td></td>
         </tr>`;
 
+    // تحديث الكروت العلوية لصفحة جرد المخزون تلقائياً
+    document.getElementById('topStockPieces').innerHTML = totalPieces + " قطعة";
+    document.getElementById('topStockCapital').innerHTML = totalCapital.toFixed(2) + " DA";
+    document.getElementById('topStockProfit').innerHTML = (totalValue - totalCapital).toFixed(2) + " DA";
+
     let ordersMap = {};
     sales.forEach(s => {
         if(!ordersMap[s.command]) { ordersMap[s.command] = { items: [], totalAmount: 0, totalProfit: 0 }; }
@@ -979,7 +1001,7 @@ function exportData(){
     linkElement.click();
 }
 
-/* ================= دالة فتح واستيراد النسخة الاحتياطية المضافة ================= */
+/* ================= دالة فتح واستيراد النسخة الاحتياطية ================= */
 function triggerImport() {
     document.getElementById('importFileInput').click();
 }
@@ -989,7 +1011,7 @@ function importData(event) {
     if (!file) return;
 
     if (!confirm("تحذير: استيراد ملف خارجي سيقوم باستبدال كافة البيانات الحالية بالبيانات الجديدة المخزنة داخل الملف. هل تريد الاستمرار؟")) {
-        event.target.value = ''; // تصفير الحقل
+        event.target.value = ''; 
         return;
     }
 
@@ -998,17 +1020,13 @@ function importData(event) {
         try {
             let importedData = JSON.parse(e.target.result);
             
-            // التحقق من صحة هيكلة الملف قبل تفريغه في المتصفح
             if (importedData.hasOwnProperty('batches') && importedData.hasOwnProperty('sales') && importedData.hasOwnProperty('expenses')) {
                 batches = importedData.batches || [];
                 sales = importedData.sales || [];
                 expenses = importedData.expenses || [];
                 commandNumber = Number(importedData.commandNumber) || 1;
                 
-                // حفظ البيانات المستوردة فوراً في الـ LocalStorage
                 save();
-                
-                // إعادة رسم وجرد الجداول والقوائم وتحديث المظهر تلقائياً
                 render();
                 if(document.getElementById('sales').classList.contains('active')) {
                     renderSalesOptions();
@@ -1022,7 +1040,7 @@ function importData(event) {
             alert("حدث خطأ أثناء قراءة ملف الـ JSON المرفوع، يرجى التأكد من سلامة الملف.");
             console.error(err);
         }
-        event.target.value = ''; // تصفير الحقل بعد الانتهاء
+        event.target.value = ''; 
     };
     reader.readAsText(file);
 }
