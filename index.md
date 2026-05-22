@@ -510,7 +510,6 @@
                     </div>
                     <div style="margin-bottom: 18px;">
                         <label>المنتج المستهدف حالياً:</label>
-                        <!-- تم إضافة event المباشر للتغيير للتأكد من التحديث بنسبة 100% -->
                         <select id="saleStock" onchange="updateDefaultSalePriceField()"></select>
                     </div>
                     
@@ -617,7 +616,7 @@
             <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية الحقيقية</h2>
         </div>
         <div class="box" style="background: #ffffff;">
-            <h3 style="margin-bottom: 20px; font-size:16px; font-weight:800; color: #7e22ce;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
+            <h3 style="margin-bottom: 20px; font-size:16px; font-weight:800; color: #7e22ce;"><i class="fa-solid fa-calendar-days"></i> فرز وااحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
             <div class="flex-inputs">
                 <div><label>من تاريخ 📅:</label><input type="date" id="filterFrom" onchange="calculateFilteredProfit()"></div>
                 <div><label>إلى تاريخ 🏁:</label><input type="date" id="filterTo" onchange="calculateFilteredProfit()"></div>
@@ -842,9 +841,12 @@
             localStorage.setItem("commandNumber", commandNumber);
         }
 
+        // === دالة الفلترة وبناء الخيارات مع التثبيت الفوري للسعر في حقل المدخلات ===
         function renderSalesOptions() {
             let search = document.getElementById("saleSearch").value.toLowerCase();
             let select = document.getElementById("saleStock");
+            let priceInput = document.getElementById("salePriceInput");
+            
             select.innerHTML = "";
 
             let filtered = batches.filter(b => b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search));
@@ -856,11 +858,16 @@
                 select.appendChild(opt);
             });
 
-            // تحديث حقل السعر بشكل تلقائي ومباشر بناءً على المنتج الأول بعد الفلترة
-            updateDefaultSalePriceField();
+            // الحل السحري: نأخذ السعر مباشرة من أول منتج يظهر في قائمة البحث المفلترة لتفادي الفراغ
+            if (filtered.length > 0) {
+                select.value = filtered[0].id; // إجبار السيلكت على تحديد أول خيار متوفر
+                priceInput.value = filtered[0].sell; // إعطاء السعر فورياً للمدخل
+            } else {
+                priceInput.value = "";
+            }
         }
 
-        // دالة تحديث السعر الفورية والمضمونة عند تبديل السلعة
+        // دالة المراقبة عند قيام المستخدم بتغيير خيار السلعة يدوياً بالماوس/اللمس من القائمة المنسدلة
         function updateDefaultSalePriceField() {
             let select = document.getElementById("saleStock");
             let priceInput = document.getElementById("salePriceInput");
