@@ -854,7 +854,12 @@
                 select.appendChild(opt);
             });
 
-            updateDefaultSalePriceField();
+            // إصلاح جوهري: ملء حقل السعر مباشرة بأول منتج يظهر في الفرز بدون انتظار الـ DOM
+            if(filtered.length > 0) {
+                document.getElementById("salePriceInput").value = filtered[0].sell;
+            } else {
+                document.getElementById("salePriceInput").value = "";
+            }
         }
 
         function updateDefaultSalePriceField() {
@@ -891,7 +896,7 @@
             let exist = currentCommandData.find(x => x.productId === b.id);
             if(exist) {
                 exist.qty += qty;
-                exist.sellPrice = sellPrice; // تحديث السعر في حال تم تعديله
+                exist.sellPrice = sellPrice; 
             } else {
                 currentCommandData.push({
                     productId: b.id,
