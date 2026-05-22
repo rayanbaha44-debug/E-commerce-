@@ -510,7 +510,8 @@
                     </div>
                     <div style="margin-bottom: 18px;">
                         <label>المنتج المستهدف حالياً:</label>
-                        <select id="saleStock"></select>
+                        <!-- تم إضافة event المباشر للتغيير للتأكد من التحديث بنسبة 100% -->
+                        <select id="saleStock" onchange="updateDefaultSalePriceField()"></select>
                     </div>
                     
                     <div class="flex-inputs">
@@ -666,9 +667,6 @@
             document.getElementById('filterTo').value = todayStr;
             document.getElementById('expDate').value = todayStr;
             document.getElementById('cmdNumberInput').value = commandNumber;
-
-            // ربط حدث التغيير لـ select مباشرة برمجياً لضمان تغيير السعر فوراً ودون أي تأخير
-            document.getElementById("saleStock").addEventListener("change", updateDefaultSalePriceField);
 
             render();
         };
@@ -858,24 +856,24 @@
                 select.appendChild(opt);
             });
 
-            // تحديث السعر الافتراضي مع أول خيار يظهر مباشرة
-            if(filtered.length > 0) {
-                document.getElementById("salePriceInput").value = filtered[0].sell;
-            } else {
-                document.getElementById("salePriceInput").value = "";
-            }
+            // تحديث حقل السعر بشكل تلقائي ومباشر بناءً على المنتج الأول بعد الفلترة
+            updateDefaultSalePriceField();
         }
 
-        // دالة تحديث السعر الفورية والمؤكدة عند تبديل المنتج المستهدف يدوياً من الـ select
+        // دالة تحديث السعر الفورية والمضمونة عند تبديل السلعة
         function updateDefaultSalePriceField() {
             let select = document.getElementById("saleStock");
+            let priceInput = document.getElementById("salePriceInput");
+            
             if(select && select.value) {
                 let selectedProduct = batches.find(x => x.id === select.value);
                 if(selectedProduct) {
-                    document.getElementById("salePriceInput").value = selectedProduct.sell;
+                    priceInput.value = selectedProduct.sell;
+                } else {
+                    priceInput.value = "";
                 }
             } else {
-                document.getElementById("salePriceInput").value = "";
+                priceInput.value = "";
             }
         }
 
