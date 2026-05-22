@@ -581,7 +581,7 @@
         </div>
         <div style="overflow-x: auto;">
             <table>
-                <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية Mتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
+                <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية المتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
                 <tbody id="lowTable"></tbody>
             </table>
         </div>
@@ -616,7 +616,7 @@
             <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية الحقيقية</h2>
         </div>
         <div class="box" style="background: #ffffff;">
-            <h3 style="margin-bottom: 20px; font-size:16px; font-weight:800; color: #7e22ce;"><i class="fa-solid fa-calendar-days"></i> فرز وااحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
+            <h3 style="margin-bottom: 20px; font-size:16px; font-weight:800; color: #7e22ce;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
             <div class="flex-inputs">
                 <div><label>من تاريخ 📅:</label><input type="date" id="filterFrom" onchange="calculateFilteredProfit()"></div>
                 <div><label>إلى تاريخ 🏁:</label><input type="date" id="filterTo" onchange="calculateFilteredProfit()"></div>
@@ -696,7 +696,7 @@
 
         function render() {
             renderProducts();
-            renderSalesOptions();
+            // قمنا بإلغاء استدعاء renderSalesOptions من هنا لمنع تصفير السعر عشوائياً عند بناء النظام الخلفي
             renderCurrentCommand();
             renderSalesLog();
             renderStockReport();
@@ -841,7 +841,7 @@
             localStorage.setItem("commandNumber", commandNumber);
         }
 
-        // === دالة الفلترة وبناء الخيارات مع التثبيت الفوري للسعر في حقل المدخلات ===
+        // بناء قائمة المنتجات بواجهة البيع وتثبيت السعر بشكل فوري وصارم
         function renderSalesOptions() {
             let search = document.getElementById("saleSearch").value.toLowerCase();
             let select = document.getElementById("saleStock");
@@ -858,16 +858,16 @@
                 select.appendChild(opt);
             });
 
-            // الحل السحري: نأخذ السعر مباشرة من أول منتج يظهر في قائمة البحث المفلترة لتفادي الفراغ
+            // تأمين الحساب المباشر فوراً دون انتظار استقرار اختيار المتصفح
             if (filtered.length > 0) {
-                select.value = filtered[0].id; // إجبار السيلكت على تحديد أول خيار متوفر
-                priceInput.value = filtered[0].sell; // إعطاء السعر فورياً للمدخل
+                select.value = filtered[0].id; 
+                priceInput.value = filtered[0].sell; // حقن السعر مباشرة من المصفوفة الأساسية
             } else {
                 priceInput.value = "";
             }
         }
 
-        // دالة المراقبة عند قيام المستخدم بتغيير خيار السلعة يدوياً بالماوس/اللمس من القائمة المنسدلة
+        // تحديث السعر بشكل صارم عند تغيير السلعة يدوياً
         function updateDefaultSalePriceField() {
             let select = document.getElementById("saleStock");
             let priceInput = document.getElementById("salePriceInput");
@@ -1004,6 +1004,7 @@
             currentCommandData = [];
             save();
             render();
+            renderSalesOptions(); // تحديث القائمة بعد الشراء ليعود السعر طبيعياً للسلعة الموالية
         }
 
         function renderSalesLog() {
