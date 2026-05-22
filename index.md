@@ -2,1147 +2,1192 @@
 <html lang="ar" dir="rtl">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POS SYSTEM EXECUTIVE - نظام المبيعات الاحترافي المطور</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS SYSTEM EXECUTIVE - نظام المبيعات الاحترافي المطور</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-/* ================= ULTRA PREMIUM MODERN DARK/NEON UI ================= */
-:root {
-    --primary: #3b82f6;
-    --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    --success: #10b981;
-    --success-gradient: linear-gradient(135deg, #10b981 0%, #059669; 100%);
-    --danger: #ef4444;
-    --danger-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-    --warning: #f59e0b;
-    --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
-    
-    /* ألوان الخلفية الاحترافية الفخمة */
-    --bg-app: #090d16; 
-    --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
-    --surface: #1f2937; 
-    --surface-card: rgba(22, 30, 49, 0.8);
-    
-    --text-main: #ffffff; 
-    --text-muted: #9ca3af; 
-    --border: rgba(255, 255, 255, 0.08);
-    
-    --radius-xl: 24px;
-    --radius-lg: 16px;
-    --radius-md: 12px;
-    
-    --shadow-blur: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-    --shadow-hover: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
-}
+    <style>
+        /* ================= ULTRA PREMIUM MODERN DARK/NEON UI ================= */
+        :root {
+            --primary: #3b82f6;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --success: #10b981;
+            --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --danger: #ef4444;
+            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            --warning: #f59e0b;
+            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+            
+            /* ألوان الخلفية الاحترافية الفخمة */
+            --bg-app: #090d16; 
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
+            --surface: #1f2937; 
+            --surface-card: rgba(22, 30, 49, 0.8);
+            
+            --text-main: #ffffff; 
+            --text-muted: #9ca3af; 
+            --border: rgba(255, 255, 255, 0.08);
+            
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            
+            --shadow-blur: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --shadow-hover: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Cairo', sans-serif;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
 
-body {
-    background: var(--bg-gradient);
-    color: var(--text-main);
-    min-height: 100vh;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-/* لوحة التحكم الرئيسية (Dashboard) */
-#dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-    width: 100%;
-    max-width: 1100px;
-    margin: 40px auto;
-}
+        /* لوحة التحكم الرئيسية (Dashboard) */
+        #dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
 
-.card {
-    background: var(--surface-card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 35px 25px;
-    border-radius: var(--radius-xl);
-    text-align: center;
-    cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--text-main);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-blur);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    position: relative;
-    overflow: hidden;
-}
+        .card {
+            background: var(--surface-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 35px 25px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-main);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-blur);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
 
-.card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: var(--primary-gradient);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
 
-.card:hover::after { transform: scaleX(1); }
+        .card:hover::after { transform: scaleX(1); }
 
-.card i {
-    font-size: 40px;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: transform 0.3s ease;
-}
+        .card i {
+            font-size: 40px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: transform 0.3s ease;
+        }
 
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-hover);
-    border-color: rgba(59, 130, 246, 0.4);
-    background: rgba(31, 41, 55, 0.9);
-}
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(31, 41, 55, 0.9);
+        }
 
-.card:hover i { transform: scale(1.15) rotate(3deg); }
+        .card:hover i { transform: scale(1.15) rotate(3deg); }
 
-/* الصفحات والحاويات الرئيسية */
-.page {
-    display: none;
-    width: 100%;
-    max-width: 1200px;
-    background: rgba(17, 24, 39, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 40px;
-    border-radius: var(--radius-xl);
-    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
+        /* الصفحات والحاويات الرئيسية */
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.page.active { display: block; }
+        .page.active { display: block; }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 25px;
-    border-bottom: 1px solid var(--border);
-}
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
 
-.header h2 {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--text-main);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+        .header h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-/* الأزرار الاحترافية بنظام التوهج */
-button {
-    padding: 14px 24px;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    background: var(--primary-gradient);
-    color: white;
-    font-weight: 700;
-    font-size: 15px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-}
+        /* الأزرار الاحترافية بنظام التوهج */
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
 
-button:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
-button:active { transform: translateY(0); }
+        button:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
+        button:active { transform: translateY(0); }
 
-.back { background: #374151; box-shadow: 0 4px 12px rgba(55, 65, 81, 0.2); }
-.back:hover { background: #4b5563; box-shadow: 0 6px 20px rgba(75, 85, 99, 0.4); }
+        .back { background: #374151; box-shadow: 0 4px 12px rgba(55, 65, 81, 0.2); }
+        .back:hover { background: #4b5563; box-shadow: 0 6px 20px rgba(75, 85, 99, 0.4); }
 
-.del { background: var(--danger-gradient); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
-.del:hover { box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
+        .del { background: var(--danger-gradient); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
+        .del:hover { box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
 
-.edit { background: #1f2937; color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: none; }
-.edit:hover { background: #3b82f6; color: white; }
+        .edit { background: #1f2937; color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: none; }
+        .edit:hover { background: #3b82f6; color: white; }
 
-/* عناصر الإدخال والقوائم */
-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    color: #9ca3af;
-    margin-bottom: 8px;
-}
+        /* عناصر الإدخال والقوائم */
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
 
-input, select {
-    width: 100%;
-    padding: 14px 18px;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: #111827;
-    color: var(--text-main);
-    font-size: 15px;
-    font-weight: 600;
-    transition: all 0.25s ease;
-}
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #111827;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
 
-input:focus, select:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: #090d16;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-}
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #090d16;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        }
 
-/* تنسيق خطأ خاص بالرفرونس المتكرر وسعر الخسارة */
-input.input-error {
-    border-color: var(--danger) !important;
-    background: rgba(239, 68, 68, 0.1) !important;
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3) !important;
-    animation: shake 0.3s ease;
-}
+        /* تنسيق خطأ خاص بالرفرونس المتكرر وسعر الخسارة */
+        input.input-error {
+            border-color: var(--danger) !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3) !important;
+            animation: shake 0.3s ease;
+        }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    75% { transform: translateX(6px); }
-}
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
 
-/* تقسيم واجهة البيع بالتساوي */
-.sales-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 30px;
-    align-items: start;
-}
+        /* تقسيم واجهة البيع بالتساوي */
+        .sales-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
 
-@media (max-width: 950px) {
-    .sales-grid { grid-template-columns: 1fr; }
-}
+        @media (max-width: 950px) {
+            .sales-grid { grid-template-columns: 1fr; }
+        }
 
-/* الصناديق والعلب الفرعية */
-.box {
-    background: rgba(9, 13, 22, 0.6);
-    padding: 25px;
-    border-radius: var(--radius-lg);
-    margin-bottom: 25px;
-    border: 1px solid var(--border);
-}
+        /* الصناديق والعلب الفرعية */
+        .box {
+            background: rgba(9, 13, 22, 0.6);
+            padding: 25px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
 
-.flex-inputs { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
-.flex-inputs > div { flex: 1; }
+        .flex-inputs { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
+        .flex-inputs > div { flex: 1; }
 
-/* ================= الجداول المتطورة فائدة التباين والوضوح ================= */
-table {
-    width: 100%;
-    margin-top: 25px;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-    table-layout: auto;
-}
+        /* الجداول */
+        table {
+            width: 100%;
+            margin-top: 25px;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            table-layout: auto;
+        }
 
-th, td { 
-    padding: 18px 15px; 
-    text-align: center; 
-    font-size: 15px; 
-    vertical-align: middle;
-}
+        th, td { 
+            padding: 18px 15px; 
+            text-align: center; 
+            font-size: 15px; 
+            vertical-align: middle;
+        }
 
-th { 
-    background-color: #111827; 
-    color: #9ca3af; 
-    font-weight: 700; 
-    border-bottom: 2px solid rgba(255, 255, 255, 0.15); 
-}
+        th { 
+            background-color: #111827; 
+            color: #9ca3af; 
+            font-weight: 700; 
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15); 
+        }
 
-td { 
-    background-color: #1f2937; 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06); 
-    color: #ffffff; 
-    font-weight: 600;
-}
+        td { 
+            background-color: #1f2937; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06); 
+            color: #ffffff; 
+            font-weight: 600;
+        }
 
-/* تأثير حركي لقراءة أسهل */
-tr:hover td {
-    background-color: #2563eb; 
-    color: #ffffff !important;
-    transition: background 0.15s ease;
-}
+        tr:hover td {
+            background-color: #2563eb; 
+            color: #ffffff !important;
+            transition: background 0.15s ease;
+        }
 
-/* تخصيص وحماية كود الباركود / الرفرونس عند الكتابة الطويلة جداً */
-td code {
-    background: rgba(0, 0, 0, 0.4);
-    padding: 6px 12px;
-    border-radius: 8px;
-    color: #38bdf8; 
-    font-family: monospace;
-    font-size: 14px;
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    font-weight: 700;
-    
-    /* الخصائص السحرية لمنع خروج الرفرونس الطويل */
-    display: inline-block;
-    max-width: 180px;
-    word-break: break-all;
-    white-space: normal;
-    overflow-wrap: break-word;
-    line-height: 1.4;
-    text-align: center;
-}
+        td code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: #38bdf8; 
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            font-weight: 700;
+            display: inline-block;
+            max-width: 180px;
+            word-break: break-all;
+            white-space: normal;
+            overflow-wrap: break-word;
+            line-height: 1.4;
+            text-align: center;
+        }
 
-tr:hover td code {
-    color: #ffffff;
-    background: rgba(0,0,0,0.3);
-    border-color: #ffffff;
-}
+        tr:hover td code {
+            color: #ffffff;
+            background: rgba(0,0,0,0.3);
+            border-color: #ffffff;
+        }
 
-tr:last-child td { border-bottom: none; }
+        tr:last-child td { border-bottom: none; }
 
-/* بطاقات الطلبيات المسجلة والسلة */
-.order-card {
-    background: #1f2937;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-blur);
-}
+        /* بطاقات الطلبيات المسجلة والسلة */
+        .order-card {
+            background: #1f2937;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-blur);
+        }
 
-.order-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px dashed var(--border);
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-}
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
 
-.order-item-line {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    font-size: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-}
+        .order-item-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
 
-.badge-qty { background: #111827; color: #f59e0b; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-qty { background: #111827; color: #f59e0b; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.3); }
 
-/* كروت شبكة تقارير الأرباح والمخزون النيون */
-.profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
-.profit-card { background: #1f2937; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
-.profit-card.success { border-right-color: var(--success); }
-.profit-card.dark { border-right-color: #cbd5e1; }
-.profit-card.filter { border-right-color: #a855f7; background: rgba(168, 85, 247, 0.05); border-top: 1px solid rgba(168, 85, 247, 0.1); }
-.profit-card.expense-card { border-right-color: var(--danger); background: rgba(239, 68, 68, 0.05); border-top: 1px solid rgba(239, 68, 68, 0.1); }
-.profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 8px;}
-.profit-card .amount { font-size: 24px; font-weight: 800; }
+        /* كروت الأرباح والمخزون النيون */
+        .profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
+        .profit-card { background: #1f2937; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
+        .profit-card.success { border-right-color: var(--success); }
+        .profit-card.dark { border-right-color: #cbd5e1; }
+        .profit-card.filter { border-right-color: #a855f7; background: rgba(168, 85, 247, 0.05); border-top: 1px solid rgba(168, 85, 247, 0.1); }
+        .profit-card.expense-card { border-right-color: var(--danger); background: rgba(239, 68, 68, 0.05); border-top: 1px solid rgba(239, 68, 68, 0.1); }
+        .profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 8px;}
+        .profit-card .amount { font-size: 24px; font-weight: 800; }
 
-/* ألوان السلع الناقصة الفاقعة والمتوافقة مع الحماية من النصوص الطويلة */
-.stock-empty { background-color: #ef4444 !important; color: #ffffff !important; }
-.stock-danger { background-color: rgba(239, 68, 68, 0.3) !important; color: #ffffff !important; }
-.stock-warning { background-color: rgba(245, 158, 11, 0.3) !important; color: #ffffff !important; }
-.stock-notice { background-color: rgba(59, 130, 246, 0.3) !important; color: #ffffff !important; }
+        /* ألوان السلع الناقصة */
+        .stock-empty { background-color: #ef4444 !important; color: #ffffff !important; }
+        .stock-danger { background-color: rgba(239, 68, 68, 0.3) !important; color: #ffffff !important; }
+        .stock-warning { background-color: rgba(245, 158, 11, 0.3) !important; color: #ffffff !important; }
+        .stock-notice { background-color: rgba(59, 130, 246, 0.3) !important; color: #ffffff !important; }
 
-/* حماية إضافية لأكواد الباركود داخل قائمة السلع الناقصة لمنع تغيير ألوانها بشكل مشوه */
-.stock-empty td code, .stock-danger td code, .stock-warning td code, .stock-notice td code {
-    color: #ffffff !important;
-    background: rgba(0, 0, 0, 0.25) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-}
+        .stock-empty td code, .stock-danger td code, .stock-warning td code, .stock-notice td code {
+            color: #ffffff !important;
+            background: rgba(0, 0, 0, 0.25) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
 
-/* تجميل شريط التمرير */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #090d16; }
-::-webkit-scrollbar-thumb { background: #374151; border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-</style>
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    </style>
 </head>
 
 <body>
 
-<div id="dashboard">
-    <div class="card" onclick="openPage('products')"><i class="fa-solid fa-box-open"></i> إدارة المنتجات والمخزن</div>
-    <div class="card" onclick="openPage('sales')"><i class="fa-solid fa-cash-register"></i> واجهة البيع السريعة</div>
-    <div class="card" onclick="openPage('stock')"><i class="fa-solid fa-warehouse"></i> جرد المخزون الكلي</div>
-    <div class="card" onclick="openPage('low')"><i class="fa-solid fa-triangle-exclamation" style="background:var(--warning-gradient); -webkit-background-clip: text;"></i> السلع الناقصة بالمحل</div>
-    <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
-    <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
-    
-    <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
-    <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد نسخة من الكمبيوتر</div>
-</div>
+    <div id="dashboard">
+        <div class="card" onclick="openPage('products')"><i class="fa-solid fa-box-open"></i> إدارة المنتجات والمخزن</div>
+        <div class="card" onclick="openPage('sales')"><i class="fa-solid fa-cash-register"></i> واجهة البيع السريعة</div>
+        <div class="card" onclick="openPage('stock')"><i class="fa-solid fa-warehouse"></i> جرد المخزون الكلي</div>
+        <div class="card" onclick="openPage('low')"><i class="fa-solid fa-triangle-exclamation" style="background:var(--warning-gradient); -webkit-background-clip: text;"></i> السلع الناقصة بالمحل</div>
+        <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
+        <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
+        
+        <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
+        <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد نسخة من الكمبيوتر</div>
+    </div>
 
-<input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importData(event)">
+    <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importData(event)">
 
-<div id="products" class="page">
-    <div class="header">
-        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
-        <h2><i class="fa-solid fa-box-open" style="color:var(--primary);"></i> إدارة المنتجات والمخزن</h2>
-    </div>
-    <div class="box">
-        <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
-        <div class="flex-inputs">
-            <div><label>الباركود / Ref (يجب أن يكون فريداً):</label><input id="pRef" placeholder="أدخل أو امسح الباركود" oninput="checkRefUniqueness()"></div>
-            <div><label>اسم المنتج:</label><input id="pName" placeholder="اسم المنتج بالكامل"></div>
+    <!-- صفحة إدارة المنتجات -->
+    <div id="products" class="page">
+        <div class="header">
+            <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
+            <h2><i class="fa-solid fa-box-open" style="color:var(--primary);"></i> إدارة المنتجات والمخزن</h2>
         </div>
-        <div class="flex-inputs">
-            <div><label>سعر الشراء (DA):</label><input id="pBuy" type="number" step="0.01" placeholder="0.00" oninput="checkPriceValidity()"></div>
-            <div><label>سعر البيع الافتراضي (DA):</label><input id="pSell" type="number" step="0.01" placeholder="0.00" oninput="checkPriceValidity()"></div>
-            <div><label>الكمية الابتدائية:</label><input id="pQty" type="number" step="0.01" placeholder="0"></div>
+        <div class="box">
+            <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
+            <div class="flex-inputs">
+                <div><label>الباركود / Ref (يجب أن يكون فريداً):</label><input id="pRef" placeholder="أدخل أو امسح الباركود" oninput="checkRefUniqueness()"></div>
+                <div><label>اسم المنتج:</label><input id="pName" placeholder="اسم المنتج بالكامل"></div>
+            </div>
+            <div class="flex-inputs">
+                <div><label>سعر الشراء (DA):</label><input id="pBuy" type="number" step="0.01" placeholder="0.00" oninput="checkPriceValidity()"></div>
+                <div><label>سعر البيع الافتراضي (DA):</label><input id="pSell" type="number" step="0.01" placeholder="0.00" oninput="checkPriceValidity()"></div>
+                <div><label>الكمية الابتدائية:</label><input id="pQty" type="number" step="0.01" placeholder="0"></div>
+            </div>
+            <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 50px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
         </div>
-        <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 50px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
-    </div>
-    <div style="margin-top: 25px; margin-bottom: 10px;">
-        <label>🔍 بحث سريع وسلس في المنتجات:</label>
-        <input id="productSearch" placeholder="ابحث باسم المنتج أو الرقم المتسلسل..." oninput="renderProducts()">
-    </div>
-    <div style="overflow-x: auto;">
-        <table>
-            <thead><tr><th>الباركود</th><th>اسم المنتج</th><th>الكمية الحالية</th><th>الشراء (DA)</th><th>البيع الافتراضي (DA)</th><th>تعديل</th><th>حذف</th></tr></thead>
-            <tbody id="productTable"></tbody>
-        </table>
-    </div>
-</div>
-
-<div id="sales" class="page" style="max-width: 1300px;">
-    <div class="header">
-        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
-        <h2><i class="fa-solid fa-cash-register" style="color:var(--primary);"></i> واجهة البيع السريعة والتعديل الفوري</h2>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-        <div class="box" style="background: #111827; color: white; padding: 15px; margin: 0; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; border-color: rgba(255,255,255,0.05);">
-            <span style="font-weight: 700; font-size: 16px;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
-            <input id="cmdNumberInput" type="number" min="1" style="width: 110px; text-align: center; font-size: 18px; font-weight: 800; color: #fff; background: #1f2937; padding: 8px;" oninput="updateCommandNumberManual()">
-            <button class="del" onclick="resetCommandNumber()" style="padding: 10px 16px; font-size: 13px;"><i class="fa-solid fa-arrow-rotate-left"></i> تصفير</button>
+        <div style="margin-top: 25px; margin-bottom: 10px;">
+            <label>🔍 بحث سريع وسلس في المنتجات:</label>
+            <input id="productSearch" placeholder="ابحث باسم المنتج أو الرقم المتسلسل..." oninput="renderProducts()">
         </div>
-        <div class="box" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 15px; margin: 0; display: flex; align-items: center; gap: 15px;">
-            <input id="searchOrderNumber" type="number" placeholder="رقم طلبية سابقة لتعديلها..." style="background: #1f2937;">
-            <button onclick="loadOrderToEdit()" style="background: var(--purple-gradient); white-space: nowrap; padding: 14px 20px;"><i class="fa-solid fa-edit"></i> جلب للتعديل</button>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead><tr><th>الباركود</th><th>اسم المنتج</th><th>الكمية الحالية</th><th>الشراء (DA)</th><th>البيع الافتراضي (DA)</th><th>تعديل</th><th>حذف</th></tr></thead>
+                <tbody id="productTable"></tbody>
+            </table>
         </div>
     </div>
 
-    <div class="sales-grid">
-        <div>
-            <div class="box" style="background: rgba(17, 24, 39, 0.6);">
-                <h3 style="font-size: 17px; margin-bottom: 20px; color: var(--primary);"><i class="fa-solid fa-filter"></i> اختيار المنتج وتحديد السعر</h3>
-                <div style="margin-bottom: 18px;">
-                    <label>فصل وتصفية المنتجات:</label>
-                    <input id="saleSearch" placeholder="اكتب اسم المنتج أو امسح الباركود للبحث..." oninput="renderSalesOptions()">
-                </div>
-                <div style="margin-bottom: 18px;">
-                    <label>المنتج المستهدف حالياً:</label>
-                    <select id="saleStock" onchange="updateDefaultSalePriceField()"></select>
+    <!-- واجهة البيع السريعة -->
+    <div id="sales" class="page" style="max-width: 1300px;">
+        <div class="header">
+            <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
+            <h2><i class="fa-solid fa-cash-register" style="color:var(--primary);"></i> واجهة البيع السريعة والتعديل الفوري</h2>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div class="box" style="background: #111827; color: white; padding: 15px; margin: 0; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; border-color: rgba(255,255,255,0.05);">
+                <span style="font-weight: 700; font-size: 16px;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
+                <input id="cmdNumberInput" type="number" min="1" style="width: 110px; text-align: center; font-size: 18px; font-weight: 800; color: #fff; background: #1f2937; padding: 8px;" oninput="updateCommandNumberManual()">
+                <button class="del" onclick="resetCommandNumber()" style="padding: 10px 16px; font-size: 13px;"><i class="fa-solid fa-arrow-rotate-left"></i> تصفير</button>
+            </div>
+            <div class="box" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 15px; margin: 0; display: flex; align-items: center; gap: 15px;">
+                <input id="searchOrderNumber" type="number" placeholder="رقم طلبية سابقة لتعديلها..." style="background: #1f2937;">
+                <button onclick="loadOrderToEdit()" style="background: var(--purple-gradient); white-space: nowrap; padding: 14px 20px;"><i class="fa-solid fa-edit"></i> جلب للتعديل</button>
+            </div>
+        </div>
+
+        <div class="sales-grid">
+            <div>
+                <div class="box" style="background: rgba(17, 24, 39, 0.6);">
+                    <h3 style="font-size: 17px; margin-bottom: 20px; color: var(--primary);"><i class="fa-solid fa-filter"></i> اختيار المنتج وتحديد السعر</h3>
+                    <div style="margin-bottom: 18px;">
+                        <label>فصل وتصفية المنتجات:</label>
+                        <input id="saleSearch" placeholder="اكتب اسم المنتج أو امسح الباركود للبحث..." oninput="renderSalesOptions()">
+                    </div>
+                    <div style="margin-bottom: 18px;">
+                        <label>المنتج المستهدف حالياً:</label>
+                        <select id="saleStock" onchange="updateDefaultSalePriceField()"></select>
+                    </div>
+                    
+                    <div class="flex-inputs">
+                        <div>
+                            <label>الكمية المراد بيعها:</label>
+                            <input id="saleQty" type="number" step="1" value="1">
+                        </div>
+                        <div>
+                            <label style="color: var(--primary); font-weight: 800;"><i class="fa-solid fa-pen-clip"></i> سعر البيع الحالي (عدّله بحرية):</label>
+                            <input id="salePriceInput" type="number" step="0.01" style="border: 2px solid var(--primary); font-size: 17px; font-weight: 700; color: #fff; background:#111827;">
+                        </div>
+                    </div>
+                    <button onclick="addToCommand()" style="width: 100%; height: 52px; font-size: 16px; background: var(--primary-gradient);"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
                 </div>
                 
-                <div class="flex-inputs">
-                    <div>
-                        <label>الكمية المراد بيعها:</label>
-                        <input id="saleQty" type="number" step="1" value="1">
-                    </div>
-                    <div>
-                        <label style="color: var(--primary); font-weight: 800;"><i class="fa-solid fa-pen-clip"></i> سعر البيع الحالي (عدّله بحرية):</label>
-                        <input id="salePriceInput" type="number" step="0.01" style="border: 2px solid var(--primary); font-size: 17px; font-weight: 700; color: #fff; background:#111827;">
-                    </div>
-                </div>
-                <button onclick="addToCommand()" style="width: 100%; height: 52px; font-size: 16px; background: var(--primary-gradient);"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
+                <h3 style="color: var(--text-main); font-weight:700; font-size: 17px; margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبيات المبيوعة السابقة</h3>
+                <div id="salesLog" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
-            
-            <h3 style="color: var(--text-main); font-weight:700; font-size: 17px; margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبيات المبيوعة السابقة</h3>
-            <div id="salesLog" style="max-height: 400px; overflow-y: auto;"></div>
-        </div>
 
-        <div class="box" style="background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(16, 185, 129, 0.3); position: sticky; top: 20px;">
-            <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; font-size: 17px; color: var(--success);"><i class="fa-solid fa-basket-shopping"></i> سلة التسوق الحالية</h3>
-            <div id="currentCommand" style="min-height: 160px; max-height: 320px; overflow-y: auto; margin-bottom: 20px;"></div>
-            
-            <div style="background: rgba(16, 185, 129, 0.05); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.2); text-align: left; margin-bottom: 20px;">
-                <span style="color: var(--success); font-size: 15px; font-weight: 700;">المجموع الإجمالي المستحق:</span>
-                <h3 id="commandTotal" style="color: var(--success); font-size: 28px; font-weight: 900; margin-top: 5px;">0.00 DA</h3>
-            </div>
-            <button onclick="confirmCommand()" style="width:100%; background: var(--success-gradient); font-size: 17px; padding: 16px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب النهائي</button>
-        </div>
-    </div>
-</div>
-
-<div id="stock" class="page">
-    <div class="header">
-        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
-        <h2><i class="fa-solid fa-warehouse" style="color:var(--primary);"></i> كشف وجرد المخزون الكلي</h2>
-    </div>
-
-    <div class="profit-grid" style="margin-top: 0; margin-bottom: 30px;">
-        <div class="profit-card" style="border-right-color: var(--primary);">
-            <p>📦 إجمالي السلع المتوفرة بالمخزن</p>
-            <div id="topStockPieces" class="amount" style="color: #60a5fa;">0 قطعة</div>
-        </div>
-        <div class="profit-card" style="border-right-color: var(--danger);">
-            <p>💰 إجمالي رأس المال المستثمر (الشراء)</p>
-            <div id="topStockCapital" class="amount" style="color: #fca5a5;">0.00 DA</div>
-        </div>
-        <div class="profit-card success" style="border-right-color: var(--success);">
-            <p>📈 صافي الأرباح المتوقعة عند البيع</p>
-            <div id="topStockProfit" class="amount" style="color: var(--success);">0.00 DA</div>
-        </div>
-    </div>
-
-    <div style="overflow-x: auto;">
-        <table>
-            <thead><tr><th>اسم المنتج</th><th>القطع المتبقية</th><th>رأس المال المستثمر</th><th>الأرباح المتوقعة</th><th>إجراء</th></tr></thead>
-            <tbody id="stockTable"></tbody>
-            <tfoot id="stockTableFoot"></tfoot>
-        </table>
-    </div>
-</div>
-
-<div id="low" class="page">
-    <div class="header">
-        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
-        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> كشف السلع الناقصة وحالة المخزون بالتدرج</h2>
-    </div>
-    <div style="overflow-x: auto;">
-        <table>
-            <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية المتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
-            <tbody id="lowTable"></tbody>
-        </table>
-    </div>
-</div>
-
-<div id="expenses" class="page">
-    <div class="header">
-        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
-        <h2><i class="fa-solid fa-hand-holding-dollar" style="color:var(--danger);"></i> إدارة مصاريف المحل الكلية 💸</h2>
-    </div>
-    <div class="box">
-        <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-file-invoice-dollar"></i> تسجيل مصروف جديد وتدوينه</h3>
-        <div style="margin-bottom: 18px;">
-            <label>بيان المصروف ونوعه:</label>
-            <input id="expTitle" placeholder="مثال: فاتورة الكهرباء، نقل السلعة، تالف...">
-        </div>
-        <div class="flex-inputs">
-            <div><label>قيمة المصروف (DA):</label><input id="expAmount" type="number" step="0.01" placeholder="0.00"></div>
-            <div><label>تاريخ التقييد:</label><input id="expDate" type="date"></div>
-        </div>
-        <button onclick="addExpense()" style="width: 100%; margin-top: 5px; background: var(--danger-gradient); height: 50px;"><i class="fa-solid fa-check"></i> حفظ وقيد المصروف بالدفتر</button>
-    </div>
-    <h3 style="color: var(--text-main); font-weight:700; margin-top:30px; font-size: 17px;"><i class="fa-solid fa-receipt"></i> سجل المصاريف اليومية والسنوية المقيدة</h3>
-    <div id="expensesLog" style="max-height: 420px; overflow-y: auto; margin-top: 20px;"></div>
-</div>
-
-<div id="profits" class="page">
-    <div class="header">
-        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
-        <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية الحقيقية</h2>
-    </div>
-    <div class="box" style="background: rgba(17, 24, 39, 0.6);">
-        <h3 style="margin-bottom: 20px; font-size:17px; color: #a855f7;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
-        <div class="flex-inputs">
-            <div><label>من تاريخ 📅:</label><input type="date" id="filterFrom" onchange="calculateFilteredProfit()"></div>
-            <div><label>إلى تاريخ 🏁:</label><input type="date" id="filterTo" onchange="calculateFilteredProfit()"></div>
-        </div>
-    </div>
-    <div class="profit-grid">
-        <div class="profit-card filter" style="grid-column: span 2 / span 2;">
-            <p>🎯 صافي فائدة الفترة المحددة بالفرز أعلاه (فائدة المبيعات المعدلة - المصاريف)</p>
-            <div id="filteredProfit" class="amount" style="color: #c084fc;">0.00 DA 💰</div>
-        </div>
-        <div class="profit-card success">
-            <p>💵 صافي أرباح اليوم الحالي</p>
-            <div id="dailyProfit" class="amount" style="color: var(--success);">0.00 DA</div>
-        </div>
-        <div class="profit-card">
-            <p>📈 صافي أرباح الشهر الحالي</p>
-            <div id="monthlyProfit" class="amount" style="color: var(--primary);">0.00 DA</div>
-        </div>
-        <div class="profit-card expense-card" style="grid-column: span 2 / span 2;">
-            <p>📉 إجمالي مصاريف السنة المسجلة بالكامل</p>
-            <div id="totalExpensesYear" class="amount" style="color: #fca5a5;">0.00 DA 💸</div>
-        </div>
-        <div class="profit-card dark" style="grid-column: span 2 / span 2;">
-            <p>👑 صافي فائدة السنة الإجمالية الحقيقية</p>
-            <div id="yearlyProfit" class="amount" style="color: var(--text-main);">0.00 DA</div>
-        </div>
-    </div>
-</div>
-
-<script>
-/* ================= SYSTEM LOGIC ================= */
-let batches = JSON.parse(localStorage.getItem("batches") || "[]");
-let sales = JSON.parse(localStorage.getItem("sales") || "[]");
-let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
-let commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
-let currentCommandData = [];
-
-window.onload = function() {
-    let todayStr = new Date().toISOString().split('T')[0];
-    document.getElementById('filterFrom').value = todayStr;
-    document.getElementById('filterTo').value = todayStr;
-    document.getElementById('expDate').value = todayStr;
-    render();
-};
-
-function save(){
-    localStorage.setItem("batches", JSON.stringify(batches));
-    localStorage.setItem("sales", JSON.stringify(sales));
-    localStorage.setItem("expenses", JSON.stringify(expenses));
-    localStorage.setItem("commandNumber", commandNumber);
-}
-
-function openPage(id){
-    document.getElementById("dashboard").style.display="none";
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-    if(id === 'sales') { document.getElementById('saleSearch').value = ''; renderSalesOptions(); }
-    window.scrollTo(0, 0);
-}
-
-function back(){ document.getElementById("dashboard").style.display="grid"; document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); }
-
-// نغمة بسيطة لإضافة مادة للسلة
-function playBeepSound() {
-    try {
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let oscillator = audioCtx.createOscillator();
-        let gainNode = audioCtx.createGain();
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime);
-        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1);
-    } catch (e) { console.log("Audio error"); }
-}
-
-// صوت تنبيه قوي عند حدوث خطأ أو تكرار رفرنس أو سعر بيع أقل من الشراء
-function playErrorSound() {
-    try {
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let now = audioCtx.currentTime;
-        
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, now);
-        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
-        
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-        
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        osc.start(now);
-        osc.stop(now + 0.3);
-    } catch (e) { console.log("Audio error"); }
-}
-
-// رنين الكاسة الاحترافي الفخم عند نجاح عملية البيع
-function playCashRegisterSound() {
-    try {
-        let AudioContext = window.AudioContext || window.webkitAudioContext;
-        let ctx = new AudioContext();
-        let now = ctx.currentTime;
-        
-        let osc1 = ctx.createOscillator();
-        let gain1 = ctx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(1400, now);
-        gain1.gain.setValueAtTime(0.25, now);
-        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-        osc1.connect(gain1);
-        gain1.connect(ctx.destination);
-        osc1.start(now);
-        osc1.stop(now + 0.4);
-        
-        let osc2 = ctx.createOscillator();
-        let gain2 = ctx.createGain();
-        osc2.type = 'triangle';
-        osc2.frequency.setValueAtTime(880, now + 0.02);
-        gain2.gain.setValueAtTime(0.15, now + 0.02);
-        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc2.connect(gain2);
-        gain2.connect(ctx.destination);
-        osc2.start(now + 0.02);
-        osc2.stop(now + 0.3);
-
-        let osc3 = ctx.createOscillator();
-        let gain3 = ctx.createGain();
-        osc3.type = 'sawtooth';
-        osc3.frequency.setValueAtTime(300, now + 0.08);
-        osc3.frequency.linearRampToValueAtTime(120, now + 0.25);
-        gain3.gain.setValueAtTime(0.1, now + 0.08);
-        gain3.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc3.connect(gain3);
-        gain3.connect(ctx.destination);
-        osc3.start(now + 0.08);
-        osc3.stop(now + 0.3);
-        
-    } catch (e) { console.log("Cash sound error: ", e); }
-}
-
-/* التحقق الفوري من تكرار الرفرونس وتلوين الحقل بالأمر */
-function checkRefUniqueness() {
-    let refField = document.getElementById('pRef');
-    let refVal = refField.value.trim();
-    if(!refVal) {
-        refField.classList.remove('input-error');
-        return;
-    }
-    let isDuplicate = batches.some(b => b.ref === refVal);
-    if(isDuplicate) {
-        refField.classList.add('input-error');
-    } else {
-        refField.classList.remove('input-error');
-    }
-}
-
-/* التحقق الفوري من ملاءمة سعر البيع وسعر الشراء */
-function checkPriceValidity() {
-    let buyField = document.getElementById('pBuy');
-    let sellField = document.getElementById('pSell');
-    let buyVal = Number(buyField.value) || 0;
-    let sellVal = Number(sellField.value) || 0;
-    
-    if(sellField.value !== "" && sellVal < buyVal) {
-        sellField.classList.add('input-error');
-    } else {
-        sellField.classList.remove('input-error');
-    }
-}
-
-function updateDefaultSalePriceField(){
-    let saleStock = document.getElementById('saleStock');
-    if(!saleStock.value) return;
-    let b = batches.find(x => x.id === Number(saleStock.value));
-    if(b) { document.getElementById('salePriceInput').value = b.sell; }
-}
-
-function updateCommandNumberManual() {
-    let inputVal = document.getElementById('cmdNumberInput').value;
-    if(inputVal && Number(inputVal) >= 1) {
-        commandNumber = Math.floor(Number(inputVal));
-        localStorage.setItem("commandNumber", commandNumber);
-    }
-}
-
-function resetCommandNumber() {
-    if(confirm("هل أنت متأكد من تصفير عداد الطلبيات والبدء من 1؟")) {
-        commandNumber = 1; document.getElementById('cmdNumberInput').value = commandNumber; save();
-    }
-}
-
-function loadOrderToEdit() {
-    let orderNum = Number(document.getElementById('searchOrderNumber').value);
-    if(!orderNum || orderNum < 1) return alert("يرجى إدخال رقم طلبية صحيح لجلبه.");
-    let orderItems = sales.filter(x => x.command === orderNum);
-    if(orderItems.length === 0) return alert("لم يتم العثور على أي طلبية تحمل الرقم #" + orderNum);
-    if(currentCommandData.length > 0) {
-        if(!confirm("السلة الحالية تحتوي على منتجات، هل تريد تفريغها وجلب الطلبية القديمة للتعديل؟")) return;
-    }
-    orderItems.forEach(s => {
-        let b = batches.find(x => x.id === s.id);
-        if(b) { b.qty += s.qty; } 
-        else { batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }); }
-    });
-    currentCommandData = orderItems.map(s => { return { id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }; });
-    sales = sales.filter(x => x.command !== orderNum);
-    commandNumber = orderNum;
-    document.getElementById('cmdNumberInput').value = commandNumber;
-    document.getElementById('searchOrderNumber').value = '';
-    save(); render(); renderSalesOptions(); updateCommandUI();
-    alert("تم جلب الطلبية #" + orderNum + " بنجاح إلى السلة.");
-}
-
-function addProduct(){
-    let refField = document.getElementById('pRef');
-    let sellField = document.getElementById('pSell');
-    
-    let ref = refField.value.trim();
-    let name = document.getElementById('pName').value.trim();
-    let buy = document.getElementById('pBuy').value;
-    let sell = sellField.value;
-    let qty = document.getElementById('pQty').value;
-    
-    if(!ref || !name || !buy || !sell || !qty) return alert("يرجى ملء جميع الخانات");
-    
-    // شرط 1: منع تكرار الرفرونس نهائياً في إضافة منتج جديد
-    let existing = batches.find(b => b.ref === ref);
-    if(existing) {
-        playErrorSound();
-        refField.classList.add('input-error');
-        alert("خطأ: هذا الرفरونس (الباركود) مستعمل مسبقاً لمنتج آخر! لا يمكن التكرار.");
-        return;
-    }
-    
-    // شرط 2: منع جعل سعر البيع أقل من سعر الشراء
-    if(Number(sell) < Number(buy)) {
-        playErrorSound();
-        sellField.classList.add('input-error');
-        alert("خطأ مالي: لا يمكن أن يكون سعر البيع أقل من سعر الشراء (بيع بالخسارة مجمّد)!");
-        return;
-    }
-    
-    batches.push({ id: Date.now(), ref, name, buy: +buy, sell: +sell, qty: +qty });
-    
-    // تفريغ المدخلات وإزالة حالات الخطأ
-    refField.value = ''; document.getElementById('pName').value = '';
-    document.getElementById('pBuy').value = ''; sellField.value = ''; document.getElementById('pQty').value = '';
-    refField.classList.remove('input-error');
-    sellField.classList.remove('input-error');
-    
-    save(); render();
-}
-
-function deleteProduct(id){
-    if(!confirm("هل أنت متأكد من حذف السلعة نهائياً؟")) return;
-    batches = batches.filter(x => x.id !== id); save(); render();
-}
-
-function editProduct(id){
-    let b = batches.find(x => x.id === id); if(!b) return;
-    let newName = prompt("تعديل اسم المنتج:", b.name) || b.name;
-    let newQty = +prompt("تعديل الكمية الحالية:", b.qty) || b.qty;
-    let newBuy = +prompt("تعديل سعر الشراء:", b.buy) || b.buy;
-    let newSell = +prompt("تعديل سعر البيع الافتراضي:", b.sell) || b.sell;
-    
-    if(newSell < newBuy) {
-        playErrorSound();
-        alert("خطأ: تم رفض التعديل لأن سعر البيع أقل من سعر الشراء!");
-        return;
-    }
-    
-    b.name = newName; b.qty = newQty; b.buy = newBuy; b.sell = newSell;
-    save(); render();
-}
-
-function renderSalesOptions(){
-    let searchVal = document.getElementById('saleSearch').value.toLowerCase().trim();
-    let filtered = batches.filter(b => b.name.toLowerCase().includes(searchVal) || b.ref.toLowerCase().includes(searchVal));
-    let saleStock = document.getElementById('saleStock');
-    saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">[${b.ref}] ${b.name} - المتبقي: ${b.qty} - السعر: ${b.sell} DA</option>`).join("");
-    updateDefaultSalePriceField();
-}
-
-function addToCommand(){
-    let saleStock = document.getElementById('saleStock');
-    let saleQty = document.getElementById('saleQty');
-    let salePriceInput = document.getElementById('salePriceInput');
-    if(!saleStock.value) return;
-    let id = Number(saleStock.value);
-    let qty = +saleQty.value;
-    let customPrice = +salePriceInput.value;
-    let b = batches.find(x=>x.id===id);
-    if(!b || qty<=0) return;
-    if(isNaN(customPrice) || customPrice < 0) { alert("يرجى إدخال سعر بيع صحيح"); return; }
-    if(b.qty < qty){ alert("المخزون غير كافي"); return; }
-    
-    // منع البيع بخسارة في واجهة البيع السريع عند تعديل السعر يدوياً
-    if(customPrice < b.buy) {
-        playErrorSound();
-        alert("تنبيه: سعر البيع المقترح في السلة أقل من سعر شراء السلعة الأصلي!");
-        return;
-    }
-    
-    let ex = currentCommandData.find(x => x.id === id && x.sell === customPrice);
-    if(ex){
-        if(b.qty < ex.qty + qty){ alert("المجموع يتجاوز المتاح في المخزن"); return; }
-        ex.qty += qty;
-    } else { currentCommandData.push({...b, qty, sell: customPrice}); }
-    playBeepSound(); updateCommandUI();
-}
-
-function updateCommandUI(){
-    let currentCommand = document.getElementById('currentCommand');
-    let commandTotal = document.getElementById('commandTotal');
-    let total=0;
-    currentCommand.innerHTML = currentCommandData.map((i,idx)=>{
-        total += i.sell*i.qty;
-        return `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0; background:#111827; padding:12px 16px; border-radius:10px; border:1px solid var(--border);">
-            <span><b>${i.name}</b> <span class="badge-qty">x${i.qty}</span> <small style="color:var(--text-muted);">(@ ${i.sell.toFixed(2)} DA)</small></span>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <span style="color:var(--success); font-weight:700;">${(i.sell*i.qty).toFixed(2)} DA</span>
-                <button class="del" onclick="removeFromCommand(${idx})" style="padding:6px 12px; font-size:13px;"><i class="fa-solid fa-trash"></i></button>
-            </div>
-        </div>`;
-    }).join("");
-    commandTotal.innerHTML = total.toFixed(2) + " DA";
-}
-
-function removeFromCommand(index) { 
-    currentCommandData.splice(index, 1); 
-    updateCommandUI(); 
-}
-
-function confirmCommand(){
-    if(currentCommandData.length===0) return alert("السلة فارغة!");
-    let uniqueTime = Date.now(); 
-    currentCommandData.forEach((item, index)=>{
-        let b = batches.find(x=>x.id===item.id); if(!b) return;
-        b.qty = Math.max(0, b.qty - item.qty);
-        sales.push({
-            id: item.id, ref: item.ref, name: item.name, qty: item.qty, buy: item.buy, sell: item.sell, 
-            profit: (item.sell - item.buy) * item.qty, time: uniqueTime + index, command: commandNumber
-        });
-    });
-    
-    playCashRegisterSound();
-    
-    commandNumber++; currentCommandData=[]; save(); render(); renderSalesOptions();
-}
-
-function deleteEntireOrder(orderNum){
-    if(!confirm(`هل تريد إلغاء الطلبية #${orderNum} بالكامل؟`)) return;
-    let orderItems = sales.filter(x => x.command === orderNum);
-    orderItems.forEach(s => {
-        let b = batches.find(x => x.id === s.id);
-        if(b) { b.qty += s.qty; } 
-        else { batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }); }
-    });
-    sales = sales.filter(x => x.command !== orderNum); save(); render(); renderSalesOptions();
-}
-
-function addExpense(){
-    let title = document.getElementById('expTitle').value.trim();
-    let amount = document.getElementById('expAmount').value;
-    let dateVal = document.getElementById('expDate').value;
-    if(!title || !amount || !dateVal) return alert("يرجى ملء كافة خانات المصروف");
-    expenses.push({ id: Date.now(), title: title, amount: +amount, date: dateVal });
-    document.getElementById('expTitle').value = ''; document.getElementById('expAmount').value = '';
-    save(); render();
-}
-
-function deleteExpense(id){
-    if(!confirm("هل تريد حذف هذا المصروف?")) return;
-    expenses = expenses.filter(x => x.id !== id); save(); render();
-}
-
-function calculateFilteredProfit(){
-    let fromVal = document.getElementById('filterFrom').value;
-    let toVal = document.getElementById('filterTo').value;
-    if(!fromVal || !toVal) return;
-    let startTime = new Date(fromVal + "T00:00:00").getTime();
-    let endTime = new Date(toVal + "T23:59:59").getTime();
-    let totalSalesProfit = 0;
-    sales.forEach(s => { let t = s.time || Date.now(); if(t >= startTime && t <= endTime) totalSalesProfit += s.profit; });
-    let totalExp = 0;
-    expenses.forEach(e => { let expTime = new Date(e.date + "T12:00:00").getTime(); if(expTime >= startTime && expTime <= endTime) totalExp += e.amount; });
-    document.getElementById('filteredProfit').innerHTML = (totalSalesProfit - totalExp).toFixed(2) + " DA 💰";
-}
-
-function renderProducts(){
-    let searchVal = document.getElementById('productSearch').value.toLowerCase().trim();
-    let filtered = batches.filter(b => b.name.toLowerCase().includes(searchVal) || b.ref.toLowerCase().includes(searchVal));
-    document.getElementById('productTable').innerHTML = filtered.map(b=>`
-    <tr>
-        <td><code>${b.ref}</code></td>
-        <td><b>${b.name}</b></td>
-        <td><span class="badge-qty" style="background:rgba(59,130,246,0.15); color:#60a5fa; border-color:transparent;">${b.qty} قطع</span></td>
-        <td style="color: #fca5a5;">${b.buy.toFixed(2)}</td>
-        <td style="color: #34d399; font-weight:800;">${b.sell.toFixed(2)}</td>
-        <td><button class="edit" onclick="editProduct(${b.id})"><i class="fa-solid fa-pen"></i></button></td>
-        <td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i></button></td>
-    </tr>`).join("");
-}
-
-function render(){
-    renderProducts();
-    let totalCapital = 0, totalValue = 0, totalPieces = 0;
-    document.getElementById('stockTable').innerHTML = batches.map(b=>{
-        let capital = b.buy * b.qty; let expectedProfit = (b.sell - b.buy) * b.qty;
-        totalCapital += capital; totalValue += (b.sell * b.qty); totalPieces += b.qty;
-        return `<tr><td><b>${b.name}</b></td><td><span class="badge-qty" style="background:rgba(59,130,246,0.15); color:#60a5fa; border-color:transparent;">${b.qty} قطعة</span></td><td style="color:#fca5a5;">${capital.toFixed(2)} DA</td><td style="color:#34d399;">${expectedProfit.toFixed(2)} DA</td><td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-    }).join("");
-
-    document.getElementById('stockTableFoot').innerHTML = `
-        <tr style="background: #111827;">
-            <td style="color: #ffffff; font-weight:800; text-align:right;">📦 إجمالي المخزون:</td>
-            <td style="color: #38bdf8; font-weight:800;">${totalPieces} قطعة</td>
-            <td style="color: #f87171; font-weight:800;">${totalCapital.toFixed(2)} DA</td>
-            <td style="color: #4ade80; font-weight:800;">${(totalValue - totalCapital).toFixed(2)} DA</td>
-            <td></td>
-        </tr>`;
-
-    // تحديث الكروت العلوية لصفحة جرد المخزون تلقائياً
-    document.getElementById('topStockPieces').innerHTML = totalPieces + " قطعة";
-    document.getElementById('topStockCapital').innerHTML = totalCapital.toFixed(2) + " DA";
-    document.getElementById('topStockProfit').innerHTML = (totalValue - totalCapital).toFixed(2) + " DA";
-
-    let ordersMap = {};
-    sales.forEach(s => {
-        if(!ordersMap[s.command]) { ordersMap[s.command] = { items: [], totalAmount: 0, totalProfit: 0 }; }
-        ordersMap[s.command].items.push(s); ordersMap[s.command].totalAmount += (s.sell * s.qty); ordersMap[s.command].totalProfit += s.profit;
-    });
-    let ordersKeys = Object.keys(ordersMap).sort((a,b) => b - a);
-    if(ordersKeys.length === 0){
-        document.getElementById('salesLog').innerHTML = "<p style='text-align:center; padding:15px; color:var(--text-muted);'>لا توجد طلبيات بعد 🌟</p>";
-    } else {
-        document.getElementById('salesLog').innerHTML = ordersKeys.map(cmdNum => {
-            let order = ordersMap[cmdNum];
-            let itemsHTML = order.items.map(item => `
-                <div class="order-item-line">
-                    <span>📦 ${item.name} <span class="badge-qty">x${item.qty}</span> <small style="color:var(--text-muted);">(@ ${item.sell} DA)</small></span>
-                    <span style="font-weight:600; color:var(--success);">${(item.sell * item.qty).toFixed(2)} DA</span>
-                </div>
-            `).join("");
-            return `
-            <div class="order-card">
-                <div class="order-card-header">
-                    <span style="font-weight:800; font-size:16px; color:var(--primary);">الطلبية # ${cmdNum}</span>
-                    <div style="display:flex; gap:8px;">
-                        <button onclick="document.getElementById('searchOrderNumber').value=${cmdNum}; loadOrderToEdit();" style="padding:6px 12px; font-size:12px; background:var(--purple-gradient);"><i class="fa-solid fa-pen"></i> جلب</button>
-                        <button class="del" onclick="deleteEntireOrder(${cmdNum})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash"></i> إلغاء</button>
-                    </div>
-                </div>
-                <div>${itemsHTML}</div>
-                <div style="display:flex; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid var(--border); font-size:14px; font-weight:700;">
-                    <span style="color:var(--text-muted);">الفائدة: <b style="color:var(--success);">${order.totalProfit.toFixed(2)} DA</b></span>
-                    <span style="color:var(--text-main);">المجموع: <b style="color:var(--primary);">${order.totalAmount.toFixed(2)} DA</b></span>
-                </div>
-            </div>`;
-        }).join("");
-    }
-
-    let totalExpensesSum = 0;
-    document.getElementById('expensesLog').innerHTML = [...expenses].reverse().map(e => {
-        totalExpensesSum += e.amount;
-        return `
-        <div class="order-card" style="border-right: 5px solid var(--danger); display:flex; justify-content:space-between; align-items:center;">
-            <span>💸 <b>${e.title}</b> <small style="color:var(--text-muted); margin-right:8px;">(${e.date})</small></span>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <b style="color:var(--danger);">${e.amount.toFixed(2)} DA</b>
-                <button class="del" onclick="deleteExpense(${e.id})" style="padding:6px 12px; font-size:13px;"><i class="fa-solid fa-trash"></i></button>
-            </div>
-        </div>`;
-    }).join("");
-    if(expenses.length === 0) document.getElementById('expensesLog').innerHTML = "<p style='text-align:center; padding:15px; color:var(--text-muted);'>لا توجد مصاريف مقيدة 🌟</p>";
-
-    let now = new Date(), dProfit = 0, mProfit = 0, yProfit = 0, dExp = 0, mExp = 0;
-    let startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-    let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-    let startOfYear = new Date(now.getFullYear(), 0, 1).getTime();
-
-    sales.forEach(s => {
-        let t = s.time || Date.now();
-        if(t >= startOfDay) dProfit += s.profit; if(t >= startOfMonth) mProfit += s.profit; if(t >= startOfYear) yProfit += s.profit;
-    });
-    expenses.forEach(e => {
-        let expTime = new Date(e.date + "T12:00:00").getTime();
-        if(expTime >= startOfDay) dExp += e.amount; if(expTime >= startOfMonth) mExp += e.amount;
-    });
-
-    document.getElementById('dailyProfit').innerHTML = (dProfit - dExp).toFixed(2) + " DA";
-    document.getElementById('monthlyProfit').innerHTML = (mProfit - mExp).toFixed(2) + " DA";
-    document.getElementById('totalExpensesYear').innerHTML = totalExpensesSum.toFixed(2) + " DA 💸";
-    document.getElementById('yearlyProfit').innerHTML = (yProfit - totalExpensesSum).toFixed(2) + " DA 👑";
-
-    calculateFilteredProfit();
-
-    // السلع الناقصة - متجاوبة مع الرفرونس الطويل
-    let lowItems = batches.filter(b => b.qty <= 15); lowItems.sort((a, b) => a.qty - b.qty);
-    document.getElementById('lowTable').innerHTML = lowItems.map(b => {
-        let rowClass = "", statusText = "";
-        if (b.qty === 0) { rowClass = "stock-empty"; statusText = "منتهي تماماً (0 قطع) ❌"; } 
-        else if (b.qty <= 5) { rowClass = "stock-danger"; statusText = "نقص حاد جداً (1-5 قطع) 🚨"; } 
-        else if (b.qty <= 10) { rowClass = "stock-warning"; statusText = "نقص متوسط (6-10 قطع) ⚠️"; } 
-        else if (b.qty <= 15) { rowClass = "stock-notice"; statusText = "بداية نقص (11-15 قطعة) ℹ️"; }
-        return `
-        <tr class="${rowClass}">
-            <td><code>${b.ref}</code></td>
-            <td><b style="color:white;">${b.name}</b></td>
-            <td><b>${b.qty} قطعة</b></td>
-            <td style="font-weight: 700;">${b.buy.toFixed(2)} DA</td>
-            <td><b>${statusText}</b></td>
-        </tr>`;
-    }).join("");
-    if(lowItems.length === 0) document.getElementById('lowTable').innerHTML = `<tr><td colspan="5" style="color:var(--success); font-weight:700; padding:20px;">🎉 كل السلع متوفرة بكميات ممتازة</td></tr>`;
-    
-    document.getElementById('cmdNumberInput').value = commandNumber;
-}
-
-function exportData(){
-    let dataStr = JSON.stringify({ batches, sales, expenses, commandNumber });
-    let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    let linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri); linkElement.setAttribute('download', 'pos_premium_backup.json');
-    linkElement.click();
-}
-
-/* ================= دالة فتح واستيراد النسخة الاحتياطية ================= */
-function triggerImport() {
-    document.getElementById('importFileInput').click();
-}
-
-function importData(event) {
-    let file = event.target.files[0];
-    if (!file) return;
-
-    if (!confirm("تحذير: استيراد ملف خارجي سيقوم باستبدال كافة البيانات الحالية بالبيانات الجديدة المخزنة داخل الملف. هل تريد الاستمرار؟")) {
-        event.target.value = ''; 
-        return;
-    }
-
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            let importedData = JSON.parse(e.target.result);
-            
-            if (importedData.hasOwnProperty('batches') && importedData.hasOwnProperty('sales') && importedData.hasOwnProperty('expenses')) {
-                batches = importedData.batches || [];
-                sales = importedData.sales || [];
-                expenses = importedData.expenses || [];
-                commandNumber = Number(importedData.commandNumber) || 1;
+            <div class="box" style="background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(16, 185, 129, 0.3); position: sticky; top: 20px;">
+                <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; font-size: 17px; color: var(--success);"><i class="fa-solid fa-basket-shopping"></i> سلة التسوق الحالية</h3>
+                <div id="currentCommand" style="min-height: 160px; max-height: 320px; overflow-y: auto; margin-bottom: 20px;"></div>
                 
+                <div style="background: rgba(16, 185, 129, 0.05); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.2); text-align: left; margin-bottom: 20px;">
+                    <span style="color: var(--success); font-size: 15px; font-weight: 700;">المجموع الإجمالي المستحق:</span>
+                    <h3 id="commandTotal" style="color: var(--success); font-size: 28px; font-weight: 900; margin-top: 5px;">0.00 DA</h3>
+                </div>
+                <button onclick="confirmCommand()" style="width:100%; background: var(--success-gradient); font-size: 17px; padding: 16px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب النهائي</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة كشف وجرد المخزون الكلي -->
+    <div id="stock" class="page">
+        <div class="header">
+            <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
+            <h2><i class="fa-solid fa-warehouse" style="color:var(--primary);"></i> كشف وجرد المخزون الكلي</h2>
+        </div>
+
+        <div class="profit-grid" style="margin-top: 0; margin-bottom: 30px;">
+            <div class="profit-card" style="border-right-color: var(--primary);">
+                <p>📦 إجمالي السلع المتوفرة بالمخزن</p>
+                <div id="topStockPieces" class="amount" style="color: #60a5fa;">0 قطعة</div>
+            </div>
+            <div class="profit-card" style="border-right-color: var(--danger);">
+                <p>💰 إجمالي رأس المال المستثمر (الشراء)</p>
+                <div id="topStockCapital" class="amount" style="color: #fca5a5;">0.00 DA</div>
+            </div>
+            <div class="profit-card success" style="border-right-color: var(--success);">
+                <p>📈 صافي الأرباح المتوقعة عند البيع</p>
+                <div id="topStockProfit" class="amount" style="color: var(--success);">0.00 DA</div>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead><tr><th>اسم المنتج</th><th>القطع المتبقية</th><th>رأس المال المستثمر</th><th>الأرباح المتوقعة</th><th>إجراء فوري</th></tr></thead>
+                <tbody id="stockTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- صفحة السلع الناقصة -->
+    <div id="low" class="page">
+        <div class="header">
+            <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
+            <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> كشف السلع الناقصة وحالة المخزون بالتدرج</h2>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية المتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
+                <tbody id="lowTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- صفحة إدارة المصاريف -->
+    <div id="expenses" class="page">
+        <div class="header">
+            <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
+            <h2><i class="fa-solid fa-hand-holding-dollar" style="color:var(--danger);"></i> إدارة مصاريف المحل الكلية 💸</h2>
+        </div>
+        <div class="box">
+            <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-file-invoice-dollar"></i> تسجيل مصروف جديد وتدوينه</h3>
+            <div style="margin-bottom: 18px;">
+                <label>بيان المصروف ونوعه:</label>
+                <input id="expTitle" placeholder="مثال: فاتورة الكهرباء، نقل السلعة، تالف...">
+            </div>
+            <div class="flex-inputs">
+                <div><label>قيمة المصروف (DA):</label><input id="expAmount" type="number" step="0.01" placeholder="0.00"></div>
+                <div><label>تاريخ التقييد:</label><input id="expDate" type="date"></div>
+            </div>
+            <button onclick="addExpense()" style="width: 100%; margin-top: 5px; background: var(--danger-gradient); height: 50px;"><i class="fa-solid fa-check"></i> حفظ وقيد المصروف بالدفتر</button>
+        </div>
+        <h3 style="color: var(--text-main); font-weight:700; margin-top:30px; font-size: 17px;"><i class="fa-solid fa-receipt"></i> سجل المصاريف المقيدة</h3>
+        <div id="expensesLog" style="max-height: 420px; overflow-y: auto; margin-top: 20px;"></div>
+    </div>
+
+    <!-- صفحة تقارير الأرباح -->
+    <div id="profits" class="page">
+        <div class="header">
+            <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
+            <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية الحقيقية</h2>
+        </div>
+        <div class="box" style="background: rgba(17, 24, 39, 0.6);">
+            <h3 style="margin-bottom: 20px; font-size:17px; color: #a855f7;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
+            <div class="flex-inputs">
+                <div><label>من تاريخ 📅:</label><input type="date" id="filterFrom" onchange="calculateFilteredProfit()"></div>
+                <div><label>إلى تاريخ 🏁:</label><input type="date" id="filterTo" onchange="calculateFilteredProfit()"></div>
+            </div>
+        </div>
+        <div class="profit-grid">
+            <div class="profit-card filter" style="grid-column: span 2 / span 2;">
+                <p>🎯 صافي فائدة الفترة المحددة بالفرز أعلاه (فائدة المبيعات المعدلة - المصاريف)</p>
+                <div id="filteredProfit" class="amount" style="color: #c084fc;">0.00 DA 💰</div>
+            </div>
+            <div class="profit-card success">
+                <p>💵 صافي أرباح اليوم الحالي</p>
+                <div id="dailyProfit" class="amount" style="color: var(--success);">0.00 DA</div>
+            </div>
+            <div class="profit-card">
+                <p>📈 صافي أرباح الشهر الحالي</p>
+                <div id="monthlyProfit" class="amount" style="color: var(--primary);">0.00 DA</div>
+            </div>
+            <div class="profit-card expense-card" style="grid-column: span 2 / span 2;">
+                <p>📉 إجمالي مصاريف السنة المسجلة بالكامل</p>
+                <div id="totalExpensesYear" class="amount" style="color: #fca5a5;">0.00 DA 💸</div>
+            </div>
+            <div class="profit-card dark" style="grid-column: span 2 / span 2;">
+                <p>👑 صافي فائدة السنة الإجمالية الحقيقية</p>
+                <div id="yearlyProfit" class="amount" style="color: var(--text-main);">0.00 DA</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SYSTEM LOGIC (MANUALLY ENGINEERED COMPLETELY) ================= -->
+    <script>
+        let batches = JSON.parse(localStorage.getItem("batches") || "[]");
+        let sales = JSON.parse(localStorage.getItem("sales") || "[]");
+        let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+        let commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
+        let currentCommandData = [];
+        let editingOrderNumber = null; // يحفظ رقم الفاتورة الجاري تعديلها
+
+        window.onload = function() {
+            let todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('filterFrom').value = todayStr;
+            document.getElementById('filterTo').value = todayStr;
+            document.getElementById('expDate').value = todayStr;
+            document.getElementById('cmdNumberInput').value = commandNumber;
+            render();
+        };
+
+        function save(){
+            localStorage.setItem("batches", JSON.stringify(batches));
+            localStorage.setItem("sales", JSON.stringify(sales));
+            localStorage.setItem("expenses", JSON.stringify(expenses));
+            localStorage.setItem("commandNumber", commandNumber);
+        }
+
+        function openPage(id){
+            document.getElementById("dashboard").style.display="none";
+            document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+            if(id === 'sales') { 
+                document.getElementById('saleSearch').value = ''; 
+                renderSalesOptions(); 
+                renderCurrentCommand();
+                renderSalesLog();
+            }
+            render();
+            window.scrollTo(0, 0);
+        }
+
+        function back(){ 
+            document.getElementById("dashboard").style.display="grid"; 
+            document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); 
+        }
+
+        /* المؤثرات الصوتية الاحترافية */
+        function playBeepSound() {
+            try {
+                let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let oscillator = audioCtx.createOscillator();
+                let gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.1);
+            } catch (e) { console.log("Audio error"); }
+        }
+
+        function playErrorSound() {
+            try {
+                let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let now = audioCtx.currentTime;
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(80, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.3);
+            } catch (e) { console.log("Audio error"); }
+        }
+
+        function playCashRegisterSound() {
+            try {
+                let ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let now = ctx.currentTime;
+                
+                let osc1 = ctx.createOscillator();
+                let gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(1400, now);
+                gain1.gain.setValueAtTime(0.25, now);
+                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                osc1.connect(gain1); gain1.connect(ctx.destination);
+                osc1.start(now); osc1.stop(now + 0.4);
+            } catch (e) { console.log("Cash sound error: ", e); }
+        }
+
+        /* التحقق من صحة المدخلات */
+        function checkRefUniqueness() {
+            let refField = document.getElementById('pRef');
+            let refVal = refField.value.trim();
+            if(!refVal) { refField.classList.remove('input-error'); return; }
+            let isDuplicate = batches.some(b => b.ref === refVal);
+            if(isDuplicate) refField.classList.add('input-error');
+            else refField.classList.remove('input-error');
+        }
+
+        function checkPriceValidity() {
+            let buyField = document.getElementById('pBuy');
+            let sellField = document.getElementById('pSell');
+            let buyVal = Number(buyField.value) || 0;
+            let sellVal = Number(sellField.value) || 0;
+            
+            if(sellField.value !== "" && sellVal < buyVal) sellField.classList.add('input-error');
+            else sellField.classList.remove('input-error');
+        }
+
+        function updateDefaultSalePriceField(){
+            let saleStock = document.getElementById('saleStock');
+            if(!saleStock.value) return;
+            let b = batches.find(x => x.id === Number(saleStock.value));
+            if(b) { document.getElementById('salePriceInput').value = b.sell; }
+        }
+
+        function updateCommandNumberManual() {
+            let inputVal = document.getElementById('cmdNumberInput').value;
+            if(inputVal && Number(inputVal) >= 1) {
+                commandNumber = Math.floor(Number(inputVal));
+                localStorage.setItem("commandNumber", commandNumber);
+            }
+        }
+
+        function resetCommandNumber() {
+            if(confirm("هل أنت متأكد من تصفير عداد الطلبيات والبدء من 1؟")) {
+                commandNumber = 1; 
+                document.getElementById('cmdNumberInput').value = commandNumber; 
                 save();
-                render();
-                if(document.getElementById('sales').classList.contains('active')) {
-                    renderSalesOptions();
+            }
+        }
+
+        /* هندسة ومعالجة البيانات الأساسية للرندرة الشاملة */
+        function render() {
+            renderProducts();
+            renderSalesOptions();
+            renderStock();
+            renderLowStock();
+            renderExpensesLog();
+            calculateProfits();
+        }
+
+        /* إدارة المنتجات والمخزن */
+        function addProduct() {
+            let ref = document.getElementById('pRef').value.trim();
+            let name = document.getElementById('pName').value.trim();
+            let buy = Number(document.getElementById('pBuy').value) || 0;
+            let sell = Number(document.getElementById('pSell').value) || 0;
+            let qty = Number(document.getElementById('pQty').value) || 0;
+
+            if(!ref || !name) { playErrorSound(); return alert("الرجاء ملء حقول الباركود واسم المنتج!"); }
+            if(batches.some(b => b.ref === ref)) { playErrorSound(); return alert("الباركود مستعمل مسبقاً، يرجى اختيار باركود فريد!"); }
+
+            let product = { id: Date.now(), ref, name, buy, sell, qty };
+            batches.push(product);
+            save();
+            render();
+            
+            // تصفير الخانات
+            document.getElementById('pRef').value = '';
+            document.getElementById('pName').value = '';
+            document.getElementById('pBuy').value = '';
+            document.getElementById('pSell').value = '';
+            document.getElementById('pQty').value = '';
+            playBeepSound();
+        }
+
+        function renderProducts() {
+            let query = document.getElementById('productSearch').value.toLowerCase();
+            let html = '';
+            let filtered = batches.filter(b => b.name.toLowerCase().includes(query) || b.ref.toLowerCase().includes(query));
+
+            filtered.forEach(b => {
+                html += `<tr>
+                    <td><code>${b.ref}</code></td>
+                    <td>${b.name}</td>
+                    <td>${b.qty}</td>
+                    <td>${b.buy.toFixed(2)}</td>
+                    <td>${b.sell.toFixed(2)}</td>
+                    <td><button class="edit" onclick="editProductQty(${b.id})"><i class="fa-solid fa-pen"></i> تعديل كمية</button></td>
+                    <td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i> حذف</button></td>
+                </tr>`;
+            });
+            document.getElementById('productTable').innerHTML = html;
+        }
+
+        function editProductQty(id) {
+            let p = batches.find(x => x.id === id);
+            if(!p) return;
+            let newQty = prompt(`أدخل الكمية الجديدة للمنتج (${p.name}):`, p.qty);
+            if(newQty !== null) {
+                p.qty = Number(newQty) || 0;
+                save(); render();
+            }
+        }
+
+        function deleteProduct(id) {
+            if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً من المخزن؟")) {
+                batches = batches.filter(x => x.id !== id);
+                save(); render();
+            }
+        }
+
+        /* واجهة البيع السريعة */
+        function renderSalesOptions() {
+            let query = document.getElementById('saleSearch').value.toLowerCase();
+            let select = document.getElementById('saleStock');
+            select.innerHTML = '';
+            
+            let filtered = batches.filter(b => b.name.toLowerCase().includes(query) || b.ref.toLowerCase().includes(query));
+            filtered.forEach(b => {
+                let option = document.createElement('option');
+                option.value = b.id;
+                option.textContent = `${b.name} (المتوفر: ${b.qty} قطعة | السعر: ${b.sell} DA)`;
+                select.appendChild(option);
+            });
+            updateDefaultSalePriceField();
+        }
+
+        function addToCommand() {
+            let select = document.getElementById('saleStock');
+            if(!select.value) return;
+            let id = Number(select.value);
+            let qty = Number(document.getElementById('saleQty').value) || 1;
+            let price = Number(document.getElementById('salePriceInput').value) || 0;
+
+            let p = batches.find(x => x.id === id);
+            if(!p) return;
+
+            // التحقق من تكرار السلعة في السلة الحالية
+            let existing = currentCommandData.find(x => x.id === id);
+            if(existing) {
+                existing.qty += qty;
+                existing.price = price;
+            } else {
+                currentCommandData.push({ id: p.id, ref: p.ref, name: p.name, qty, price, buy: p.buy });
+            }
+
+            playBeepSound();
+            renderCurrentCommand();
+        }
+
+        function renderCurrentCommand() {
+            let container = document.getElementById('currentCommand');
+            container.innerHTML = '';
+            let total = 0;
+
+            currentCommandData.forEach((item, index) => {
+                let subtotal = item.qty * item.price;
+                total += subtotal;
+                container.innerHTML += `<div class="order-item-line">
+                    <span>${item.name} <span class="badge-qty">x${item.qty}</span></span>
+                    <span>${subtotal.toFixed(2)} DA 
+                        <i class="fa-solid fa-circle-xmark" style="color:var(--danger); cursor:pointer; margin-right:10px;" onclick="removeFromCommand(${index})"></i>
+                    </span>
+                </div>`;
+            });
+
+            document.getElementById('commandTotal').textContent = total.toFixed(2) + ' DA';
+        }
+
+        function removeFromCommand(index) {
+            currentCommandData.splice(index, 1);
+            renderCurrentCommand();
+        }
+
+        function confirmCommand() {
+            if(currentCommandData.length === 0) { playErrorSound(); return alert("سلة التسوق فارغة حالياً!"); }
+
+            let todayStr = new Date().toISOString().split('T')[0];
+
+            // إذا كنا نقوم بتعديل طلبية قديمة، نقوم أولاً بإرجاع الكميات القديمة للمخزن وحذف السجل القديم للطلب
+            if(editingOrderNumber !== null) {
+                let oldSales = sales.filter(x => x.command === editingOrderNumber);
+                oldSales.forEach(os => {
+                    let p = batches.find(b => b.id === os.id);
+                    if(p) p.qty += os.qty; // استعادة الكمية
+                });
+                sales = sales.filter(x => x.command !== editingOrderNumber); // حذف السجل القديم لتعويضه بالجديد
+                commandNumber = editingOrderNumber; // حفظها بنفس رقم الفاتورة الأصلية
+            }
+
+            // خصم الكميات وتسجيل المبيعات
+            for(let item of currentCommandData) {
+                let p = batches.find(b => b.id === item.id);
+                if(p) {
+                    p.qty -= item.qty; // خصم المخزن
                 }
                 
-                alert("🎉 تم استيراد واسترجاع النسخة الاحتياطية بنجاح، وتم تحديث كامل النظام!");
-            } else {
-                alert("الملف المرفوع غير متوافق أو لا يحتوي على الهيكلة الصحيحة لنظام الـ POS المطور.");
+                sales.push({
+                    command: commandNumber,
+                    id: item.id,
+                    ref: item.ref,
+                    name: item.name,
+                    qty: item.qty,
+                    price: item.price,
+                    buy: item.buy,
+                    date: todayStr
+                });
             }
-        } catch (err) {
-            alert("حدث خطأ أثناء قراءة ملف الـ JSON المرفوع، يرجى التأكد من سلامة الملف.");
-            console.error(err);
+
+            playCashRegisterSound();
+            alert(`تم حفظ وتأكيد الطلبية بنجاح برقم: #${commandNumber}`);
+
+            if(editingOrderNumber !== null) {
+                editingOrderNumber = null; // إنهاء وضع التعديل
+                commandNumber = Number(localStorage.getItem("commandNumber")) || 1; // العودة للعداد الافتراضي
+            } else {
+                commandNumber++;
+            }
+
+            currentCommandData = [];
+            document.getElementById('cmdNumberInput').value = commandNumber;
+            document.getElementById('searchOrderNumber').value = '';
+            save();
+            render();
+            renderCurrentCommand();
+            renderSalesLog();
         }
-        event.target.value = ''; 
-    };
-    reader.readAsText(file);
-}
-</script>
+
+        function renderSalesLog() {
+            let container = document.getElementById('salesLog');
+            container.innerHTML = '';
+            
+            // تجميع المبيعات حسب رقم الفاتورة
+            let grouped = {};
+            sales.forEach(s => {
+                if(!grouped[s.command]) grouped[s.command] = { total: 0, date: s.date, items: [] };
+                grouped[s.command].total += (s.price * s.qty);
+                grouped[s.command].items.push(s);
+            });
+
+            // عرض الفواتير بترتيب تنازلي (الأحدث أولاً)
+            let keys = Object.keys(grouped).sort((a,b) => b - a);
+            keys.forEach(cmdId => {
+                let g = grouped[cmdId];
+                container.innerHTML += `<div class="order-card">
+                    <div class="order-card-header">
+                        <span style="font-weight:800; color:var(--primary);">الطلب #${cmdId}</span>
+                        <span style="font-size:13px; color:var(--text-muted);">${g.date}</span>
+                    </div>
+                    <div style="font-size:14px; font-weight:700; margin-bottom:10px;">المجموع الإجمالي: ${g.total.toFixed(2)} DA</div>
+                    <button class="edit" style="padding:5px 12px; font-size:12px;" onclick="loadOrderToEditDirect(${cmdId})"><i class="fa-solid fa-edit"></i> تعديل</button>
+                    <button class="del" style="padding:5px 12px; font-size:12px; margin-right:5px;" onclick="deleteOrder(${cmdId})"><i class="fa-solid fa-trash"></i> إلغاء وحذف</button>
+                </div>`;
+            });
+        }
+
+        function loadOrderToEdit() {
+            let orderNum = Number(document.getElementById('searchOrderNumber').value);
+            if(!orderNum || orderNum < 1) return alert("يرجى إدخال رقم طلبية صحيح لجلبه.");
+            loadOrderToEditDirect(orderNum);
+        }
+
+        function loadOrderToEditDirect(orderNum) {
+            let orderItems = sales.filter(x => x.command === orderNum);
+            if(orderItems.length === 0) return alert("لم يتم العثور على أي طلبية تحمل الرقم #" + orderNum);
+            if(currentCommandData.length > 0) {
+                if(!confirm("السلة الحالية تحتوي على منتجات، هل تريد تفريغها وجلب الطلبية القديمة للتعديل؟")) return;
+            }
+
+            currentCommandData = orderItems.map(x => ({
+                id: x.id, ref: x.ref, name: x.name, qty: x.qty, price: x.price, buy: x.buy
+            }));
+            
+            editingOrderNumber = orderNum;
+            document.getElementById('cmdNumberInput').value = orderNum;
+            renderCurrentCommand();
+            alert(`جاري تعديل الفاتورة رقم #${orderNum} الآن بنجاح.`);
+        }
+
+        function deleteOrder(orderNum) {
+            if(confirm(`هل أنت متأكد من إلغاء وحذف الطلبية #${orderNum} بالكامل؟ سيتم إرجاع سلعها للمخزن تلقائياً.`)) {
+                let orderItems = sales.filter(x => x.command === orderNum);
+                orderItems.forEach(os => {
+                    let p = batches.find(b => b.id === os.id);
+                    if(p) p.qty += os.qty;
+                });
+                sales = sales.filter(x => x.command !== orderNum);
+                save(); render(); renderSalesLog();
+            }
+        }
+
+        /* جرد المخزون الكلي */
+        function renderStock() {
+            let html = '';
+            let totalPieces = 0;
+            let totalCapital = 0;
+            let totalExpectedProfit = 0;
+
+            batches.forEach(b => {
+                let cap = b.qty * b.buy;
+                let prof = (b.sell - b.buy) * b.qty;
+                
+                totalPieces += b.qty;
+                totalCapital += cap;
+                totalExpectedProfit += prof;
+
+                html += `<tr>
+                    <td>${b.name}</td>
+                    <td><span class="badge-qty" style="color:#fff;">${b.qty} قطعة</span></td>
+                    <td>${cap.toFixed(2)} DA</td>
+                    <td style="color:var(--success); font-weight:700;">${prof.toFixed(2)} DA</td>
+                    <td><button class="edit" style="padding:6px 12px;" onclick="addStockManual(${b.id})"><i class="fa-solid fa-plus"></i> توريد سريع</button></td>
+                </tr>`;
+            });
+
+            document.getElementById('stockTable').innerHTML = html;
+            document.getElementById('topStockPieces').textContent = totalPieces + ' قطعة';
+            document.getElementById('topStockCapital').textContent = totalCapital.toFixed(2) + ' DA';
+            document.getElementById('topStockProfit').textContent = totalExpectedProfit.toFixed(2) + ' DA';
+        }
+
+        function addStockManual(id) {
+            let p = batches.find(x => x.id === id);
+            if(!p) return;
+            let addQty = prompt(`أدخل كمية التوريد والسلع الجديدة المضافة للمخزن من المنتج (${p.name}):`, "10");
+            if(addQty) {
+                p.qty += (Number(addQty) || 0);
+                save(); render();
+            }
+        }
+
+        /* جرد السلع الناقصة بالتدرج */
+        function renderLowStock() {
+            let html = '';
+            batches.forEach(b => {
+                let statusClass = '';
+                let statusText = '';
+                
+                if(b.qty === 0) { statusClass = 'stock-empty'; statusText = '⚠️ نافذ تماماً (0 قطع)'; }
+                else if(b.qty <= 5) { statusClass = 'stock-danger'; statusText = '🚨 خطورة قصوى (أقل من 5)'; }
+                else if(b.qty <= 15) { statusClass = 'stock-warning'; statusText = '⚡ تنبيه متوسط (أقل من 15)'; }
+                else if(b.qty <= 30) { statusClass = 'stock-notice'; statusText = '📦 بداية نقص (أقل من 30)'; }
+                else return; // إذا كانت الكمية ممتازة لا تظهر هنا
+
+                html += `<tr class="${statusClass}">
+                    <td><code>${b.ref}</code></td>
+                    <td>${b.name}</td>
+                    <td style="font-weight:900;">${b.qty} قطعة</td>
+                    <td>${b.buy.toFixed(2)} DA</td>
+                    <td style="font-weight:800;">${statusText}</td>
+                </tr>`;
+            });
+            document.getElementById('lowTable').innerHTML = html;
+        }
+
+        /* إدارة المصاريف الكلية */
+        function addExpense() {
+            let title = document.getElementById('expTitle').value.trim();
+            let amount = Number(document.getElementById('expAmount').value) || 0;
+            let date = document.getElementById('expDate').value;
+
+            if(!title || amount <= 0 || !date) { playErrorSound(); return alert("يرجى ملء جميع بيانات المصروف بطريقة صحيحة!"); }
+
+            expenses.push({ id: Date.now(), title, amount, date });
+            save(); render();
+
+            document.getElementById('expTitle').value = '';
+            document.getElementById('expAmount').value = '';
+            playBeepSound();
+        }
+
+        function renderExpensesLog() {
+            let container = document.getElementById('expensesLog');
+            container.innerHTML = '';
+            
+            // ترتيب تنازلي للمصاريف
+            let sorted = [...expenses].sort((a,b) => new Date(b.date) - new Date(a.date));
+            sorted.forEach(e => {
+                container.innerHTML += `<div class="order-card" style="border-right: 5px solid var(--danger);">
+                    <div class="order-card-header">
+                        <span style="font-weight:800; color:var(--danger);">${e.title}</span>
+                        <span style="font-size:13px; color:var(--text-muted);">${e.date}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:16px; font-weight:800; color:#ff8a8a;">${e.amount.toFixed(2)} DA</span>
+                        <button class="del" style="padding:4px 10px; font-size:11px;" onclick="deleteExpense(${e.id})"><i class="fa-solid fa-trash"></i> حذف</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function deleteExpense(id) {
+            if(confirm("هل أنت متأكد من حذف هذا المصروف نهائياً من الدفاتر؟")) {
+                expenses = expenses.filter(x => x.id !== id);
+                save(); render();
+            }
+        }
+
+        /* الحسابات والتقارير المالية والأرباح الصافية الحقيقية */
+        function calculateProfits() {
+            let todayStr = new Date().toISOString().split('T')[0];
+            let thisMonthStr = todayStr.substring(0, 7); // YYYY-MM
+            let thisYearStr = todayStr.substring(0, 4); // YYYY
+
+            let dailyProfit = 0;
+            let monthlyProfit = 0;
+            let yearlyProfit = 0;
+            let totalExpensesYear = 0;
+
+            // 1. احتساب فائدة المبيعات (سعر البيع المعدل الفعلي - سعر الشراء)
+            sales.forEach(s => {
+                let profitItem = (s.price - s.buy) * s.qty;
+                if(s.date === todayStr) dailyProfit += profitItem;
+                if(s.date.startsWith(thisMonthStr)) monthlyProfit += profitItem;
+                if(s.date.startsWith(thisYearStr)) yearlyProfit += profitItem;
+            });
+
+            // 2. تجميع مصاريف السنة الجارية وخصمها من الأرباح الصافية
+            expenses.forEach(e => {
+                if(e.date.startsWith(thisYearStr)) {
+                    totalExpensesYear += e.amount;
+                    if(e.date === todayStr) dailyProfit -= e.amount;
+                    if(e.date.startsWith(thisMonthStr)) monthlyProfit -= e.amount;
+                }
+            });
+
+            // الفائدة الصافية السنوية الإجمالية = فائدة المبيعات السنوية - مصاريف السنة
+            yearlyProfit = yearlyProfit - totalExpensesYear;
+
+            // رندرة النتائج على كروت لوحة التحكم والتقارير المالية
+            document.getElementById('dailyProfit').textContent = dailyProfit.toFixed(2) + ' DA';
+            document.getElementById('monthlyProfit').textContent = monthlyProfit.toFixed(2) + ' DA';
+            document.getElementById('totalExpensesYear').textContent = totalExpensesYear.toFixed(2) + ' DA 💸';
+            document.getElementById('yearlyProfit').textContent = yearlyProfit.toFixed(2) + ' DA';
+
+            calculateFilteredProfit();
+        }
+
+        function calculateFilteredProfit() {
+            let from = document.getElementById('filterFrom').value;
+            let to = document.getElementById('filterTo').value;
+            if(!from || !to) return;
+
+            let dFrom = new Date(from);
+            let dTo = new Date(to);
+            let filteredProfit = 0;
+
+            sales.forEach(s => {
+                let dStr = new Date(s.date);
+                if(dStr >= dFrom && dStr <= dTo) {
+                    filteredProfit += (s.price - s.buy) * s.qty;
+                }
+            });
+
+            expenses.forEach(e => {
+                let dStr = new Date(e.date);
+                if(dStr >= dFrom && dStr <= dTo) {
+                    filteredProfit -= e.amount;
+                }
+            });
+
+            document.getElementById('filteredProfit').textContent = filteredProfit.toFixed(2) + ' DA 💰';
+        }
+
+        /* حزمة الاستيراد والتصدير للنسخ الاحتياطي JSON */
+        function exportData() {
+            let dataStr = JSON.stringify({ batches, sales, expenses, commandNumber });
+            let blob = new Blob([dataStr], { type: "application/json" });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `POS_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        function triggerImport() {
+            document.getElementById('importFileInput').click();
+        }
+
+        function importData(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let imported = JSON.parse(e.target.result);
+                    if(imported.batches && imported.sales && imported.expenses) {
+                        batches = imported.batches;
+                        sales = imported.sales;
+                        expenses = imported.expenses;
+                        commandNumber = imported.commandNumber || 1;
+                        save(); render();
+                        alert("تم استيراد واسترجاع قاعدة البيانات والنسخة الاحتياطية بنجاح تام 👑!");
+                    } else { alert("الملف المرفوع غير متوافق أو تالف!"); }
+                } catch(err) { alert("فشل في قراءة الملف، تأكد من اختيار ملف .json صحيح."); }
+            };
+            reader.readAsText(file);
+        }
+    </script>
 </body>
 </html>
