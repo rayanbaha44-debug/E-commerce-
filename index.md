@@ -294,9 +294,16 @@ tfoot tr td {
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
         <h2><i class="fa-solid fa-cash-register" style="color:var(--primary);"></i> واجهة البيع السريعة</h2>
     </div>
-    <div class="box" style="background: var(--text-main); color: white; text-align: center;">
-        <h3 id="cmdNumber" style="font-weight: 800; font-size: 22px;">Commande #1</h3>
+    
+    <!-- قسم رقم الطلبية المحدث (تعديل + تصفير) -->
+    <div class="box" style="background: var(--text-main); color: white; padding: 20px;">
+        <div style="display: flex; gap: 15px; align-items: center; justify-content: center; flex-wrap: wrap;">
+            <span style="font-weight: 800; font-size: 18px; white-space: nowrap;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
+            <input id="cmdNumberInput" type="number" min="1" style="width: 120px; margin: 0; text-align: center; font-size: 20px; font-weight: 800; color: var(--text-main); background: #fff; padding: 8px;" oninput="updateCommandNumberManual()">
+            <button class="del" onclick="resetCommandNumber()" style="padding: 10px 16px; font-size: 14px; background: var(--danger-gradient);"><i class="fa-solid fa-arrow-rotate-left"></i> تصفير (إلى 1)</button>
+        </div>
     </div>
+
     <input id="saleSearch" placeholder="🔍 ابحث هنا بالترتيب الأبجدي للمنتج..." oninput="renderSalesOptions()">
     <select id="saleStock"></select>
     <input id="saleQty" type="number" step="1" value="1" placeholder="الكمية">
@@ -425,7 +432,7 @@ function openPage(id){
 
 function back(){ document.getElementById("dashboard").style.display="grid"; document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); }
 
-/* دالة إنتاج نغمة الباركود الاحترافية تلقائياً دون ملفات خارجية */
+/* دالة إنتاج نغمة الباركود */
 function playBeepSound() {
     try {
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -433,16 +440,33 @@ function playBeepSound() {
         let gainNode = audioCtx.createGain();
 
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime); // تردد حاد ومميز مثل قارئ الكود
-        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime); // مستوى صوت متناسق ومريح للأذن
+        oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
 
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
 
         oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.1); // مدة رنة قصيرة جداً وسريعة (0.1 ثانية)
+        oscillator.stop(audioCtx.currentTime + 0.1);
     } catch (e) {
-        console.log("Audio API not supported or blocked by browser user gesture.");
+        console.log("Audio error");
+    }
+}
+
+/* دوال معالجة رقم الكومند الجديد يدوياً */
+function updateCommandNumberManual() {
+    let inputVal = document.getElementById('cmdNumberInput').value;
+    if(inputVal && Number(inputVal) >= 1) {
+        commandNumber = Math.floor(Number(inputVal));
+        localStorage.setItem("commandNumber", commandNumber);
+    }
+}
+
+function resetCommandNumber() {
+    if(confirm("هل أنت متأكد من تصفير عداد الطلبيات والبدء من 1؟")) {
+        commandNumber = 1;
+        document.getElementById('cmdNumberInput').value = commandNumber;
+        save();
     }
 }
 
@@ -505,7 +529,7 @@ function addToCommand(){
         ex.qty += qty;
     } else { currentCommandData.push({...b, qty}); }
     
-    playBeepSound(); // تشغيل الصوت فور الإضافة الناجحة للسلة 🔊
+    playBeepSound();
     updateCommandUI();
 }
 
@@ -709,7 +733,8 @@ function render(){
     
     if(lowItems.length === 0) document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success); font-weight:700; padding:30px;">🎉 كل السلع متوفرة بكميات ممتازة (+15 قطعة)</td></tr>`;
     
-    document.getElementById('cmdNumber').innerHTML = "Commande #" + commandNumber;
+    // تحديث قيمة خانة الإدخال برقم الطلبية الحالي في الواجهة
+    document.getElementById('cmdNumberInput').value = commandNumber;
 }
 
 function exportData(){
