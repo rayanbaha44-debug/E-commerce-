@@ -372,12 +372,14 @@ tr:last-child td {
         <h2><i class="fa-solid fa-cash-register" style="color:var(--primary);"></i> واجهة البيع السريعة</h2>
     </div>
 
-    <div class="box" style="border: 1px dashed var(--primary); background: #f0f7ff;">
-        <h4 style="color: var(--primary); margin-bottom: 8px;"><i class="fa-solid fa-pen-to-square"></i> تعديل ومراجعة كوموند سابق</h4>
+    <div class="box" style="border: 1px dashed var(--primary); background: #f0f7ff; display: flex; flex-direction: column; gap: 10px;">
+        <h4 style="color: var(--primary); margin-bottom: 0px;"><i class="fa-solid fa-pen-to-square"></i> مراجعة كوموند سابق / التحكم بالعداد</h4>
         <div class="flex-inputs">
             <input id="editCmdNumInput" type="number" placeholder="أدخل رقم الكوموند القديم للبحث عنه...">
             <button onclick="loadCommandForEdit()" style="white-space: nowrap;"><i class="fa-solid fa-magnifying-glass"></i> جلب وتعديل</button>
         </div>
+        <!-- الزر الجديد لتصفير العداد إلى 1 -->
+        <button onclick="resetCommandCounterToOne()" style="background: var(--warning); box-shadow: none; font-size: 13px; padding: 8px 15px; align-self: flex-start;"><i class="fa-solid fa-arrow-rotate-left"></i> 🔄 إرجاع وتثبيت عداد الكوموند عند الرقم 1</button>
     </div>
 
     <div class="box" style="background: var(--text-main); color: white; text-align: center; border: none; box-shadow: var(--shadow-md);">
@@ -491,6 +493,17 @@ function calculateNextCommandNumber() {
         commandNumber = maxExistingCmd + 1;
     } else {
         commandNumber = 1;
+    }
+}
+
+/* دالة جديدة لإجبار العداد على العودة للرقم 1 وتصفير سجل المبيعات القديم */
+function resetCommandCounterToOne() {
+    if(confirm("هل أنت متأكد من تصفير العداد؟ سيتم البدء من الكوموند #1 (ملاحظة: هذا الخيار سيمسح سجل العمليات السابقة لتجنب تداخل الأرقام)")) {
+        sales = []; // إخلاء سجل المبيعات لتصفير الحسابات
+        commandNumber = 1;
+        save();
+        render();
+        alert("تمت إعادة تعيين العداد بنجاح! الكوموند القادمة ستكون رقم 1.");
     }
 }
 
@@ -613,12 +626,22 @@ function loadCommandForEdit() {
 function confirmCommand(){
     if(currentCommandData.length===0){ alert("السلة فارغة تماماً!"); return; }
 
-    currentCommandData.forEach(item=>{
+    let uniqueTime = Date.now(); 
+
+    currentCommandData.forEach((item, index)=>{
         let b = batches.find(x=>x.id===item.id); if(!b) return;
         b.qty = Math.max(0, (b.qty||0) - (item.qty||0));
+        
         sales.push({
-            id:item.id, ref:item.ref, name:item.name, qty:item.qty, buy:item.buy, sell:item.sell,
-            profit:(item.sell-item.buy)*item.qty, time:Date.now(), command:commandNumber
+            id:item.id, 
+            ref:item.ref, 
+            name:item.name, 
+            qty:item.qty, 
+            buy:item.buy, 
+            sell:item.sell,
+            profit:(item.sell-item.buy)*item.qty, 
+            time: uniqueTime + index, 
+            command:commandNumber
         });
     });
 
@@ -627,13 +650,17 @@ function confirmCommand(){
     save(); render(); renderSalesOptions();
 }
 
-function deleteSale(index){
+function deleteSaleByTime(saleTime){
     if(!confirm("هل تريد إلغاء هذه المبيعة وإرجاع الكمية للمخزن؟")) return;
-    let s = sales[index]; if(!s) return;
-    let b = batches.find(x=>x.id===s.id); if(b) b.qty += s.qty;
+    
+    let s = sales.find(x => x.time === saleTime);
+    if(!s) return;
+    
+    let b = batches.find(x => x.id === s.id); 
+    if(b) b.qty += s.qty; 
     
     let deletedCommandNumber = s.command;
-    sales.splice(index,1);
+    sales = sales.filter(x => x.time !== saleTime);
     commandNumber = deletedCommandNumber;
 
     save(); render(); renderSalesOptions();
@@ -732,13 +759,12 @@ function render(){
         <p><i class="fa-solid fa-coins" style="color:var(--warning)"></i> <strong>القيمة الإجمالية المتوقعة عند البيع:</strong> ${totalValue.toFixed(2)} DA</p>
         <p style="color:var(--success); font-size: 17px;"><i class="fa-solid fa-circle-dollar-to-slot"></i> <strong>صافي الأرباح المنتظرة الكلية:</strong> ${(totalValue - totalCapital).toFixed(2)} DA</p>`;
 
-    document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s,i)=>{
-        let idx = sales.length-1-i;
+    document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s)=>{
         return `
         <div class="saleItem">
             <span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} <span class="badge-qty" style="background:#f1f5f9; color:var(--text-main)">x${s.qty}</span></span>
             <span>الربح الصافي: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span>
-            <button class="del" onclick="deleteSale(${idx})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-rotate-left"></i> إلغاء المبيعة</button>
+            <button class="del" onclick="deleteSaleByTime(${s.time})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-rotate-left"></i> إلغاء المبيعة</button>
         </div>`;
     }).join("");
 
