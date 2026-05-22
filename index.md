@@ -9,7 +9,7 @@
 
 <style>
 
-/* ================= UI SAME ================= */
+/* ================= UI SAME & UPDATED ================= */
 
 *{
 margin:0;
@@ -25,25 +25,26 @@ display:flex;
 justify-content:center;
 align-items:center;
 min-height:100vh; 
-padding: 20px 0; 
+padding: 20px; 
 }
 
 #dashboard{
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:12px;
-width:360px;
+width:100%;
+max-width: 500px; /* تكبير لوحة التحكم الرئيسية */
 }
 
 .card{
 background:white;
-padding:20px;
+padding:25px; /* زيادة الحجم */
 border-radius:14px;
 text-align:center;
 cursor:pointer;
 border:1px solid #d1d5db;
 font-weight:bold;
-font-size:18px;
+font-size:20px; /* تكبير الخط */
 transition:.2s;
 box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
@@ -55,10 +56,10 @@ transform:scale(1.03);
 .page{
 display:none;
 width:100%;
-max-width: 450px; 
+max-width: 850px; /* تم تكبير عرض الصفحة لتظهر كل البيانات مستقيمة وغير مقصوصة */
 min-height:100vh;
 padding:20px;
-padding-bottom: 80px; 
+padding-bottom: 100px; 
 }
 
 .page.active{
@@ -73,13 +74,14 @@ margin-bottom:15px;
 }
 
 button{
-padding:10px;
+padding:12px 18px; /* تكبير الأزرار */
 border:none;
 border-radius:8px;
 cursor:pointer;
 background:#22c55e;
 color:black;
 font-weight:bold;
+font-size:15px;
 }
 
 .back{
@@ -89,66 +91,71 @@ color:white;
 
 input,select{
 width:100%;
-padding:12px;
-margin:6px 0;
+padding:14px; /* تكبير حقول الإدخال للقراءة المريحة */
+margin:8px 0;
 border-radius:8px;
 border:1px solid #ccc;
 background:white;
 color:black;
-font-size:15px;
+font-size:16px;
 }
 
 table{
 width:100%;
-margin-top:10px;
+margin-top:15px;
 border-collapse:collapse;
 background:white;
 border-radius:10px;
 overflow:hidden;
 box-shadow:0 2px 10px rgba(0,0,0,.05);
-display:block;
-overflow-x:auto;
-white-space:nowrap;
 }
 
 th,td{
-padding:10px;
+padding:14px 10px; /* زيادة مساحات الخلايا داخل الجدول */
 text-align:center;
 border-bottom:1px solid #ddd;
+font-size:15px;
+}
+
+th {
+background-color: #f3f4f6;
+font-weight: bold;
 }
 
 .del{
 background:#ef4444;
-padding:5px 8px;
+padding:6px 12px;
 border-radius:6px;
-font-size:12px;
+font-size:13px;
 color:white;
 cursor:pointer;
+font-weight: bold;
 }
 
 .edit{
 background:#3b82f6;
-padding:5px 8px;
+padding:6px 12px;
 border-radius:6px;
-font-size:12px;
+font-size:13px;
 color:white;
 cursor:pointer;
+font-weight: bold;
 }
 
 #salesLog{
 margin-top:15px;
 background:white;
-padding:10px;
+padding:15px;
 border-radius:10px;
-max-height:250px;
+max-height:300px;
 overflow:auto;
 box-shadow:0 2px 10px rgba(0,0,0,.05);
 }
 
 .saleItem{
-padding:8px;
+padding:10px;
 border-bottom:1px solid #ddd;
-font-size:14px;
+font-size:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -158,10 +165,16 @@ flex-wrap:wrap;
 
 .box{
 background:white;
-padding:12px;
+padding:16px;
 border-radius:12px;
 margin-bottom:12px;
 box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.flex-inputs {
+display: flex;
+gap: 10px;
+align-items: center;
 }
 
 </style>
@@ -172,11 +185,11 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <!-- DASHBOARD -->
 <div id="dashboard">
 
-<div class="card" onclick="openPage('products')">المنتجات📦</div>
-<div class="card" onclick="openPage('sales')">البيع🛒</div>
-<div class="card" onclick="openPage('stock')">المخزون🏬</div>
-<div class="card" onclick="openPage('low')">الناقص⚠️</div>
-<div class="card" onclick="openPage('profits')">الأرباح💰</div>
+<div class="card" onclick="openPage('products')">المنتجات 📦</div>
+<div class="card" onclick="openPage('sales')">البيع 🛒</div>
+<div class="card" onclick="openPage('stock')">المخزون 🏬</div>
+<div class="card" onclick="openPage('low')">الناقص ⚠️</div>
+<div class="card" onclick="openPage('profits')">الأرباح 💰</div>
 <div class="card" onclick="exportData()">تصدير البيانات 💾</div>
 
 </div>
@@ -185,27 +198,27 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <div id="products" class="page">
 
 <div class="header">
-<button class="back" onclick="back()">رجوع↩️</button>
-<h2>📦المنتجات</h2>
+<button class="back" onclick="back()">رجوع ↩️</button>
+<h2>📦 المنتجات</h2>
 </div>
 
-<input id="pRef" placeholder="الرفيرونس">
+<input id="pRef" placeholder="الرفيرونس (الباركود أو الرمز)">
 <input id="pName" placeholder="اسم المنتج">
 <input id="pBuy" type="number" step="0.01" placeholder="سعر الشراء (مثال: 221.77)">
 <input id="pSell" type="number" step="0.01" placeholder="سعر البيع (مثال: 250.50)">
-<input id="pQty" type="number" step="0.01" placeholder="الكمية">
+<input id="pQty" type="number" step="0.01" placeholder="الكمية المتوفرة">
 
-<button onclick="addProduct()">إضافة</button>
+<button onclick="addProduct()" style="width: 100%; margin-bottom: 10px;">إضافة منتج جديد</button>
 
 <input type="file" id="importFile" hidden onchange="importData(event)">
-<button onclick="document.getElementById('importFile').click()" style="background:#3b82f6; color:white; margin-top:5px;">استيراد البيانات 📥</button>
+<button onclick="document.getElementById('importFile').click()" style="background:#3b82f6; color:white; width: 100%; margin-bottom: 15px;">استيراد البيانات من ملف خارجي 📥</button>
 
-<input id="productSearch" placeholder="ابحث باسم المنتج أو الرفيرونس..." oninput="renderProducts()">
+<input id="productSearch" placeholder="ابحث هنا باسم المنتج أو الرفيرونس للتصفية السريعة..." oninput="renderProducts()">
 
 <table>
 <thead>
 <tr>
-<th>الرفيرونس</th><th>الاسم</th><th>الكمية</th><th>شراء</th><th>بيع</th><th>تعديل</th><th>حذف</th>
+<th>الرفيرونس</th><th>اسم المنتج</th><th>الكمية</th><th>شراء</th><th>بيع</th><th>تعديل</th><th>حذف</th>
 </tr>
 </thead>
 <tbody id="productTable"></tbody>
@@ -217,27 +230,36 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <div id="sales" class="page">
 
 <div class="header">
-<button class="back" onclick="back()">رجوع↩️</button>
-<h2>🛒البيع</h2>
+<button class="back" onclick="back()">رجوع ↩️</button>
+<h2>🛒 واجهة البيع</h2>
+</div>
+
+<!-- ميزة تعديل الكوموندات السابقة -->
+<div class="box" style="border: 2px dashed #3b82f6; background: #eff6ff;">
+<h3>📝 تعديل كوموند سابق</h3>
+<div class="flex-inputs">
+<input id="editCmdNumInput" type="number" placeholder="أدخل رقم الكوموند المراد تعديله هنا...">
+<button onclick="loadCommandForEdit()" style="background: #3b82f6; color: white; white-space: nowrap;">جلب وتعديل ✏️</button>
+</div>
 </div>
 
 <div class="box">
 <h3 id="cmdNumber">Commande #1</h3>
 </div>
 
-<input id="saleSearch" placeholder="ابحث باسم المنتج أو الرفيرونس..." oninput="renderSalesOptions()">
+<input id="saleSearch" placeholder="ابحث باسم المنتج أو الرفيرونس لتصفية قائمة البيع..." oninput="renderSalesOptions()">
 
 <select id="saleStock"></select>
 <input id="saleQty" type="number" step="0.01" value="1">
 
-<button onclick="addToCommand()">إضافة للكوموند</button>
+<button onclick="addToCommand()" style="width: 100%;">إضافة المنتج للكوموند الحالي</button>
 
 <div class="box" style="margin-top:15px;">
-<h3>منتجات الكوموند</h3>
+<h3>منتجات الكوموند الحالي</h3>
 <div id="currentCommand"></div>
-<h3 id="commandTotal" style="margin-top:10px;">المجموع: 0 DA</h3>
+<h3 id="commandTotal" style="margin-top:10px; color:#16a34a;">المجموع: 0.00 DA</h3>
 
-<button onclick="confirmCommand()" style="width:100%; margin-top:10px;">تأكيد الطلب OK</button>
+<button onclick="confirmCommand()" style="width:100%; margin-top:10px; font-size: 18px; padding: 15px;">تأكيد وطباعة الطلب OK</button>
 </div>
 
 <h3>سجل مبيعات اليوم الحالي</h3>
@@ -248,28 +270,28 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <!-- STOCK -->
 <div id="stock" class="page">
 <div class="header">
-<button class="back" onclick="back()">رجوع↩️</button>
-<h2>🏬المخزون</h2>
+<button class="back" onclick="back()">رجوع ↩️</button>
+<h2>🏬 جرد المخزون</h2>
 </div>
 
 <table>
 <thead>
-<tr><th>المنتج</th><th>الكمية</th><th>رأس المال</th><th>القيمة المتوقعة</th><th>حذف</th></tr>
+<tr><th>اسم المنتج</th><th>الكمية المتبقية</th><th>إجمالي رأس المال</th><th>الأرباح المتوقعة</th><th>حذف المنتج</th></tr>
 </thead>
 <tbody id="stockTable"></tbody>
 </table>
 
-<div id="totals" class="box" style="margin-top:15px;"></div>
+<div id="totals" class="box" style="margin-top:15px; font-size: 16px; line-height: 2;"></div>
 </div>
 
 <!-- LOW -->
 <div id="low" class="page">
 <div class="header">
-<button class="back" onclick="back()">رجوع↩️</button>
-<h2>⚠️الناقص</h2>
+<button class="back" onclick="back()">رجوع ↩️</button>
+<h2>⚠️ النواقص (المخزن شبه الفارغ)</h2>
 </div>
 <table>
-<thead><tr><th>المنتج</th><th>الكمية المتبقية</th><th>الحالة</th></tr></thead>
+<thead><tr><th>اسم المنتج</th><th>الكمية المتبقية</th><th>الحالة</th></tr></thead>
 <tbody id="lowTable"></tbody>
 </table>
 </div>
@@ -277,20 +299,20 @@ box-shadow:0 2px 10px rgba(0,0,0,.05);
 <!-- PROFITS -->
 <div id="profits" class="page">
 <div class="header">
-<button class="back" onclick="back()">رجوع↩️</button>
-<h2>💰الأرباح</h2>
+<button class="back" onclick="back()">رجوع ↩️</button>
+<h2>💰 كشف الأرباح والمدخول</h2>
 </div>
 
 <div class="box">
-<h3>أرباح اليوم</h3><div id="dailyProfit">0 DA</div>
+<h3>أرباح اليوم الحالي</h3><div id="dailyProfit" style="font-size: 24px; font-weight: bold; color: #16a34a;">0.00 DA</div>
 </div>
 
 <div class="box">
-<h3>أرباح الشهر</h3><div id="monthlyProfit">0 DA</div>
+<h3>أرباح الشهر الحالي</h3><div id="monthlyProfit" style="font-size: 24px; font-weight: bold; color: #16a34a;">0.00 DA</div>
 </div>
 
 <div class="box">
-<h3>أرباح السنة</h3><div id="yearlyProfit">0 DA</div>
+<h3>أرباح السنة الحالية</h3><div id="yearlyProfit" style="font-size: 24px; font-weight: bold; color: #16a34a;">0.00 DA</div>
 </div>
 
 </div>
@@ -320,6 +342,7 @@ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 if(id === 'sales') {
 document.getElementById('saleSearch').value = ''; 
+document.getElementById('editCmdNumInput').value = ''; 
 renderSalesOptions();
 }
 window.scrollTo(0, 0);
@@ -403,7 +426,7 @@ b.ref.toLowerCase().includes(searchVal)
 );
 
 let saleStock = document.getElementById('saleStock');
-saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">[${b.ref}] ${b.name} (${b.qty} قطعة) - ${b.sell.toFixed(2)} DA</option>`).join("");
+saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">[${b.ref}] ${b.name} (${b.qty} قطعة متبقية) - ${b.sell.toFixed(2)} DA</option>`).join("");
 }
 
 function addToCommand(){
@@ -437,12 +460,11 @@ currentCommandData.push({...b, qty});
 updateCommandUI();
 }
 
-/* تعديل سعر منتج معين داخل الكوموند قبل التأكيد */
 function editCommandItemPrice(idx) {
 let item = currentCommandData[idx];
 if(!item) return;
 
-let newPrice = prompt(`تعديل سعر بيع [${item.name}] لهذا الكوموند الحالى فقط:`, item.sell);
+let newPrice = prompt(`تعديل سعر بيع [${item.name}] لهذا الكوموند فقط:`, item.sell);
 if(newPrice === null || newPrice.trim() === "") return;
 
 if(isNaN(newPrice) || +newPrice < 0) {
@@ -452,6 +474,58 @@ return;
 
 item.sell = +newPrice;
 updateCommandUI();
+}
+
+/* ================= ميزة جلب وتعديل كوموند سابق ================= */
+function loadCommandForEdit() {
+let cmdNum = Number(document.getElementById('editCmdNumInput').value);
+if (!cmdNum || cmdNum <= 0) {
+alert("الرجاء إدخال رقم كوموند صحيح");
+return;
+}
+
+// البحث عن المنتجات المباعة في هذا الكوموند
+let targetSales = sales.filter(x => x.command === cmdNum);
+if (targetSales.length === 0) {
+alert("هذا الكوموند غير موجود أو تم حذفه مسبقاً!");
+return;
+}
+
+if (currentCommandData.length > 0) {
+if (!confirm("سلتك الحالية تحتوي على منتجات، هل تريد تفريغها وجلب الكوموند القديم بدلاً منها؟")) return;
+}
+
+// 1. إرجاع السلع القديمة مؤقتاً إلى المخزن قبل التعديل لكي لا تظهر أخطاء نقص الكمية
+targetSales.forEach(s => {
+let b = batches.find(x => x.id === s.id);
+if (b) {
+b.qty += s.qty;
+}
+});
+
+// 2. تحويل السلع الملغاة إلى السلة الحالية للبدء في تعديلها
+currentCommandData = targetSales.map(s => {
+return {
+id: s.id,
+ref: s.ref,
+name: s.name,
+buy: s.buy,
+sell: s.sell,
+qty: s.qty
+};
+});
+
+// 3. حذف السجل القديم للكوموند من قائمة المبيعات لمنع التكرار
+sales = sales.filter(x => x.command !== cmdNum);
+
+// 4. جعل رقم الكوموند الحالي هو نفسه رقم الكوموند القديم حتى عند الحفظ يتم حفظه بنفس رقمه
+commandNumber = cmdNum;
+
+save();
+render();
+updateCommandUI();
+renderSalesOptions();
+alert(`تم جلب المنتجات للكوموند #${cmdNum} بنجاح. يمكنك الآن التعديل، الحذف، أو إضافة سلع جديدة ثم اضغط تأكيد الطلب OK.`);
 }
 
 /* ================= CONFIRM ================= */
@@ -466,6 +540,7 @@ currentCommandData.forEach(item=>{
 let b = batches.find(x=>x.id===item.id);
 if(!b) return;
 
+// خصم الكمية الفعلي من المخزن
 b.qty = Math.max(0, (b.qty||0) - (item.qty||0));
 
 sales.push({
@@ -481,7 +556,10 @@ command:commandNumber
 });
 });
 
-commandNumber++;
+// الانتقال التلقائي للرقم الموالي بعد الحفظ
+let maxExistingCmd = sales.reduce((max, s) => s.command > max ? s.command : max, 0);
+commandNumber = maxExistingCmd + 1;
+
 currentCommandData=[];
 save();
 render();
@@ -500,7 +578,6 @@ b.qty += s.qty;
 }
 
 let deletedCommandNumber = s.command;
-
 sales.splice(index,1);
 
 if (deletedCommandNumber === commandNumber - 1) {
@@ -526,21 +603,21 @@ let total=0;
 currentCommand.innerHTML = currentCommandData.map((i,idx)=>{
 total += i.sell*i.qty;
 return `
-<div style="display:flex; justify-content:space-between; align-items:center; margin:6px 0; background:#f3f4f6; padding:8px; border-radius:8px;">
-<span style="font-weight:500;">${i.name} x${i.qty}</span>
+<div style="display:flex; justify-content:space-between; align-items:center; margin:6px 0; background:#f3f4f6; padding:10px; border-radius:8px;">
+<span style="font-weight:500;">${i.name} (الكمية: ${i.qty})</span>
 <span style="color:#2563eb; font-weight:bold;">${(i.sell*i.qty).toFixed(2)} DA</span>
 <div style="display:flex; gap:8px;">
-<span onclick="editCommandItemPrice(${idx})" style="cursor:pointer; background:#3b82f6; color:white; padding:2px 6px; border-radius:4px; font-size:12px;">✏️ سعر</span>
-<span onclick="removeFromCommand(${idx})" style="cursor:pointer; background:#ef4444; color:white; padding:2px 6px; border-radius:4px; font-size:12px;">❌</span>
+<span onclick="editCommandItemPrice(${idx})" style="cursor:pointer; background:#3b82f6; color:white; padding:4px 8px; border-radius:4px; font-size:13px;">✏️ السعر</span>
+<span onclick="removeFromCommand(${idx})" style="cursor:pointer; background:#ef4444; color:white; padding:4px 8px; border-radius:4px; font-size:13px;">❌ إلغاء</span>
 </div>
 </div>`;
 }).join("");
 
-commandTotal.innerHTML = "المجموع: " + total.toFixed(2) + " DA";
+commandTotal.innerHTML = "المجموع الإجمالي: " + total.toFixed(2) + " DA";
 cmdNumber.innerHTML = "Commande #" + commandNumber;
 }
 
-function removeFromCommand(i){
+function removeFromCommand(i) {
 currentCommandData.splice(i,1);
 updateCommandUI();
 }
@@ -553,9 +630,9 @@ let filtered = batches.filter(b => b.name.toLowerCase().includes(searchVal) || b
 
 document.getElementById('productTable').innerHTML = filtered.map(b=>`
 <tr>
-<td>${b.ref}</td>
+<td><strong>${b.ref}</strong></td>
 <td>${b.name}</td>
-<td>${b.qty}</td>
+<td><mark style="padding:2px 6px; border-radius:4px; background:#fef3c7">${b.qty}</mark></td>
 <td>${b.buy.toFixed(2)}</td>
 <td>${b.sell.toFixed(2)}</td>
 <td><button class="edit" onclick="editProduct(${b.id})">تعديل</button></td>
@@ -578,8 +655,8 @@ totalValue += (b.sell * b.qty);
 
 return `
 <tr>
-<td>${b.name}</td>
-<td>${b.qty}</td>
+<td><strong>${b.name}</strong></td>
+<td>${b.qty} قطع</td>
 <td>${capital.toFixed(2)} DA</td>
 <td>${expectedProfit.toFixed(2)} DA</td>
 <td><button class="del" onclick="deleteProduct(${b.id})">حذف</button></td>
@@ -587,17 +664,18 @@ return `
 }).join("");
 
 document.getElementById('totals').innerHTML = `
-<p><strong>إجمالي رأس المال الحالي:</strong> ${totalCapital.toFixed(2)} DA</p>
-<p><strong>القيمة الإجمالية للسلع عند البيع:</strong> ${totalValue.toFixed(2)} DA</p>
+<p>💰 <strong>إجمالي رأس المال المستثمر في السلع:</strong> ${totalCapital.toFixed(2)} DA</p>
+<p>📈 <strong>القيمة الإجمالية المتوقعة عند بيع كل السلع:</strong> ${totalValue.toFixed(2)} DA</p>
+<p>✨ <strong>الأرباح الصافية المتوقعة بالمستودع:</strong> ${(totalValue - totalCapital).toFixed(2)} DA</p>
 `;
 
 document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s,i)=>{
 let idx = sales.length-1-i;
 return `
 <div class="saleItem">
-<span><strong>#${s.command}</strong> - [${s.ref}] ${s.name} x${s.qty}</span>
-<span>الربح: ${s.profit.toFixed(2)} DA</span>
-<span onclick="deleteSale(${idx})" style="cursor:pointer;">❌</span>
+<span><b style="color:#2563eb;">#${s.command}</b> - [${s.ref}] ${s.name} x${s.qty}</span>
+<span>صافي الربح: <b>${s.profit.toFixed(2)} DA</b></span>
+<span onclick="deleteSale(${idx})" style="cursor:pointer; background:#fee2e2; color:#ef4444; padding:2px 6px; border-radius:4px;">❌ حذف المبيعة</span>
 </div>`;
 }).join("");
 
@@ -622,13 +700,13 @@ document.getElementById('yearlyProfit').innerHTML = yProfit.toFixed(2) + " DA";
 let lowItems = batches.filter(b => b.qty <= 5);
 document.getElementById('lowTable').innerHTML = lowItems.map(b => `
 <tr style="background: ${b.qty === 0 ? '#fee2e2' : '#fef3c7'}">
-<td>${b.name}</td>
-<td>${b.qty}</td>
-<td><span style="color:${b.qty === 0 ? 'red':'orange'}; font-weight:bold;">${b.qty === 0 ? 'منتهي ❌' : 'شبه منتهي ⚠️'}</span></td>
+<td><b>${b.name}</b></td>
+<td>${b.qty} قطع متبقية</td>
+<td><span style="color:${b.qty === 0 ? 'red':'orange'}; font-weight:bold;">${b.qty === 0 ? 'منتهي تماماً ❌' : 'شبه منتهي ⚠️'}</span></td>
 </tr>
 `).join("");
 if(lowItems.length === 0){
-document.getElementById('lowTable').innerHTML = `<tr><td colspan="3">لا توجد نواقص بحمد الله 🎉</td></tr>`;
+document.getElementById('lowTable').innerHTML = `<tr><td colspan="3">كل المنتجات متوفرة وبكميات جيدة 🎉</td></tr>`;
 }
 
 document.getElementById('cmdNumber').innerHTML = "Commande #" + commandNumber;
@@ -659,7 +737,7 @@ sales = parsed.sales || [];
 commandNumber = parsed.commandNumber || 1;
 save();
 render();
-alert("تم استيراد البيانات بنجاح!");
+alert("تم استيراد البيانات بنجاح ودمجها بالنظام!");
 } else {
 alert("ملف غير صالح.");
 }
