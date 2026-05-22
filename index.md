@@ -386,8 +386,14 @@ tr:last-child td { border-bottom: none; }
     <div class="card" onclick="openPage('low')"><i class="fa-solid fa-triangle-exclamation" style="background:var(--warning-gradient); -webkit-background-clip: text;"></i> السلع الناقصة بالمحل</div>
     <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
     <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
-    <div class="card" onclick="exportData()" style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.15);"><i class="fa-solid fa-file-export" style="background:#94a3b8; -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
+    
+    <!-- أزرار النسخ الاحتياطي المحدثة (التصدير والاستيراد) -->
+    <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
+    <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد نسخة من الكمبيوتر</div>
 </div>
+
+<!-- حقل مخفي مخصص لرفع الملفات من الكمبيوتر -->
+<input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importData(event)">
 
 <!-- إدارة المنتجات - PRODUCTS -->
 <div id="products" class="page">
@@ -971,6 +977,54 @@ function exportData(){
     let linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri); linkElement.setAttribute('download', 'pos_premium_backup.json');
     linkElement.click();
+}
+
+/* ================= دالة فتح واستيراد النسخة الاحتياطية المضافة ================= */
+function triggerImport() {
+    document.getElementById('importFileInput').click();
+}
+
+function importData(event) {
+    let file = event.target.files[0];
+    if (!file) return;
+
+    if (!confirm("تحذير: استيراد ملف خارجي سيقوم باستبدال كافة البيانات الحالية بالبيانات الجديدة المخزنة داخل الملف. هل تريد الاستمرار؟")) {
+        event.target.value = ''; // تصفير الحقل
+        return;
+    }
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let importedData = JSON.parse(e.target.result);
+            
+            // التحقق من صحة هيكلة الملف قبل تفريغه في المتصفح
+            if (importedData.hasOwnProperty('batches') && importedData.hasOwnProperty('sales') && importedData.hasOwnProperty('expenses')) {
+                batches = importedData.batches || [];
+                sales = importedData.sales || [];
+                expenses = importedData.expenses || [];
+                commandNumber = Number(importedData.commandNumber) || 1;
+                
+                // حفظ البيانات المستوردة فوراً في الـ LocalStorage
+                save();
+                
+                // إعادة رسم وجرد الجداول والقوائم وتحديث المظهر تلقائياً
+                render();
+                if(document.getElementById('sales').classList.contains('active')) {
+                    renderSalesOptions();
+                }
+                
+                alert("🎉 تم استيراد واسترجاع النسخة الاحتياطية بنجاح، وتم تحديث كامل النظام!");
+            } else {
+                alert("الملف المرفوع غير متوافق أو لا يحتوي على الهيكلة الصحيحة لنظام الـ POS المطور.");
+            }
+        } catch (err) {
+            alert("حدث خطأ أثناء قراءة ملف الـ JSON المرفوع، يرجى التأكد من سلامة الملف.");
+            console.error(err);
+        }
+        event.target.value = ''; // تصفير الحقل بعد الانتهاء
+    };
+    reader.readAsText(file);
 }
 </script>
 </body>
