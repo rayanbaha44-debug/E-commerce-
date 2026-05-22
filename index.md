@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POS SYSTEM EXECUTIVE - نظام المبيعات الاحترافي المطور</title>
+<title>POS SYSTEM EXECUTIVE - نظام المبيعات المطور بالخطورة الديناميكية</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,6 @@
     --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
     
-    /* ألوان الخلفية الاحترافية الفخمة */
     --bg-app: #090d16; 
     --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
     --surface: #1f2937; 
@@ -221,7 +220,6 @@ input:focus, select:focus {
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
 }
 
-/* تنسيق خطأ خاص بالرفرونس المتكرر وسعر الخسارة */
 input.input-error {
     border-color: var(--danger) !important;
     background: rgba(239, 68, 68, 0.1) !important;
@@ -231,7 +229,7 @@ input.input-error {
 
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25 { transform: translateX(-6px); }
+    25% { transform: translateX(-6px); }
     75% { transform: translateX(6px); }
 }
 
@@ -247,7 +245,6 @@ input.input-error {
     .sales-grid { grid-template-columns: 1fr; }
 }
 
-/* الصناديق والعلب الفرعية */
 .box {
     background: rgba(9, 13, 22, 0.6);
     padding: 25px;
@@ -259,7 +256,7 @@ input.input-error {
 .flex-inputs { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
 .flex-inputs > div { flex: 1; }
 
-/* ================= الجداول المتطورة فائدة التباين والوضوح ================= */
+/* الجداول المتطورة */
 table {
     width: 100%;
     margin-top: 25px;
@@ -293,14 +290,12 @@ td {
     font-weight: 600;
 }
 
-/* تأثير حركي لقراءة أسهل */
 tr:hover td {
     background-color: #2563eb; 
     color: #ffffff !important;
     transition: background 0.15s ease;
 }
 
-/* تخصيص وحماية كود الباركود / الرفرونس عند الكتابة الطويلة جداً */
 td code {
     background: rgba(0, 0, 0, 0.4);
     padding: 6px 12px;
@@ -310,8 +305,6 @@ td code {
     font-size: 14px;
     border: 1px solid rgba(56, 189, 248, 0.2);
     font-weight: 700;
-    
-    /* الخصائص السحرية لمنع خروج الرفرونس الطويل */
     display: inline-block;
     max-width: 180px;
     word-break: break-all;
@@ -329,7 +322,6 @@ tr:hover td code {
 
 tr:last-child td { border-bottom: none; }
 
-/* بطاقات الطلبيات المسجلة والسلة */
 .order-card {
     background: #1f2937;
     border: 1px solid var(--border);
@@ -358,7 +350,7 @@ tr:last-child td { border-bottom: none; }
 
 .badge-qty { background: #111827; color: #f59e0b; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.3); }
 
-/* كروت شبكة تقارير الأرباح والمخزون النيون */
+/* كروت شبكة تقارير الأرباح والمخزون */
 .profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
 .profit-card { background: #1f2937; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
 .profit-card.success { border-right-color: var(--success); }
@@ -368,20 +360,15 @@ tr:last-child td { border-bottom: none; }
 .profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 8px;}
 .profit-card .amount { font-size: 24px; font-weight: 800; }
 
-/* ألوان السلع الناقصة الفاقعة والمتوافقة مع الحماية من النصوص الطويلة */
-.stock-empty { background-color: #ef4444 !important; color: #ffffff !important; }
-.stock-danger { background-color: rgba(239, 68, 68, 0.3) !important; color: #ffffff !important; }
-.stock-warning { background-color: rgba(245, 158, 11, 0.3) !important; color: #ffffff !important; }
-.stock-notice { background-color: rgba(59, 130, 246, 0.3) !important; color: #ffffff !important; }
-
-/* حماية إضافية لأكواد الباركود داخل قائمة السلع الناقصة لمنع تغيير ألوانها بشكل مشوه */
-.stock-empty td code, .stock-danger td code, .stock-warning td code, .stock-notice td code {
-    color: #ffffff !important;
-    background: rgba(0, 0, 0, 0.25) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
+/* شارات درجات الخطورة الثابتة للجداول والباركود */
+.risk-badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 13px;
+    display: inline-block;
 }
 
-/* تجميل شريط التمرير */
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: #090d16; }
 ::-webkit-scrollbar-thumb { background: #374151; border-radius: 5px; }
@@ -399,7 +386,7 @@ tr:last-child td { border-bottom: none; }
     <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
     <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
     
-    <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
+    <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-gradient-clip: text;"></i> تصدير نسخة احتياطية</div>
     <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد نسخة من الكمبيوتر</div>
 </div>
 
@@ -529,11 +516,20 @@ tr:last-child td { border-bottom: none; }
 <div id="low" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
-        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> كشف السلع الناقصة وحالة المخزون بالتدرج</h2>
+        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> السلع الناقصة بالمحل (مرتبة تصاعدياً بحسب درجة الخطورة 1-15)</h2>
     </div>
     <div style="overflow-x: auto;">
         <table>
-            <thead><tr><th>الباركود / Ref</th><th>اسم المنتج</th><th>الكمية المتبقية</th><th>سعر الشراء (DA)</th><th>حالة خطورة المخزون وطبيعة التنبيه</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>الباركود / Ref</th>
+                    <th>اسم المنتج</th>
+                    <th>الكمية المتبقية</th>
+                    <th>سعر الشراء (DA)</th>
+                    <th>مستوى درجة الخطورة</th>
+                    <th>طبيعة وحالة التنبيه الفوري</th>
+                </tr>
+            </thead>
             <tbody id="lowTable"></tbody>
         </table>
     </div>
@@ -624,12 +620,12 @@ function openPage(id){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById(id).classList.add("active");
     if(id === 'sales') { document.getElementById('saleSearch').value = ''; renderSalesOptions(); }
+    if(id === 'low') { renderLowStockPage(); }
     window.scrollTo(0, 0);
 }
 
 function back(){ document.getElementById("dashboard").style.display="grid"; document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); }
 
-// نغمة بسيطة لإضافة مادة للسلة
 function playBeepSound() {
     try {
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -644,31 +640,23 @@ function playBeepSound() {
     } catch (e) { console.log("Audio error"); }
 }
 
-// صوت تنبيه قوي عند حدوث خطأ أو تكرار رفرنس أو سعر بيع أقل من الشراء
 function playErrorSound() {
     try {
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let now = audioCtx.currentTime;
-        
         let osc = audioCtx.createOscillator();
         let gain = audioCtx.createGain();
-        
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(150, now);
         osc.frequency.linearRampToValueAtTime(80, now + 0.3);
-        
         gain.gain.setValueAtTime(0.3, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-        
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        
-        osc.start(now);
-        osc.stop(now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
     } catch (e) { console.log("Audio error"); }
 }
 
-// رنين الكاسة الاحترافي الفخم عند نجاح عملية البيع
 function playCashRegisterSound() {
     try {
         let AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -681,10 +669,8 @@ function playCashRegisterSound() {
         osc1.frequency.setValueAtTime(1400, now);
         gain1.gain.setValueAtTime(0.25, now);
         gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-        osc1.connect(gain1);
-        gain1.connect(ctx.destination);
-        osc1.start(now);
-        osc1.stop(now + 0.4);
+        osc1.connect(gain1); gain1.connect(ctx.destination);
+        osc1.start(now); osc1.stop(now + 0.4);
         
         let osc2 = ctx.createOscillator();
         let gain2 = ctx.createGain();
@@ -692,54 +678,25 @@ function playCashRegisterSound() {
         osc2.frequency.setValueAtTime(880, now + 0.02);
         gain2.gain.setValueAtTime(0.15, now + 0.02);
         gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc2.connect(gain2);
-        gain2.connect(ctx.destination);
-        osc2.start(now + 0.02);
-        osc2.stop(now + 0.3);
-
-        let osc3 = ctx.createOscillator();
-        let gain3 = ctx.createGain();
-        osc3.type = 'sawtooth';
-        osc3.frequency.setValueAtTime(300, now + 0.08);
-        osc3.frequency.linearRampToValueAtTime(120, now + 0.25);
-        gain3.gain.setValueAtTime(0.1, now + 0.08);
-        gain3.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc3.connect(gain3);
-        gain3.connect(ctx.destination);
-        osc3.start(now + 0.08);
-        osc3.stop(now + 0.3);
-        
+        osc2.connect(gain2); gain2.connect(ctx.destination);
+        osc2.start(now + 0.02); osc2.stop(now + 0.3);
     } catch (e) { console.log("Cash sound error: ", e); }
 }
 
-/* التحقق الفوري من تكرار الرفرونس وتلوين الحقل بالأمر */
 function checkRefUniqueness() {
     let refField = document.getElementById('pRef');
     let refVal = refField.value.trim();
-    if(!refVal) {
-        refField.classList.remove('input-error');
-        return;
-    }
+    if(!refVal) { refField.classList.remove('input-error'); return; }
     let isDuplicate = batches.some(b => b.ref === refVal);
-    if(isDuplicate) {
-        refField.classList.add('input-error');
-    } else {
-        refField.classList.remove('input-error');
-    }
+    if(isDuplicate) { refField.classList.add('input-error'); } else { refField.classList.remove('input-error'); }
 }
 
-/* التحقق الفوري من ملاءمة سعر البيع وسعر الشراء */
 function checkPriceValidity() {
     let buyField = document.getElementById('pBuy');
     let sellField = document.getElementById('pSell');
     let buyVal = Number(buyField.value) || 0;
     let sellVal = Number(sellField.value) || 0;
-    
-    if(sellField.value !== "" && sellVal < buyVal) {
-        sellField.classList.add('input-error');
-    } else {
-        sellField.classList.remove('input-error');
-    }
+    if(sellField.value !== "" && sellVal < buyVal) { sellField.classList.add('input-error'); } else { sellField.classList.remove('input-error'); }
 }
 
 function updateDefaultSalePriceField(){
@@ -772,7 +729,6 @@ function loadOrderToEdit() {
         if(!confirm("السلة الحالية تحتوي على منتجات، هل تريد تفريغها وجلب الطلبية القديمة للتعديل؟")) return;
     }
 
-    // تصفير وتهيئة السلة واسترجاع عناصر الطلبية المسجلة للتعديل
     currentCommandData = [];
     orderItems.forEach(item => {
         currentCommandData.push({
@@ -786,11 +742,8 @@ function loadOrderToEdit() {
 
     commandNumber = orderNum;
     document.getElementById('cmdNumberInput').value = commandNumber;
-    
-    // سحب وحذف السجلات القديمة مؤقتاً من قاعدة البيانات لتفادي التكرار عند إعادة الحفظ
     sales = sales.filter(x => x.command !== orderNum);
     
-    // تحديث واجهة العرض
     renderCurrentCommand();
     renderSalesLog();
     calculateProfitPage();
@@ -805,31 +758,20 @@ function addProduct() {
     let sell = Number(document.getElementById('pSell').value) || 0;
     let qty = Number(document.getElementById('pQty').value) || 0;
 
-    if (!ref || !name || qty < 0) {
-        playErrorSound();
-        return alert("يرجى ملء الباركود واسم المنتج بشكل صحيح.");
-    }
-    if (batches.some(b => b.ref === ref)) {
-        playErrorSound();
-        return alert("خطأ: كود الباركود هذا مكرر بالفعل لسلعة أخرى!");
-    }
-    if (sell < buy) {
-        playErrorSound();
-        if(!confirm("تنبيه: سعر البيع أقل من سعر الشراء (خسارة)، هل تريد الاستمرار على أي حال؟")) return;
-    }
+    if (!ref || !name || qty < 0) { playErrorSound(); return alert("يرجى ملء الباركود واسم المنتج بشكل صحيح."); }
+    if (batches.some(b => b.ref === ref)) { playErrorSound(); return alert("خطأ: كود الباركود هذا مكرر بالفعل لسلعة أخرى!"); }
+    if (sell < buy) { playErrorSound(); if(!confirm("تنبيه: سعر البيع أقل من سعر الشراء (خسارة)، هل تريد الاستمرار على أي حال؟")) return; }
 
     let item = { id: Date.now(), ref, name, buy, sell, qty };
     batches.push(item);
     save();
     render();
 
-    // تفريغ الحقول
     document.getElementById('pRef').value = '';
     document.getElementById('pName').value = '';
     document.getElementById('pBuy').value = '';
     document.getElementById('pSell').value = '';
     document.getElementById('pQty').value = '';
-    
     document.getElementById('pRef').classList.remove('input-error');
     document.getElementById('pSell').classList.remove('input-error');
 }
@@ -864,7 +806,7 @@ function editProduct(id) {
     render();
 }
 
-/* ================= منصة واجهة البيع السريعة والسلة والفرز الترتيبي ================= */
+/* ================= منصة واجهة البيع السريعة ================= */
 function renderSalesOptions() {
     let search = document.getElementById('saleSearch').value.toLowerCase().trim();
     let select = document.getElementById('saleStock');
@@ -874,29 +816,15 @@ function renderSalesOptions() {
     if (search === '') {
         filtered = batches;
     } else {
-        // الفلترة الترتيبية الذكية: تبدأ بالحرف الأول ثم الثاني وهكذا
-        let startsWithSearch = batches.filter(b => 
-            b.name.toLowerCase().startsWith(search) || 
-            b.ref.toLowerCase().startsWith(search)
-        );
-        
-        // البحث الاحتياطي: إذا لم نجد كلمة تبدأ به، نبحث بوجود الحرف داخل الكلمة
-        let containsSearch = batches.filter(b => 
-            !b.name.toLowerCase().startsWith(search) && 
-            !b.ref.toLowerCase().startsWith(search) &&
-            (b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search))
-        );
-        
+        let startsWithSearch = batches.filter(b => b.name.toLowerCase().startsWith(search) || b.ref.toLowerCase().startsWith(search));
+        let containsSearch = batches.filter(b => !b.name.toLowerCase().startsWith(search) && !b.ref.toLowerCase().startsWith(search) && (b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search)));
         filtered = [...startsWithSearch, ...containsSearch];
     }
 
     if (filtered.length === 0) {
         let opt = document.createElement('option');
-        opt.text = "❌ لا توجد أي سلعة مطابقة للبحث الحرفي";
-        opt.value = "";
-        select.appendChild(opt);
-        document.getElementById('salePriceInput').value = '';
-        return;
+        opt.text = "❌ لا توجد أي سلعة مطابقة للبحث الحرفي"; opt.value = ""; select.appendChild(opt);
+        document.getElementById('salePriceInput').value = ''; return;
     }
 
     filtered.forEach(b => {
@@ -905,72 +833,41 @@ function renderSalesOptions() {
         opt.text = `${b.name} (${b.qty} قطع متوفرة) - [${b.ref}]`;
         select.appendChild(opt);
     });
-
     updateDefaultSalePriceField();
 }
 
 function addToCommand() {
     let select = document.getElementById('saleStock');
-    let id = Number(select.value);
-    if (!id) return;
-
-    let b = batches.find(x => x.id === id);
-    if (!b) return;
+    let id = Number(select.value); if (!id) return;
+    let b = batches.find(x => x.id === id); if (!b) return;
 
     let qty = Number(document.getElementById('saleQty').value) || 1;
     let customPrice = Number(document.getElementById('salePriceInput').value);
 
     if (qty <= 0) return alert("الكمية المحددة للبيع غير صالحة.");
-    if (customPrice < b.buy) {
-        playErrorSound();
-        if(!confirm("انتبه: سعر البيع الحالي أقل من سعر الشراء المقيد! هل تود الإضافة للسلة؟")) return;
-    }
+    if (customPrice < b.buy) { playErrorSound(); if(!confirm("انتبه: سعر البيع الحالي أقل من سعر الشراء المقيد! هل تود الإضافة للسلة؟")) return; }
 
-    // التحقق من تكرار العنصر داخل السلة لزيادة الكمية فقط بدل السطر الجديد
     let exist = currentCommandData.find(x => x.ref === b.ref);
-    if (exist) {
-        exist.qty += qty;
-        exist.sellPrice = customPrice; 
-    } else {
-        currentCommandData.push({
-            ref: b.ref,
-            name: b.name,
-            qty: qty,
-            sellPrice: customPrice,
-            buyPrice: b.buy
-        });
+    if (exist) { exist.qty += qty; exist.sellPrice = customPrice; } else {
+        currentCommandData.push({ ref: b.ref, name: b.name, qty: qty, sellPrice: customPrice, buyPrice: b.buy });
     }
-
-    playBeepSound();
-    renderCurrentCommand();
+    playBeepSound(); renderCurrentCommand();
     document.getElementById('saleQty').value = 1;
 }
 
 function removeFromCommand(index) {
-    if (index > -1 && index < currentCommandData.length) {
-        currentCommandData.splice(index, 1);
-        playBeepSound();
-        renderCurrentCommand();
-    }
+    if (index > -1 && index < currentCommandData.length) { currentCommandData.splice(index, 1); playBeepSound(); renderCurrentCommand(); }
 }
 
 function renderCurrentCommand() {
-    let container = document.getElementById('currentCommand');
-    container.innerHTML = '';
-    let total = 0;
-
+    let container = document.getElementById('currentCommand'); container.innerHTML = ''; let total = 0;
     if (currentCommandData.length === 0) {
         container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-cart-shopping" style="font-size:24px; margin-bottom:10px; display:block;"></i>السلة فارغة حالياً..</div>`;
-        document.getElementById('commandTotal').innerText = "0.00 DA";
-        return;
+        document.getElementById('commandTotal').innerText = "0.00 DA"; return;
     }
-
     currentCommandData.forEach((item, index) => {
-        let lineSubTotal = item.qty * item.sellPrice;
-        total += lineSubTotal;
-
-        let div = document.createElement('div');
-        div.className = 'order-item-line';
+        let lineSubTotal = item.qty * item.sellPrice; total += lineSubTotal;
+        let div = document.createElement('div'); div.className = 'order-item-line';
         div.innerHTML = `
             <div style="display:flex; flex-direction:column; gap:4px;">
                 <span style="font-weight:700; color:#fff;">${item.name}</span>
@@ -984,80 +881,45 @@ function renderCurrentCommand() {
         `;
         container.appendChild(div);
     });
-
     document.getElementById('commandTotal').innerText = total.toFixed(2) + " DA";
 }
 
 function confirmCommand() {
     if (currentCommandData.length === 0) return alert("سلة التسوق فارغة تماماً!");
-
     let today = new Date().toISOString().split('T')[0];
 
     currentCommandData.forEach(item => {
         let target = batches.find(b => b.ref === item.ref);
-        if (target) {
-            target.qty -= item.qty;
-        }
-
-        sales.push({
-            id: Date.now() + Math.random(),
-            command: commandNumber,
-            ref: item.ref,
-            name: item.name,
-            qty: item.qty,
-            buyPrice: item.buyPrice,
-            sellPrice: item.sellPrice,
-            date: today
-        });
+        if (target) { target.qty -= item.qty; }
+        sales.push({ id: Date.now() + Math.random(), command: commandNumber, ref: item.ref, name: item.name, qty: item.qty, buyPrice: item.buyPrice, sellPrice: item.sellPrice, date: today });
     });
 
     playCashRegisterSound();
-    
     let searchInput = document.getElementById('searchOrderNumber').value;
     if (searchInput && Number(searchInput) === commandNumber) {
-        alert(`تم تحديث وحفظ الطلبية رقم #${commandNumber} بنجاح وتسوية كميات المخزن!`);
+        alert(`تم تحديث وحفظ الطلبية رقم #${commandNumber} بنجاح!`);
         document.getElementById('searchOrderNumber').value = '';
-    } else {
-        alert(`تم تسجيل وحفظ الطلبية الإجمالية رقم #${commandNumber} بنجاح!`);
-        commandNumber++;
-    }
+    } else { alert(`تم تسجيل وحفظ الطلبية رقم #${commandNumber} بنجاح!`); commandNumber++; }
 
-    currentCommandData = [];
-    renderCurrentCommand();
-    save();
-    render();
+    currentCommandData = []; renderCurrentCommand(); save(); render();
 }
 
-/* الفرز الترتيبي من الحرف الأول فصاعداً لصفحة إدارة المنتجات */
 function renderProducts() {
     let search = document.getElementById('productSearch').value.toLowerCase().trim();
-    let tbody = document.getElementById('productTable');
-    tbody.innerHTML = '';
-
+    let tbody = document.getElementById('productTable'); tbody.innerHTML = '';
     let filtered = [];
-    if (search === '') {
-        filtered = batches;
-    } else {
-        let startsWithSearch = batches.filter(b => 
-            b.name.toLowerCase().startsWith(search) || 
-            b.ref.toLowerCase().startsWith(search)
-        );
-        let containsSearch = batches.filter(b => 
-            !b.name.toLowerCase().startsWith(search) && 
-            !b.ref.toLowerCase().startsWith(search) &&
-            (b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search))
-        );
+    if (search === '') { filtered = batches; } else {
+        let startsWithSearch = batches.filter(b => b.name.toLowerCase().startsWith(search) || b.ref.toLowerCase().startsWith(search));
+        let containsSearch = batches.filter(b => !b.name.toLowerCase().startsWith(search) && !b.ref.toLowerCase().startsWith(search) && (b.name.toLowerCase().includes(search) || b.ref.toLowerCase().includes(search)));
         filtered = [...startsWithSearch, ...containsSearch];
     }
-
     filtered.forEach(b => {
         let tr = document.createElement('tr');
         tr.innerHTML = `
             <td><code>${b.ref}</code></td>
             <td style="text-align:right; font-weight:700;">${b.name}</td>
             <td><span style="font-weight:800; color:${b.qty <= 0 ? 'var(--danger)' : b.qty <= 5 ? 'var(--warning)' : '#fff'}">${b.qty}</span></td>
-            <td>${b.buy.toFixed(2)}</td>
-            <td>${b.sell.toFixed(2)}</td>
+            <td>${b.buy.toFixed(2)}</td> <td>${b.sell.toFixed(2)}</td>
             <td><button class="edit" onclick="editProduct(${b.id})"><i class="fa-solid fa-pen"></i></button></td>
             <td><button class="del" onclick="deleteProduct(${b.id})" style="padding:8px 14px;"><i class="fa-solid fa-trash"></i></button></td>
         `;
@@ -1066,85 +928,99 @@ function renderProducts() {
 }
 
 function renderStockPage() {
-    let tbody = document.getElementById('stockTable');
-    let tfoot = document.getElementById('stockTableFoot');
-    tbody.innerHTML = '';
-
-    let totalPieces = 0;
-    let totalCapital = 0;
-    let totalExpectedProfit = 0;
+    let tbody = document.getElementById('stockTable'); let tfoot = document.getElementById('stockTableFoot'); tbody.innerHTML = '';
+    let totalPieces = 0; let totalCapital = 0; let totalExpectedProfit = 0;
 
     batches.forEach(b => {
-        let capital = b.qty > 0 ? b.qty * b.buy : 0;
-        let profit = b.qty > 0 ? b.qty * (b.sell - b.buy) : 0;
-
-        totalPieces += b.qty > 0 ? b.qty : 0;
-        totalCapital += capital;
-        totalExpectedProfit += profit;
+        let capital = b.qty > 0 ? b.qty * b.buy : 0; let profit = b.qty > 0 ? b.qty * (b.sell - b.buy) : 0;
+        totalPieces += b.qty > 0 ? b.qty : 0; totalCapital += capital; totalExpectedProfit += profit;
 
         let tr = document.createElement('tr');
         tr.innerHTML = `
             <td style="text-align:right;">${b.name}</td>
             <td><span class="badge-qty" style="color:#fff; background:#111827;">${b.qty} قطعة</span></td>
-            <td>${capital.toFixed(2)} DA</td>
-            <td style="color:var(--success);">${profit.toFixed(2)} DA</td>
+            <td>${capital.toFixed(2)} DA</td> <td style="color:var(--success);">${profit.toFixed(2)} DA</td>
             <td><button class="edit" onclick="openPage('products'); document.getElementById('productSearch').value='${b.ref}'; renderProducts();"><i class="fa-solid fa-eye"></i> عيانية</button></td>
         `;
         tbody.appendChild(tr);
     });
-
     document.getElementById('topStockPieces').innerText = totalPieces + " قطعة";
     document.getElementById('topStockCapital').innerText = totalCapital.toFixed(2) + " DA";
     document.getElementById('topStockProfit').innerText = totalExpectedProfit.toFixed(2) + " DA";
 
-    tfoot.innerHTML = `
-        <tr style="background:#111827; font-weight:800;">
-            <td>الإجمالي المالي العام للمخزن:</td>
-            <td>${totalPieces} قطعة</td>
-            <td style="color:#fca5a5;">${totalCapital.toFixed(2)} DA</td>
-            <td style="color:#34d399;">${totalExpectedProfit.toFixed(2)} DA</td>
-            <td>---</td>
-        </tr>
-    `;
+    tfoot.innerHTML = `<tr style="background:#111827; font-weight:800;"><td>الإجمالي العام:</td><td>${totalPieces} قطعة</td><td style="color:#fca5a5;">${totalCapital.toFixed(2)} DA</td><td style="color:#34d399;">${totalExpectedProfit.toFixed(2)} DA</td><td>---</td></tr>`;
 }
 
+/* ================= التحديث الجوهري: فرز تصاعدي وحساب درجة الخطورة من 1 إلى 15 ================= */
 function renderLowStockPage() {
     let tbody = document.getElementById('lowTable');
     tbody.innerHTML = '';
 
-    let lowItems = batches.filter(b => b.qty <= 10);
+    // تصفية السلع التي كميتها 15 أو أقل
+    let lowItems = batches.filter(b => b.qty <= 15);
 
     if(lowItems.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="padding:40px; color:var(--success); font-weight:700;"><i class="fa-solid fa-shield-heart" style="font-size:22px; display:block; margin-bottom:10px;"></i>كل السلع متوفرة بمخزنك بشكل ممتاز ومطمئن!</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="padding:40px; color:var(--success); font-weight:700;"><i class="fa-solid fa-shield-heart" style="font-size:24px; display:block; margin-bottom:10px;"></i>كل السلع متوفرة بمخزنك بشكل ممتاز (فوق 15 قطعة)!</td></tr>`;
         return;
     }
 
+    // الترتيب التصاعدي الفعلي: يبدأ من 0 (لي مكانش) فما فوق
+    lowItems.sort((a, b) => a.qty - b.qty);
+
     lowItems.forEach(b => {
         let tr = document.createElement('tr');
+        
+        let riskScore = 1;        // من 1 إلى 15
         let statusText = "";
-        let rowClass = "";
+        let bgColor = "";
+        let textColor = "#ffffff";
 
+        // حساب الخطورة الديناميكية بناءً على نقص الكمية الدقيق
         if (b.qty <= 0) {
-            statusText = "🚨 نافذ تماماً - يرجى إعادة الشراء فوراً";
-            rowClass = "stock-empty";
-        } else if (b.qty <= 2) {
-            statusText = "⚠️ خطر حرج - المخزون شارف على الانتهاء";
-            rowClass = "stock-danger";
-        } else if (b.qty <= 5) {
-            statusText = "📦 كمية قليلة - تنبيه متوسط للمتابعة";
-            rowClass = "stock-warning";
-        } else {
-            statusText = "💡 تحت المراقبة - بدأ المخزون يتناقص";
-            rowClass = "stock-notice";
+            riskScore = 15;
+            statusText = "🚨 نافذ تماماً (إنقاذ المخزن)";
+            bgColor = "rgba(239, 68, 68, 0.95)"; // أحمر نيون فاقع جداً للـ 0
+        } else if (b.qty === 1) {
+            riskScore = 14; statusText = "⚠️ قطعة واحدة متبقية!"; bgColor = "rgba(239, 68, 68, 0.75)";
+        } else if (b.qty === 2) {
+            riskScore = 13; statusText = "⚠️ قطعتين فقط بالمحل!"; bgColor = "rgba(239, 68, 68, 0.6)";
+        } else if (b.qty === 3) {
+            riskScore = 12; statusText = "📦 نقص حاد جداً"; bgColor = "rgba(244, 63, 94, 0.6)";
+        } else if (b.qty === 4) {
+            riskScore = 11; statusText = "📦 نقص حاد بالمخزن"; bgColor = "rgba(249, 115, 22, 0.7)";
+        } else if (b.qty === 5) {
+            riskScore = 10; statusText = "📦 نقص حاد ملحوظ"; bgColor = "rgba(249, 115, 22, 0.55)";
+        } else if (b.qty === 6) {
+            riskScore = 9; statusText = "🔔 إنذار متوسط الدرجة"; bgColor = "rgba(245, 158, 11, 0.65)";
+        } else if (b.qty === 7) {
+            riskScore = 8; statusText = "🔔 إنذار قيد التناقص"; bgColor = "rgba(245, 158, 11, 0.5)";
+        } else if (b.qty === 8) {
+            riskScore = 7; statusText = "⚡ كمية متوسطة ضئيلة"; bgColor = "rgba(234, 179, 8, 0.6)";
+        } else if (b.qty === 9) {
+            riskScore = 6; statusText = "⚡ كمية متوسطة المدى"; bgColor = "rgba(234, 179, 8, 0.45)";
+        } else if (b.qty === 10) {
+            riskScore = 5; statusText = "💡 مستوى النصف المقبول"; bgColor = "rgba(202, 138, 4, 0.4)";
+        } else if (b.qty === 11) {
+            riskScore = 4; statusText = "📉 بداية الهبوط الميداني"; bgColor = "rgba(59, 130, 246, 0.5)";
+        } else if (b.qty === 12) {
+            riskScore = 3; statusText = "📉 تراجع خفيف للمخزون"; bgColor = "rgba(59, 130, 246, 0.35)";
+        } else if (b.qty === 13) {
+            riskScore = 2; statusText = "🛡️ وضع آمن مؤقتاً"; bgColor = "rgba(16, 185, 129, 0.4)";
+        } else { // 14 أو 15 قطعة
+            riskScore = 1; statusText = "🛡️ السلعة ممتازة وبداية الفرز"; bgColor = "rgba(16, 185, 129, 0.25)";
         }
 
-        tr.className = rowClass;
+        // تطبيق لون السطر حسب طبيعة درجة خطورة المنتج
+        tr.style.backgroundColor = bgColor;
+        tr.style.color = textColor;
+
         tr.innerHTML = `
-            <td><code>${b.ref}</code></td>
-            <td style="text-align:right; font-weight:700;">${b.name}</td>
-            <td style="font-weight:900; font-size:16px;">${b.qty}</td>
-            <td>${b.buy.toFixed(2)} DA</td>
-            <td style="font-weight:700;">${statusText}</td>
+            <td><code style="background:rgba(0,0,0,0.5); color:#fff; border-color:#fff;">${b.ref}</code></td>
+            <td style="text-align:right; font-weight:700; color:#fff;">${b.name}</td>
+            <td style="font-weight:900; font-size:17px; color:#fff;">${b.qty} قطعة</td>
+            <td style="color:#fff;">${b.buy.toFixed(2)} DA</td>
+            <td><span class="risk-badge" style="background:#111827; color:${riskScore >= 10 ? '#ef4444' : riskScore >= 5 ? '#f59e0b' : '#3b82f6'}; border: 1px solid rgba(255,255,255,0.15);">درجة ${riskScore} / 15</span></td>
+            <td style="font-weight:700; color:#fff;">${statusText}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -1155,48 +1031,24 @@ function addExpense() {
     let title = document.getElementById('expTitle').value.trim();
     let amount = Number(document.getElementById('expAmount').value) || 0;
     let date = document.getElementById('expDate').value;
-
     if (!title || amount <= 0 || !date) return alert("يرجى ملء كافة بيانات المصروف بقيم صالحة.");
-
-    expenses.push({ id: Date.now(), title, amount, date });
-    save();
-    render();
-
-    document.getElementById('expTitle').value = '';
-    document.getElementById('expAmount').value = '';
+    expenses.push({ id: Date.now(), title, amount, date }); save(); render();
+    document.getElementById('expTitle').value = ''; document.getElementById('expAmount').value = '';
 }
 
 function deleteExpense(id) {
-    if (confirm("هل تريد حذف هذا القيد المالي من دفتر المصاريف?")) {
-        expenses = expenses.filter(e => e.id !== id);
-        save();
-        render();
-    }
+    if (confirm("هل تريد حذف هذا القيد المالي من دفتر المصاريف?")) { expenses = expenses.filter(e => e.id !== id); save(); render(); }
 }
 
 function renderExpensesLog() {
-    let log = document.getElementById('expensesLog');
-    log.innerHTML = '';
-
-    if (expenses.length === 0) {
-        log.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-weight:700; padding:20px;">لا يوجد أي مصاريف مقيدة حالياً.</p>`;
-        return;
-    }
-
+    let log = document.getElementById('expensesLog'); log.innerHTML = '';
+    if (expenses.length === 0) { log.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-weight:700; padding:20px;">لا يوجد أي مصاريف مقيدة حالياً.</p>`; return; }
     expenses.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(e => {
-        let div = document.createElement('div');
-        div.className = 'order-card';
-        div.style = "border-right: 4px solid var(--danger); margin-bottom:12px; padding:15px;";
+        let div = document.createElement('div'); div.className = 'order-card'; div.style = "border-right: 4px solid var(--danger); margin-bottom:12px; padding:15px;";
         div.innerHTML = `
             <div style="display:flex; justify-content:between; align-items:center; flex-wrap:wrap; gap:10px;">
-                <div style="flex:1;">
-                    <h4 style="color:#fff; font-weight:700;">${e.title}</h4>
-                    <small style="color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-calendar"></i> التاريخ: ${e.date}</small>
-                </div>
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <span style="color:var(--danger); font-size:18px; font-weight:800;">-${e.amount.toFixed(2)} DA</span>
-                    <button class="del" onclick="deleteExpense(${e.id})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash-can"></i></button>
-                </div>
+                <div style="flex:1;"><h4 style="color:#fff; font-weight:700;">${e.title}</h4><small style="color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-calendar"></i> التاريخ: ${e.date}</small></div>
+                <div style="display:flex; align-items:center; gap:15px;"><span style="color:var(--danger); font-size:18px; font-weight:800;">-${e.amount.toFixed(2)} DA</span><button class="del" onclick="deleteExpense(${e.id})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash-can"></i></button></div>
             </div>
         `;
         log.appendChild(div);
@@ -1204,60 +1056,29 @@ function renderExpensesLog() {
 }
 
 function renderSalesLog() {
-    let log = document.getElementById('salesLog');
-    log.innerHTML = '';
-
+    let log = document.getElementById('salesLog'); log.innerHTML = '';
     let grouped = {};
     sales.forEach(s => {
         if (!grouped[s.command]) grouped[s.command] = { total: 0, date: s.date, items: [] };
-        grouped[s.command].items.push(s);
-        grouped[s.command].total += s.qty * s.sellPrice;
+        grouped[s.command].items.push(s); grouped[s.command].total += s.qty * s.sellPrice;
     });
-
     let keys = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
-
-    if(keys.length === 0) {
-        log.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-weight:700; padding:20px;">لا توجد مبيعات سابقة مقيدة في السجل.</p>`;
-        return;
-    }
-
+    if(keys.length === 0) { log.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-weight:700; padding:20px;">لا توجد مبيعات سابقة مقيدة في السجل.</p>`; return; }
     keys.forEach(cmd => {
-        let g = grouped[cmd];
-        let div = document.createElement('div');
-        div.className = 'order-card';
-        
-        let itemsHtml = g.items.map(i => `
-            <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:4px; color:#cbd5e1;">
-                <span>• ${i.name} (x${i.qty})</span>
-                <span>${(i.qty * i.sellPrice).toFixed(2)} DA</span>
-            </div>
-        `).join('');
-
+        let g = grouped[cmd]; let div = document.createElement('div'); div.className = 'order-card';
+        let itemsHtml = g.items.map(i => `<div style="display:flex; justify-content:space-between; font-size:13px; margin-top:4px; color:#cbd5e1;"><span>• ${i.name} (x${i.qty})</span><span>${(i.qty * i.sellPrice).toFixed(2)} DA</span></div>`).join('');
         div.innerHTML = `
-            <div class="order-card-header">
-                <span style="font-weight:800; color:var(--primary);">الطلبية #${cmd}</span>
-                <span style="font-size:12px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-clock"></i> ${g.date}</span>
-            </div>
-            <div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.03); margin-bottom:8px;">
-                ${itemsHtml}
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:13px; font-weight:700;">المجموع الإجمالي:</span>
-                <span style="font-weight:900; color:var(--success); font-size:16px;">${g.total.toFixed(2)} DA</span>
-            </div>
+            <div class="order-card-header"><span style="font-weight:800; color:var(--primary);">الطلبية #${cmd}</span><span style="font-size:12px; color:var(--text-muted); font-weight:700;"><i class="fa-solid fa-clock"></i> ${g.date}</span></div>
+            <div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.03); margin-bottom:8px;">${itemsHtml}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;"><span>المجموع الإجمالي:</span><span style="font-weight:900; color:var(--success); font-size:16px;">${g.total.toFixed(2)} DA</span></div>
         `;
         log.appendChild(div);
     });
 }
 
 function calculateProfitPage() {
-    let todayStr = new Date().toISOString().split('T')[0];
-    let thisMonthStr = todayStr.substring(0, 7);
-
-    let dailyProfit = 0;
-    let monthlyProfit = 0;
-    let yearlyProfit = 0;
-    let totalExpensesYear = 0;
+    let todayStr = new Date().toISOString().split('T')[0]; let thisMonthStr = todayStr.substring(0, 7);
+    let dailyProfit = 0; let monthlyProfit = 0; let yearlyProfit = 0; let totalExpensesYear = 0;
 
     sales.forEach(s => {
         let gain = s.qty * (s.sellPrice - s.buyPrice);
@@ -1265,103 +1086,53 @@ function calculateProfitPage() {
         if (s.date.startsWith(thisMonthStr)) monthlyProfit += gain;
         yearlyProfit += gain;
     });
-
-    expenses.forEach(e => {
-        totalExpensesYear += e.amount;
-    });
+    expenses.forEach(e => { totalExpensesYear += e.amount; });
 
     document.getElementById('dailyProfit').innerText = dailyProfit.toFixed(2) + " DA";
     document.getElementById('monthlyProfit').innerText = monthlyProfit.toFixed(2) + " DA";
     document.getElementById('totalExpensesYear').innerText = totalExpensesYear.toFixed(2) + " DA 💸";
     document.getElementById('yearlyProfit').innerText = (yearlyProfit - totalExpensesYear).toFixed(2) + " DA";
-
     calculateFilteredProfit();
 }
 
 function calculateFilteredProfit() {
-    let from = document.getElementById('filterFrom').value;
-    let to = document.getElementById('filterTo').value;
-    
+    let from = document.getElementById('filterFrom').value; let to = document.getElementById('filterTo').value;
     if(!from || !to) return;
-
-    let dFrom = new Date(from);
-    let dTo = new Date(to);
-
+    let dFrom = new Date(from); let dTo = new Date(to);
     let salesGain = 0;
-    sales.forEach(s => {
-        let sDate = new Date(s.date);
-        if (sDate >= dFrom && sDate <= dTo) {
-            salesGain += s.qty * (s.sellPrice - s.buyPrice);
-        }
-    });
-
+    sales.forEach(s => { let sDate = new Date(s.date); if (sDate >= dFrom && sDate <= dTo) { salesGain += s.qty * (s.sellPrice - s.buyPrice); } });
     let expLoss = 0;
-    expenses.forEach(e => {
-        let eDate = new Date(e.date);
-        if (eDate >= dFrom && eDate <= dTo) {
-            expLoss += e.amount;
-        }
-    });
-
-    let finalNet = salesGain - expLoss;
-    let container = document.getElementById('filteredProfit');
+    expenses.forEach(e => { let eDate = new Date(e.date); if (eDate >= dFrom && eDate <= dTo) { expLoss += e.amount; } });
+    let finalNet = salesGain - expLoss; let container = document.getElementById('filteredProfit');
     container.innerText = finalNet.toFixed(2) + " DA 💰";
-
-    if (finalNet < 0) {
-        container.style.color = "var(--danger)";
-    } else {
-        container.style.color = "#c084fc";
-    }
+    container.style.color = finalNet < 0 ? "var(--danger)" : "#c084fc";
 }
 
-/* ================= دالات الاستيراد والتصدير الفورية للنسخ الاحتياطية ================= */
 function exportData() {
-    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
-        batches, sales, expenses, commandNumber
-    }));
-    let downloadAnchor = document.createElement('a');
-    let timestamp = new Date().toISOString().split('T')[0];
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `POS_EXECUTIVE_BACKUP_${timestamp}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ batches, sales, expenses, commandNumber }));
+    let downloadAnchor = document.createElement('a'); let timestamp = new Date().toISOString().split('T')[0];
+    downloadAnchor.setAttribute("href", dataStr); downloadAnchor.setAttribute("download", `POS_EXECUTIVE_BACKUP_${timestamp}.json`);
+    document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
 }
 
-function triggerImport() {
-    document.getElementById('importFileInput').click();
-}
-
+function triggerImport() { document.getElementById('importFileInput').click(); }
 function importData(event) {
-    let file = event.target.files[0];
-    if (!file) return;
-
+    let file = event.target.files[0]; if (!file) return;
     let reader = new FileReader();
     reader.onload = function(e) {
         try {
             let parsed = JSON.parse(e.target.result);
             if (parsed.batches || parsed.sales || parsed.expenses) {
-                if(confirm("تحذير: سيقوم هذا الاستيراد باستبدال كافة البيانات الحالية بالبيانات المستوردة، هل أنت متأكد؟")) {
-                    batches = parsed.batches || [];
-                    sales = parsed.sales || [];
-                    expenses = parsed.expenses || [];
-                    commandNumber = Number(parsed.commandNumber) || 1;
-                    save();
-                    render();
-                    alert("تم استيراد قاعدة البيانات وتحديث النظام الشامل بنجاح كامل!");
+                if(confirm("هل تريد استبدال كافة البيانات الحالية بالبيانات المستوردة؟")) {
+                    batches = parsed.batches || []; sales = parsed.sales || []; expenses = parsed.expenses || []; commandNumber = Number(parsed.commandNumber) || 1;
+                    save(); render(); alert("تم استيراد قاعدة البيانات بنجاح!");
                 }
-            } else {
-                alert("ملف الـ JSON المرفق غير متوافق مع بنية نظام POS EXECUTIVE.");
-            }
-        } catch (err) {
-            alert("فشل قراءة الملف، يرجى التأكد من سلامة ملف النسخة الاحتياطية المستوردة.");
-        }
+            } else { alert("ملف الـ JSON غير متوافق."); }
+        } catch (err) { alert("فشل قراءة الملف."); }
     };
-    reader.readAsText(file);
-    event.target.value = '';
+    reader.readAsText(file); event.target.value = '';
 }
 
-/* دالة التجميع والتحديث المركزي للواجهات */
 function render() {
     document.getElementById('cmdNumberInput').value = commandNumber;
     renderProducts();
