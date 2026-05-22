@@ -216,19 +216,31 @@ tfoot tr td {
 }
 
 .flex-inputs { display: flex; gap: 14px; align-items: center; }
-#salesLog, #expensesLog{ margin-top: 15px; max-height: 250px; overflow-y: auto; }
+#salesLog, #expensesLog{ margin-top: 15px; max-height: 400px; overflow-y: auto; }
 
-.saleItem{
-    padding: 14px 20px;
+/* تصميم كرت الطلبية المجمعة */
+.order-card {
     background: var(--surface);
-    border-radius: var(--radius-md);
-    margin-bottom: 10px;
     border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+}
+.order-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 15px;
-    box-shadow: var(--shadow-sm);
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+.order-item-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #f8fafc;
 }
 
 .badge-qty { background: #fef3c7; color: #d97706; padding: 5px 10px; border-radius: 8px; font-weight: 700; }
@@ -295,7 +307,7 @@ tfoot tr td {
         <h2><i class="fa-solid fa-cash-register" style="color:var(--primary);"></i> واجهة البيع السريعة</h2>
     </div>
     
-    <!-- قسم رقم الطلبية المحدث (تعديل + تصفير) -->
+    <!-- قسم رقم الطلبية (تعديل + تصفير) -->
     <div class="box" style="background: var(--text-main); color: white; padding: 20px;">
         <div style="display: flex; gap: 15px; align-items: center; justify-content: center; flex-wrap: wrap;">
             <span style="font-weight: 800; font-size: 18px; white-space: nowrap;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
@@ -304,17 +316,40 @@ tfoot tr td {
         </div>
     </div>
 
+    <!-- قسم جلب وتعديل طلبية سابقة -->
+    <div class="box" style="background: #eff6ff; border: 1px solid #bfdbfe; margin-bottom: 20px;">
+        <h3 style="font-size: 15px; color: #1e40af; margin-bottom: 10px;"><i class="fa-solid fa-magnifying-glass"></i> تعديل طلبية سابقة برقمها</h3>
+        <div class="flex-inputs">
+            <input id="searchOrderNumber" type="number" placeholder="أدخل رقم الطلبية المراد تعديلها (مثال: 5)">
+            <button onclick="loadOrderToEdit()" style="background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); box-shadow: 0 4px 10px rgba(168, 85, 247, 0.25); white-space: nowrap;"><i class="fa-solid fa-edit"></i> جلب وتعديل الطلبية</button>
+        </div>
+    </div>
+
     <input id="saleSearch" placeholder="🔍 ابحث هنا بالترتيب الأبجدي للمنتج..." oninput="renderSalesOptions()">
-    <select id="saleStock"></select>
-    <input id="saleQty" type="number" step="1" value="1" placeholder="الكمية">
+    <select id="saleStock" onchange="updateDefaultSalePriceField()"></select>
+    
+    <!-- قسم المدخلات: الكمية وسعر البيع لتعديله بحرية -->
+    <div class="flex-inputs" style="margin: 10px 0;">
+        <div style="flex: 1;">
+            <label style="font-size: 13px; font-weight: 700; color: var(--text-muted);">الكمية للبيع:</label>
+            <input id="saleQty" type="number" step="1" value="1" placeholder="الكمية" style="margin:0;">
+        </div>
+        <div style="flex: 1;">
+            <label style="font-size: 13px; font-weight: 700; color: #3b82f6;"><i class="fa-solid fa-tags"></i> سعر البيع الحالي (يمكنك تعديله):</label>
+            <input id="salePriceInput" type="number" step="0.01" placeholder="سعر البيع" style="margin:0; background:#fff; border-color:#3b82f6;">
+        </div>
+    </div>
+    
     <button onclick="addToCommand()" style="width: 100%; margin-bottom: 25px; height: 50px;"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
+    
     <div class="box" style="background: #fff; border: 1px solid var(--border);">
         <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-basket-shopping" style="color:var(--primary)"></i> سلة التسوق الحالية</h3>
         <div id="currentCommand"></div>
         <h3 id="commandTotal" style="margin-top:20px; color: var(--success); text-align: left; font-weight:800;">المجموع: 0.00 DA</h3>
         <button onclick="confirmCommand()" style="width:100%; margin-top:15px; background: var(--success-gradient); font-size: 18px; padding: 16px;"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب (OK)</button>
     </div>
-    <h3 style="margin-top: 25px; color: var(--text-muted); font-weight:700;"><i class="fa-solid fa-clock-rotate-left"></i> سجل عمليات البيع</h3>
+    
+    <h3 style="margin-top: 25px; color: var(--text-muted); font-weight:700;"><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبيات المبيوعة</h3>
     <div id="salesLog"></div>
 </div>
 
@@ -453,7 +488,17 @@ function playBeepSound() {
     }
 }
 
-/* دوال معالجة رقم الكومند الجديد يدوياً */
+/* تحديث السعر الافتراضي في الخانة عند تغيير المنتج المستهدف في القائمة */
+function updateDefaultSalePriceField(){
+    let saleStock = document.getElementById('saleStock');
+    if(!saleStock.value) return;
+    let b = batches.find(x => x.id === Number(saleStock.value));
+    if(b) {
+        document.getElementById('salePriceInput').value = b.sell;
+    }
+}
+
+/* دوال معالجة رقم الكومند يدوياً */
 function updateCommandNumberManual() {
     let inputVal = document.getElementById('cmdNumberInput').value;
     if(inputVal && Number(inputVal) >= 1) {
@@ -468,6 +513,38 @@ function resetCommandNumber() {
         document.getElementById('cmdNumberInput').value = commandNumber;
         save();
     }
+}
+
+/* دالة جلب وتعديل طلبية سابقة وتفكيكها للسلة */
+function loadOrderToEdit() {
+    let orderNum = Number(document.getElementById('searchOrderNumber').value);
+    if(!orderNum || orderNum < 1) return alert("يرجى إدخال رقم طلبية صحيح لجلبه.");
+
+    let orderItems = sales.filter(x => x.command === orderNum);
+    if(orderItems.length === 0) return alert("لم يتم العثور على أي طلبية تحمل الرقم #" + orderNum);
+
+    if(currentCommandData.length > 0) {
+        if(!confirm("السلة الحالية تحتوي على منتجات، هل تريد تفريغها وجلب الطلبية القديمة للتعديل؟")) return;
+    }
+
+    orderItems.forEach(s => {
+        let b = batches.find(x => x.id === s.id);
+        if(b) { b.qty += s.qty; } 
+        else { batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }); }
+    });
+
+    currentCommandData = orderItems.map(s => {
+        return { id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty };
+    });
+
+    sales = sales.filter(x => x.command !== orderNum);
+
+    commandNumber = orderNum;
+    document.getElementById('cmdNumberInput').value = commandNumber;
+    document.getElementById('searchOrderNumber').value = '';
+    
+    save(); render(); renderSalesOptions(); updateCommandUI();
+    alert("تم جلب الطلبية #" + orderNum + " بنجاح إلى السلة. يمكنك التعديل عليها الآن وإعادة تأكيدها.");
 }
 
 function addProduct(){
@@ -508,26 +585,37 @@ function renderSalesOptions(){
     let searchVal = document.getElementById('saleSearch').value.toLowerCase().trim();
     let filtered = batches.filter(b => b.name.toLowerCase().startsWith(searchVal) || b.ref.toLowerCase().startsWith(searchVal));
     let saleStock = document.getElementById('saleStock');
-    saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">[${b.ref}] ${b.name} - المتبقي: ${b.qty} - السعر: ${b.sell} DA</option>`).join("");
+    saleStock.innerHTML = filtered.map(b => `<option value="${b.id}">[${b.ref}] ${b.name} - المتبقي: ${b.qty} - السعر الاصلي: ${b.sell} DA</option>`).join("");
+    updateDefaultSalePriceField();
 }
 
 function addToCommand(){
     let saleStock = document.getElementById('saleStock');
     let saleQty = document.getElementById('saleQty');
+    let salePriceInput = document.getElementById('salePriceInput');
+    
     if(!saleStock.value) return;
 
     let id = Number(saleStock.value);
     let qty = +saleQty.value;
+    let customPrice = +salePriceInput.value; // جلب السعر المعدل من الخانة
+
     let b = batches.find(x=>x.id===id);
     if(!b || qty<=0) return;
+    if(isNaN(customPrice) || customPrice < 0) { alert("يرجى إدخال سعر بيع صحيح"); return; }
 
     if(b.qty < qty){ alert("المخزون غير كافي"); return; }
-    let ex = currentCommandData.find(x=>x.id===id);
+    
+    // البحث في السلة الحالية بنفس المنتج ونفس السعر المعدل
+    let ex = currentCommandData.find(x => x.id === id && x.sell === customPrice);
 
     if(ex){
-        if(b.qty < ex.qty + qty){ alert("المجموع يتجاوز المتاح"); return; }
+        if(b.qty < ex.qty + qty){ alert("المجموع يتجاوز المتاح في المخزن"); return; }
         ex.qty += qty;
-    } else { currentCommandData.push({...b, qty}); }
+    } else { 
+        // نأخذ بيانات المنتج مع قيد السعر الجديد المعدل لحساب الفائدة والجماليات بشكل صحيح
+        currentCommandData.push({...b, qty, sell: customPrice}); 
+    }
     
     playBeepSound();
     updateCommandUI();
@@ -542,7 +630,7 @@ function updateCommandUI(){
         total += i.sell*i.qty;
         return `
         <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0; background:var(--background); padding:14px; border-radius:10px;">
-            <span>${i.name} <span class="badge-qty">x${i.qty}</span></span>
+            <span>${i.name} <span class="badge-qty">x${i.qty}</span> <small style="color:var(--text-muted);">(@ ${i.sell.toFixed(2)} DA)</small></span>
             <span style="color:var(--primary); font-weight:bold;">${(i.sell*i.qty).toFixed(2)} DA</span>
             <button class="del" onclick="removeFromCommand(${idx})" style="padding:6px 12px; font-size:13px;"><i class="fa-solid fa-trash"></i></button>
         </div>`;
@@ -568,8 +656,8 @@ function confirmCommand(){
             name: item.name, 
             qty: item.qty, 
             buy: item.buy, 
-            sell: item.sell,
-            profit: (item.sell - item.buy) * item.qty, 
+            sell: item.sell, // يتم تخزين السعر المعدل الجديد
+            profit: (item.sell - item.buy) * item.qty, // حساب الربح بناء على السعر المعدل
             time: uniqueTime + index, 
             command: commandNumber
         });
@@ -580,16 +668,17 @@ function confirmCommand(){
     save(); render(); renderSalesOptions();
 }
 
-function deleteSaleByTime(saleTime){
-    if(!confirm("هل تريد إلغاء وحذف هذه المبيعة؟ (سيتم إرجاع السلعة إلى المخزن تلقائياً)")) return;
-    let s = sales.find(x => x.time === saleTime);
-    if(!s) return;
+function deleteEntireOrder(orderNum){
+    if(!confirm(`هل تريد إلغاء وحذف الطلبية #${orderNum} بالكامل؟ (سيتم إرجاع جميع منتجاتها للمخزن)`)) return;
     
-    let b = batches.find(x => x.id === s.id); 
-    if(b) { b.qty += s.qty; } 
-    else { batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }); }
-    
-    sales = sales.filter(x => x.time !== saleTime);
+    let orderItems = sales.filter(x => x.command === orderNum);
+    orderItems.forEach(s => {
+        let b = batches.find(x => x.id === s.id);
+        if(b) { b.qty += s.qty; } 
+        else { batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }); }
+    });
+
+    sales = sales.filter(x => x.command !== orderNum);
     save(); render(); renderSalesOptions();
 }
 
@@ -677,9 +766,48 @@ function render(){
             <td></td>
         </tr>`;
 
-    document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s)=>{
-        return `<div class="saleItem"><span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} <span class="badge-qty">x${s.qty}</span></span><span>الربح: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span><button class="del" onclick="deleteSaleByTime(${s.time})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash-can"></i> حذف وإرجاع</button></div>`;
-    }).join("");
+    // تجميع الطلبيات المنفصلة وعرضها
+    let ordersMap = {};
+    sales.forEach(s => {
+        if(!ordersMap[s.command]) {
+            ordersMap[s.command] = { items: [], totalAmount: 0, totalProfit: 0 };
+        }
+        ordersMap[s.command].items.push(s);
+        ordersMap[s.command].totalAmount += (s.sell * s.qty);
+        ordersMap[s.command].totalProfit += s.profit;
+    });
+
+    let ordersKeys = Object.keys(ordersMap).sort((a,b) => b - a);
+    
+    if(ordersKeys.length === 0){
+        document.getElementById('salesLog').innerHTML = "<p style='text-align:center; padding:15px; color:var(--text-muted);'>لا توجد طلبيات مبيوعة بعد 🌟</p>";
+    } else {
+        document.getElementById('salesLog').innerHTML = ordersKeys.map(cmdNum => {
+            let order = ordersMap[cmdNum];
+            let itemsHTML = order.items.map(item => `
+                <div class="order-item-line">
+                    <span>📦 ${item.name} <span class="badge-qty" style="padding:2px 6px; font-size:11px;">x${item.qty}</span> <small style="color:var(--text-muted);">(@ ${item.sell} DA)</small></span>
+                    <span style="font-weight:600;">${(item.sell * item.qty).toFixed(2)} DA</span>
+                </div>
+            `).join("");
+
+            return `
+            <div class="order-card">
+                <div class="order-card-header">
+                    <span style="font-weight:800; font-size:16px; color:var(--primary);">الطلبية # ${cmdNum}</span>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="document.getElementById('searchOrderNumber').value=${cmdNum}; loadOrderToEdit();" style="padding:6px 12px; font-size:12px; background:linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); box-shadow:none;"><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
+                        <button class="del" onclick="deleteEntireOrder(${cmdNum})" style="padding:6px 12px; font-size:12px; box-shadow:none;"><i class="fa-solid fa-trash-can"></i> إلغاء</button>
+                    </div>
+                </div>
+                <div>${itemsHTML}</div>
+                <div style="display:flex; justify-content:space-between; margin-top:12px; padding-top:8px; border-top:1px solid var(--border); font-size:14px; font-weight:700;">
+                    <span style="color:var(--text-muted);">فائدة الطلب: <b style="color:var(--success);">${order.totalProfit.toFixed(2)} DA</b></span>
+                    <span style="color:var(--text-main);">المجموع: <b style="color:var(--primary); font-size:16px;">${order.totalAmount.toFixed(2)} DA</b></span>
+                </div>
+            </div>`;
+        }).join("");
+    }
 
     let totalExpensesSum = 0;
     document.getElementById('expensesLog').innerHTML = [...expenses].reverse().map(e => {
@@ -733,7 +861,6 @@ function render(){
     
     if(lowItems.length === 0) document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success); font-weight:700; padding:30px;">🎉 كل السلع متوفرة بكميات ممتازة (+15 قطعة)</td></tr>`;
     
-    // تحديث قيمة خانة الإدخال برقم الطلبية الحالي في الواجهة
     document.getElementById('cmdNumberInput').value = commandNumber;
 }
 
