@@ -93,9 +93,7 @@ body{
     border-color: var(--primary);
 }
 
-.card:hover i {
-    transform: scale(1.15);
-}
+.card:hover i { transform: scale(1.15); }
 
 /* الصفحات والحاويات الرئيسية */
 .page{
@@ -116,9 +114,7 @@ body{
     to { opacity: 1; transform: translateY(0); }
 }
 
-.page.active{
-    display: block;
-}
+.page.active{ display: block; }
 
 .header{
     display: flex;
@@ -156,30 +152,15 @@ button{
     gap: 8px;
 }
 
-button:hover{
-    opacity: 0.95;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.35);
-}
+button:hover{ opacity: 0.95; transform: translateY(-1px); box-shadow: 0 6px 14px rgba(59, 130, 246, 0.35); }
 
-.back{
-    background: #64748b;
-    box-shadow: 0 4px 10px rgba(100, 116, 139, 0.2);
-}
+.back{ background: #64748b; box-shadow: 0 4px 10px rgba(100, 116, 139, 0.2); }
 .back:hover{ background: #475569; }
 
-.del{
-    background: var(--danger-gradient);
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
-}
+.del{ background: var(--danger-gradient); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2); }
 .del:hover { box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35); }
 
-.edit{
-    background: #f1f5f9;
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    box-shadow: none;
-}
+.edit{ background: #f1f5f9; color: var(--text-main); border: 1px solid var(--border); box-shadow: none; }
 .edit:hover{ background: var(--border); }
 
 /* المدخلات والقوائم المنسدلة */
@@ -215,18 +196,8 @@ table{
     box-shadow: var(--shadow-sm);
 }
 
-th, td{
-    padding: 18px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    font-size: 15px;
-}
-
-th {
-    background-color: #f8fafc;
-    color: var(--text-muted);
-    font-weight: 700;
-}
+th, td{ padding: 18px; text-align: center; border-bottom: 1px solid var(--border); font-size: 15px; }
+th { background-color: #f8fafc; color: var(--text-muted); font-weight: 700; }
 
 /* الصناديق الفرعية */
 .box{
@@ -237,17 +208,8 @@ th {
     border: 1px solid var(--border);
 }
 
-.flex-inputs {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-}
-
-#salesLog{
-    margin-top: 15px;
-    max-height: 350px;
-    overflow-y: auto;
-}
+.flex-inputs { display: flex; gap: 14px; align-items: center; }
+#salesLog{ margin-top: 15px; max-height: 350px; overflow-y: auto; }
 
 .saleItem{
     padding: 14px 20px;
@@ -262,35 +224,21 @@ th {
     box-shadow: var(--shadow-sm);
 }
 
-.badge-qty {
-    background: #fef3c7;
-    color: #d97706;
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-weight: 700;
-}
+.badge-qty { background: #fef3c7; color: #d97706; padding: 5px 10px; border-radius: 8px; font-weight: 700; }
 
 /* كروت الأرباح */
-.profit-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
-}
-
-.profit-card {
-    background: var(--surface);
-    padding: 25px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    border-right: 5px solid var(--primary);
-    box-shadow: var(--shadow-md);
-}
+.profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; }
+.profit-card { background: var(--surface); padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-md); }
 .profit-card.success { border-right-color: var(--success); }
 .profit-card.dark { border-right-color: var(--text-main); }
-
 .profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 5px;}
 .profit-card .amount { font-size: 26px; font-weight: 800; }
+
+/* ألوان التدريج المخصصة لجدول النواقص */
+.stock-empty { background-color: #27272a !important; color: #ffffff !important; } /* 0 قطعة - رمادي غامق */
+.stock-danger { background-color: #fee2e2 !important; color: #991b1b !important; } /* 1-5 قطع - أحمر خفيف */
+.stock-warning { background-color: #ffedd5 !important; color: #9a3412 !important; } /* 6-10 قطع - برتقالي خفيف */
+.stock-notice { background-color: #e0f2fe !important; color: #075985 !important; } /* 11-15 قطعة - أزرق خفيف */
 </style>
 </head>
 
@@ -361,7 +309,7 @@ th {
         <button onclick="confirmCommand()" style="width:100%; margin-top:15px; background: var(--success-gradient); font-size: 18px; padding: 16px;"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب (OK)</button>
     </div>
 
-    <h3 style="margin-top: 25px; color: var(--text-muted); font-weight:700;"><i class="fa-solid fa-clock-rotate-left"></i> سجل عمليات البيع (يمكنك الحذف واسترجاع السلع من هنا)</h3>
+    <h3 style="margin-top: 25px; color: var(--text-muted); font-weight:700;"><i class="fa-solid fa-clock-rotate-left"></i> سجل عمليات البيع</h3>
     <div id="salesLog"></div>
 </div>
 
@@ -380,14 +328,16 @@ th {
     <div id="totals" class="box" style="margin-top:25px; line-height: 2.2; background: #fff;"></div>
 </div>
 
-<!-- LOW -->
+<!-- LOW (تم تحديث هذه الصفحة بالترتيب اللوني والتصاعدي) -->
 <div id="low" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
-        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> تنبيه السلع الناقصة</h2>
+        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> كشف السلع الناقصة بالتدرج (من الأكثر نقصاً إلى 15 قطعة)</h2>
     </div>
     <table>
-        <thead><tr><th>اسم المنتج</th><th>الكمية الحالية</th><th>حالة السلعة بالمخزن</th></tr></thead>
+        <thead>
+            <tr><th>اسم المنتج</th><th>الكمية المتبقية</th><th>حالة خطورة المخزون</th></tr>
+        </thead>
         <tbody id="lowTable"></tbody>
     </table>
 </div>
@@ -452,7 +402,6 @@ function addProduct(){
 
     if(!ref || !name || !buy || !sell || !qty) return alert("يرجى ملء جميع الخانات");
 
-    // نتحقق إذا كان الباركود موجود مسبقاً لكي نزيد في الكمية فقط أو ننشئ منتج جديد
     let existing = batches.find(b => b.ref === ref);
     if(existing) {
         existing.qty += +qty;
@@ -533,14 +482,11 @@ function removeFromCommand(i) { currentCommandData.splice(i,1); updateCommandUI(
 
 function confirmCommand(){
     if(currentCommandData.length===0) return alert("السلة فارغة!");
-
     let uniqueTime = Date.now(); 
 
     currentCommandData.forEach((item, index)=>{
         let b = batches.find(x=>x.id===item.id); 
         if(!b) return;
-        
-        // إنقاص الكمية من المخزن عند تأكيد البيع
         b.qty = Math.max(0, b.qty - item.qty);
         
         sales.push({
@@ -561,39 +507,20 @@ function confirmCommand(){
     save(); render(); renderSalesOptions();
 }
 
-/* ================= الميزة المطلوبة: الحذف والإرجاع التلقائي للستوك ================= */
 function deleteSaleByTime(saleTime){
-    if(!confirm("هل تريد إلغاء وحذف هذه المبيعة؟ (سيتم إرجاع السلعة إلى المخزن تلقائياً) ")) return;
-    
-    // 1. البحث عن المبيعة المراد حذفها
+    if(!confirm("هل تريد إلغاء وحذف هذه المبيعة؟ (سيتم إرجاع السلعة إلى المخزن تلقائياً)")) return;
     let s = sales.find(x => x.time === saleTime);
     if(!s) return;
     
-    // 2. البحث عن المنتج الأصلي في المخزن بواسطة الـ ID
     let b = batches.find(x => x.id === s.id); 
     if(b) {
-        // إرجاع الكمية المباعة إلى المخزن الأصلي تلقائياً
         b.qty += s.qty; 
     } else {
-        // في حال تم حذف السلعة تماماً من المخزن سابقاً، نقوم بإعادة إنشائها بالكمية المسترجعة
-        batches.push({
-            id: s.id,
-            ref: s.ref,
-            name: s.name,
-            buy: s.buy,
-            sell: s.sell,
-            qty: s.qty
-        });
+        batches.push({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty });
     }
     
-    // 3. حذف المبيعة من السجل
     sales = sales.filter(x => x.time !== saleTime);
-
-    // 4. حفظ وتحديث الشاشة
-    save(); 
-    render(); 
-    renderSalesOptions();
-    alert("تم حذف المبيعة بنجاح وإرجاع السلعة إلى الستوك!");
+    save(); render(); renderSalesOptions();
 }
 
 function renderProducts(){
@@ -633,19 +560,16 @@ function render(){
         <p><strong>إجمالي رأس المال في المخزن:</strong> ${totalCapital.toFixed(2)} DA</p>
         <p><strong>صافي الأرباح المنتظرة:</strong> ${(totalValue - totalCapital).toFixed(2)} DA</p>`;
 
-    // عرض المبيعات في السجل مع زر الحذف والإرجاع التلقائي
     document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s)=>{
         return `
         <div class="saleItem">
             <span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} <span class="badge-qty">x${s.qty}</span></span>
             <span>الربح: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span>
-            <button class="del" onclick="deleteSaleByTime(${s.time})" style="padding:6px 12px; font-size:12px;">
-                <i class="fa-solid fa-trash-can"></i> حذف وإرجاع للستوك
-            </button>
+            <button class="del" onclick="deleteSaleByTime(${s.time})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash-can"></i> حذف وإرجاع</button>
         </div>`;
     }).join("");
 
-    // حساب الأرباح
+    // حساب المبيعات اليومية والشهرية
     let now = new Date(), dProfit = 0, mProfit = 0, yProfit = 0;
     let startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
     let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
@@ -662,9 +586,43 @@ function render(){
     document.getElementById('monthlyProfit').innerHTML = mProfit.toFixed(2) + " DA";
     document.getElementById('yearlyProfit').innerHTML = yProfit.toFixed(2) + " DA";
 
-    let lowItems = batches.filter(b => b.qty <= 5);
-    document.getElementById('lowTable').innerHTML = lowItems.map(b => `
-    <tr><td><b>${b.name}</b></td><td>${b.qty} قطع</td><td>سلعة ناقصة ⚠️</td></tr>`).join("");
+    /* ================= منطق السلع الناقصة الجديد المطور ================= */
+    // 1. جلب السلع التي كميتها 15 أو أقل
+    let lowItems = batches.filter(b => b.qty <= 15);
+    
+    // 2. ترتيب تصاعدي (من الأكثر نقصاً 0 فما فوق لتبدأ هي الأولى)
+    lowItems.sort((a, b) => a.qty - b.qty);
+
+    // 3. بناء الجدول وتوزيع الألوان التدريجية
+    document.getElementById('lowTable').innerHTML = lowItems.map(b => {
+        let rowClass = "";
+        let statusText = "";
+
+        if (b.qty === 0) {
+            rowClass = "stock-empty";
+            statusText = "منتهي تماماً (0 قطع) ❌";
+        } else if (b.qty <= 5) {
+            rowClass = "stock-danger";
+            statusText = "نقص حاد جداً (1-5 قطع) 🚨";
+        } else if (b.qty <= 10) {
+            rowClass = "stock-warning";
+            statusText = "نقص متوسط (6-10 قطع) ⚠️";
+        } else if (b.qty <= 15) {
+            rowClass = "stock-notice";
+            statusText = "بداية نقص (11-15 قطعة) ℹ️";
+        }
+
+        return `
+        <tr class="${rowClass}">
+            <td><b>${b.name}</b></td>
+            <td><b>${b.qty} قطعة متبقية</b></td>
+            <td><b>${statusText}</b></td>
+        </tr>`;
+    }).join("");
+    
+    if(lowItems.length === 0){
+        document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success); font-weight:700; padding:30px;"><i class="fa-solid fa-circle-check"></i> كل السلع متوفرة بكميات ممتازة (+15 قطعة) 🎉</td></tr>`;
+    }
     
     document.getElementById('cmdNumber').innerHTML = "Commande #" + commandNumber;
 }
