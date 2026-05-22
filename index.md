@@ -4,87 +4,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POS SYSTEM PRO - نظام المبيعات الاحترافي</title>
+<title>POS SYSTEM PREMIUM - نظام المبيعات الاحترافي</title>
+
+<!-- استدعاء خط Cairo والأيقونات الاحترافية -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-/* ================= PROFESSIONAL MODERN UI ================= */
+/* ================= PREMIUM MODERN UI/UX ================= */
 :root {
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
+    --primary: #3b82f6;
+    --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     --success: #10b981;
-    --success-hover: #059669;
+    --success-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
     --danger: #ef4444;
-    --danger-hover: #dc2626;
-    --background: #f8fafc;
+    --danger-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    --warning: #f59e0b;
+    --background: #f1f5f9;
     --surface: #ffffff;
-    --text-main: #0f172a;
+    --text-main: #1e293b;
     --text-muted: #64748b;
     --border: #e2e8f0;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --shadow-sm: 0 2px 4px 0 rgba(0,0,0,0.02);
+    --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+    --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.08);
 }
 
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Cairo', sans-serif;
 }
 
 body{
-    background: var(--background);
+    background: radial-gradient(at 50% 0%, #f8fafc 0%, #e2e8f0 100%);
     color: var(--text-main);
     min-height: 100vh; 
-    padding: 30px 20px;
+    padding: 40px 20px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
 }
 
-/* لوحة التحكم الرئيسية */
+/* لوحة التحكم الرئيسية (Dashboard Grid) */
 #dashboard{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
     width: 100%;
-    max-width: 800px;
-    margin: 40px auto;
+    max-width: 950px;
+    margin: 20px auto;
 }
 
 .card{
     background: var(--surface);
-    padding: 30px 20px;
-    border-radius: 16px;
+    padding: 35px 25px;
+    border-radius: var(--radius-lg);
     text-align: center;
     cursor: pointer;
-    border: 1px solid var(--border);
-    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.7);
+    font-weight: 700;
     font-size: 18px;
     color: var(--text-main);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.card i {
+    font-size: 32px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.3s ease;
 }
 
 .card:hover{
-    transform: translateY(-4px);
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
     border-color: var(--primary);
-    box-shadow: 0 10px 15px -3px rgb(37 99 235 / 0.1), 0 4px 6px -4px rgb(37 99 235 / 0.1);
-    color: var(--primary);
 }
 
-/* الصفحات والتقسيمات */
+.card:hover i {
+    transform: scale(1.15);
+}
+
+/* الصفحات والحاويات الرئيسية */
 .page{
     display: none;
     width: 100%;
-    max-width: 900px;
-    background: var(--surface);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.05);
-    border: 1px solid var(--border);
-    animation: fadeIn 0.3s ease-in-out;
+    max-width: 1000px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 35px;
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255,255,255,0.8);
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -96,28 +124,32 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--background);
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
 }
 
 .header h2 {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 26px;
+    font-weight: 800;
     color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* الأزرار الاحترافية */
+/* الأزرار الفاخرة */
 button{
-    padding: 12px 24px;
+    padding: 12px 26px;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    background: var(--primary);
+    background: var(--primary-gradient);
     color: white;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 15px;
-    transition: background 0.2s;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -125,60 +157,71 @@ button{
 }
 
 button:hover{
-    background: var(--primary-hover);
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.35);
+}
+
+button:active {
+    transform: translateY(1px);
 }
 
 .back{
-    background: var(--text-muted);
+    background: #64748b;
+    box-shadow: 0 4px 10px rgba(100, 116, 139, 0.2);
 }
-.back:hover{
-    background: #475569;
-}
+.back:hover{ background: #475569; box-shadow: 0 6px 14px rgba(100, 116, 139, 0.3); }
 
-/* المدخلات (Inputs) القابلة للقراءة بشكل ممتاز */
+/* المدخلات والقوائم المنسدلة النظيفة */
 input, select{
     width: 100%;
-    padding: 14px 16px;
+    padding: 14px 18px;
     margin: 10px 0;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    background: var(--background);
+    background: #f8fafc;
     color: var(--text-main);
-    font-size: 16px;
-    transition: all 0.2s;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.25s ease;
 }
 
 input:focus, select:focus{
     outline: none;
     border-color: var(--primary);
     background: white;
-    box-shadow: 0 0 0 4px rgb(37 99 235 / 0.1);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
-/* الجداول المنظمة */
+/* الجداول المنظمة والحديثة */
 table{
     width: 100%;
-    margin-top: 20px;
+    margin-top: 25px;
     border-collapse: separate;
     border-spacing: 0;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 th, td{
-    padding: 16px;
+    padding: 18px;
     text-align: center;
     border-bottom: 1px solid var(--border);
     font-size: 15px;
 }
 
 th {
-    background-color: var(--background);
+    background-color: #f8fafc;
     color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
+    font-weight: 700;
     font-size: 14px;
+    text-transform: uppercase;
+}
+
+tr:hover td {
+    background-color: #f8fafc;
 }
 
 tr:last-child td {
@@ -186,57 +229,93 @@ tr:last-child td {
 }
 
 .del{
-    background: var(--danger);
+    background: var(--danger-gradient);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
 }
-.del:hover{ background: var(--danger-hover); }
+.del:hover { box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35); }
 
 .edit{
     background: #f1f5f9;
     color: var(--text-main);
     border: 1px solid var(--border);
+    box-shadow: none;
 }
 .edit:hover{ background: var(--border); }
 
-/* الصناديق الجانبية والحاويات */
+/* الصناديق الفرعية */
 .box{
-    background: var(--background);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 16px;
+    background: #f8fafc;
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
     border: 1px solid var(--border);
 }
 
 .flex-inputs {
     display: flex;
-    gap: 12px;
+    gap: 14px;
     align-items: center;
 }
 
 #salesLog{
     margin-top: 15px;
-    max-height: 250px;
+    max-height: 280px;
     overflow-y: auto;
+    padding-right: 5px;
 }
 
 .saleItem{
-    padding: 12px;
+    padding: 14px 20px;
     background: var(--surface);
-    border-radius: 8px;
-    margin-bottom: 8px;
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
     border: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 15px;
+    box-shadow: var(--shadow-sm);
 }
 
-/* تمييز الأرقام الهامة */
 .badge-qty {
     background: #fef3c7;
     color: #d97706;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+/* كروت عرض الأرباح الكبيرة */
+.profit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.profit-card {
+    background: var(--surface);
+    padding: 25px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    border-right: 5px solid var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.profit-card.success { border-right-color: var(--success); }
+.profit-card.dark { border-right-color: var(--text-main); }
+
+.profit-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.profit-card .amount {
+    font-size: 26px;
+    font-weight: 800;
 }
 </style>
 </head>
@@ -245,19 +324,19 @@ tr:last-child td {
 
 <!-- DASHBOARD -->
 <div id="dashboard">
-    <div class="card" onclick="openPage('products')">📦 المنتجات</div>
-    <div class="card" onclick="openPage('sales')">🛒 واجهة البيع</div>
-    <div class="card" onclick="openPage('stock')">🏬 جرد المخزون</div>
-    <div class="card" onclick="openPage('low')">⚠️ المواد الناقصة</div>
-    <div class="card" onclick="openPage('profits')">💰 تقارير الأرباح</div>
-    <div class="card" onclick="exportData()" style="background: #fafafa;">💾 تصدير البيانات</div>
+    <div class="card" onclick="openPage('products')"><i class="fa-solid fa-box-open"></i> إدارة المنتجات</div>
+    <div class="card" onclick="openPage('sales')"><i class="fa-solid fa-cash-register"></i> واجهة البيع السريعة</div>
+    <div class="card" onclick="openPage('stock')"><i class="fa-solid fa-warehouse"></i> جرد المخزون الكلي</div>
+    <div class="card" onclick="openPage('low')"><i class="fa-solid fa-triangle-exclamation" style="background:var(--warning); -webkit-background-clip: text;"></i> السلع الناقصة</div>
+    <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح</div>
+    <div class="card" onclick="exportData()" style="background: #fafafa;"><i class="fa-solid fa-file-export" style="background:#64748b; -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
 </div>
 
 <!-- PRODUCTS -->
 <div id="products" class="page">
     <div class="header">
-        <button class="back" onclick="back()">↩️ رجوع</button>
-        <h2>📦 إدارة المنتجات</h2>
+        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+        <h2><i class="fa-solid fa-box-open" style="color:var(--primary);"></i> إدارة المنتجات والمخزن</h2>
     </div>
 
     <div class="box">
@@ -268,13 +347,13 @@ tr:last-child td {
             <input id="pSell" type="number" step="0.01" placeholder="سعر البيع (DA)">
             <input id="pQty" type="number" step="0.01" placeholder="الكمية الابتدائية">
         </div>
-        <button onclick="addProduct()" style="width: 100%; margin-top: 10px; background: var(--success);">➕ إضافة المنتج للمخزن</button>
+        <button onclick="addProduct()" style="width: 100%; margin-top: 12px; background: var(--success-gradient); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
     </div>
 
     <input type="file" id="importFile" hidden onchange="importData(event)">
-    <button onclick="document.getElementById('importFile').click()" style="background:var(--primary); width: 100%; margin-bottom: 15px;">📥 استيراد بيانات من ملف خارجي</button>
+    <button onclick="document.getElementById('importFile').click()" style="width: 100%; margin-bottom: 20px; background:#475569;"><i class="fa-solid fa-file-import"></i> استيراد بيانات من ملف خارجي (.json)</button>
 
-    <input id="productSearch" placeholder="🔍 ابحث هنا باسم المنتج أو الرمز للتصفية..." oninput="renderProducts()">
+    <input id="productSearch" placeholder="🔍 ابحث هنا باسم المنتج أو الرمز لتصفية الجدول الموالي..." oninput="renderProducts()">
 
     <table>
         <thead>
@@ -289,46 +368,45 @@ tr:last-child td {
 <!-- SALES -->
 <div id="sales" class="page">
     <div class="header">
-        <button class="back" onclick="back()">↩️ رجوع</button>
-        <h2>🛒 واجهة البيع السريعة</h2>
+        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+        <h2><i class="fa-solid fa-cash-register" style="color:var(--primary);"></i> واجهة البيع السريعة</h2>
     </div>
 
-    <div class="box" style="border: 1px dashed var(--primary); background: #eff6ff;">
-        <h4 style="color: var(--primary); margin-bottom: 8px;">✏️ تعديل ومراجعة كوموند سابق</h4>
+    <div class="box" style="border: 1px dashed var(--primary); background: #f0f7ff;">
+        <h4 style="color: var(--primary); margin-bottom: 8px;"><i class="fa-solid fa-pen-to-square"></i> تعديل ومراجعة كوموند سابق</h4>
         <div class="flex-inputs">
-            <input id="editCmdNumInput" type="number" placeholder="أدخل رقم الكوموند القديم...">
-            <button onclick="loadCommandForEdit()" style="white-space: nowrap;">جلب وتعديل</button>
+            <input id="editCmdNumInput" type="number" placeholder="أدخل رقم الكوموند القديم للبحث عنه...">
+            <button onclick="loadCommandForEdit()" style="white-space: nowrap;"><i class="fa-solid fa-magnifying-glass"></i> جلب وتعديل</button>
         </div>
     </div>
 
-    <div class="box" style="background: var(--text-main); color: white; text-align: center;">
-        <h3 id="cmdNumber" style="font-weight: 700; letter-spacing: 1px;">Commande #1</h3>
+    <div class="box" style="background: var(--text-main); color: white; text-align: center; border: none; box-shadow: var(--shadow-md);">
+        <h3 id="cmdNumber" style="font-weight: 800; letter-spacing: 1px; font-size: 22px;">Commande #1</h3>
     </div>
 
-    <input id="saleSearch" placeholder="🔍 ابحث هنا عن المنتج المراد بيعه..." oninput="renderSalesOptions()">
+    <input id="saleSearch" placeholder="🔍 ابحث هنا عن المنتج المراد بيعه حالياً..." oninput="renderSalesOptions()">
 
     <select id="saleStock"></select>
-    <!-- خطوة الزيادة مضبوطة على 1 لتقفز مباشرة للأرقام الكاملة -->
     <input id="saleQty" type="number" step="1" value="1" placeholder="الكمية">
 
-    <button onclick="addToCommand()" style="width: 100%; margin-bottom: 20px;">🛒 إضافة إلى السلة</button>
+    <button onclick="addToCommand()" style="width: 100%; margin-bottom: 25px; height: 50px; font-size: 16px;"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
 
-    <div class="box" style="background: #fff; border: 2px solid var(--border);">
-        <h3 style="margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border);">🛒 سلة التسوق الحالية</h3>
+    <div class="box" style="background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-md);">
+        <h3 style="margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid var(--background); font-weight:700;"><i class="fa-solid fa-basket-shopping" style="color:var(--primary)"></i> سلة التسوق الحالية</h3>
         <div id="currentCommand"></div>
-        <h3 id="commandTotal" style="margin-top:15px; color: var(--success); text-align: left;">المجموع: 0.00 DA</h3>
-        <button onclick="confirmCommand()" style="width:100%; margin-top:15px; background: var(--success); font-size: 18px; padding: 16px;">✔️ تأكيد وحفظ الطلب (OK)</button>
+        <h3 id="commandTotal" style="margin-top:20px; color: var(--success); text-align: left; font-weight:800; font-size: 22px;">المجموع: 0.00 DA</h3>
+        <button onclick="confirmCommand()" style="width:100%; margin-top:15px; background: var(--success-gradient); font-size: 18px; padding: 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب (OK)</button>
     </div>
 
-    <h3 style="margin-top: 20px; color: var(--text-muted)">📋 سجل عمليات اليوم</h3>
+    <h3 style="margin-top: 25px; color: var(--text-muted); font-weight:700;"><i class="fa-solid fa-clock-rotate-left"></i> سجل عمليات اليوم السريعة</h3>
     <div id="salesLog"></div>
 </div>
 
 <!-- STOCK -->
 <div id="stock" class="page">
     <div class="header">
-        <button class="back" onclick="back()">↩️ رجوع</button>
-        <h2>🏬 كشف وجرد المخزن</h2>
+        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+        <h2><i class="fa-solid fa-warehouse" style="color:var(--primary);"></i> كشف وجرد المخزن الكلي</h2>
     </div>
     <table>
         <thead>
@@ -336,17 +414,17 @@ tr:last-child td {
         </thead>
         <tbody id="stockTable"></tbody>
     </table>
-    <div id="totals" class="box" style="margin-top:20px; line-height: 2; background: #f8fafc;"></div>
+    <div id="totals" class="box" style="margin-top:25px; line-height: 2.2; background: #fff; box-shadow: var(--shadow-md);"></div>
 </div>
 
 <!-- LOW -->
 <div id="low" class="page">
     <div class="header">
-        <button class="back" onclick="back()">↩️ رجوع</button>
-        <h2>⚠️ تنبيه السلع الناقصة</h2>
+        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+        <h2><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> تنبيه السلع الناقصة والمستنفذة</h2>
     </div>
     <table>
-        <thead><tr><th>اسم المنتج</th><th>الكمية الحالية</th><th>حالة السلعة</th></tr></thead>
+        <thead><tr><th>اسم المنتج</th><th>الكمية الحالية</th><th>حالة السلعة بالمخزن</th></tr></thead>
         <tbody id="lowTable"></tbody>
     </table>
 </div>
@@ -354,20 +432,44 @@ tr:last-child td {
 <!-- PROFITS -->
 <div id="profits" class="page">
     <div class="header">
-        <button class="back" onclick="back()">↩️ رجوع</button>
-        <h2>💰 التقارير المالية والأرباح</h2>
+        <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+        <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية</h2>
     </div>
-    <div class="box" style="border-right: 5px solid var(--success);">
-        <p style="color: var(--text-muted)">أرباح اليوم الحالي</p>
-        <div id="dailyProfit" style="font-size: 28px; font-weight: 800; color: var(--success);">0.00 DA</div>
+
+    <!-- ميزة البحث بين تاريخين المتقدمة -->
+    <div class="box" style="background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-md);">
+        <h4 style="margin-bottom: 12px; color: var(--text-main); font-weight:700;"><i class="fa-solid fa-calendar-days" style="color:var(--primary)"></i> فلترة الأرباح حسب فترة زمنية مخصصة</h4>
+        <div class="flex-inputs" style="flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 160px;">
+                <label style="font-size: 13px; font-weight:700; color: var(--text-muted); display: block; margin-bottom:4px;">من تاريخ:</label>
+                <input type="date" id="profitFromDate">
+            </div>
+            <div style="flex: 1; min-width: 160px;">
+                <label style="font-size: 13px; font-weight:700; color: var(--text-muted); display: block; margin-bottom:4px;">إلى تاريخ:</label>
+                <input type="date" id="profitToDate">
+            </div>
+            <button onclick="filterProfitsByDate()" style="height: 50px; margin-top: 24px; background: var(--primary-gradient);"><i class="fa-solid fa-filter"></i> تطبيق الفلتر</button>
+            <button onclick="resetProfitFilter()" style="height: 50px; margin-top: 24px; background: #64748b; box-shadow:none;"><i class="fa-solid fa-arrow-rotate-left"></i> إلغاء</button>
+        </div>
+        <div id="customPeriodResultBox" style="display:none; margin-top: 20px; padding: 16px; background: #f0fdf4; border-radius: var(--radius-md); border-right: 5px solid var(--success); animation: fadeIn 0.3s ease;">
+            <p style="color: var(--success); font-weight:700; font-size: 14px;">أرباح الفترة المحددة أعلاه:</p>
+            <div id="customPeriodProfit" style="font-size: 26px; font-weight: 800; color: #166534;">0.00 DA</div>
+        </div>
     </div>
-    <div class="box" style="border-right: 5px solid var(--primary);">
-        <p style="color: var(--text-muted)">أرباح الشهر الحالي</p>
-        <div id="monthlyProfit" style="font-size: 28px; font-weight: 800; color: var(--primary);">0.00 DA</div>
-    </div>
-    <div class="box" style="border-right: 5px solid var(--text-main);">
-        <p style="color: var(--text-muted)">أرباح السنة الإجمالية</p>
-        <div id="yearlyProfit" style="font-size: 28px; font-weight: 800; color: var(--text-main);">0.00 DA</div>
+
+    <div class="profit-grid">
+        <div class="profit-card success">
+            <p>أرباح اليوم الحالي</p>
+            <div id="dailyProfit" class="amount" style="color: var(--success);">0.00 DA</div>
+        </div>
+        <div class="profit-card">
+            <p>أرباح الشهر الحالي</p>
+            <div id="monthlyProfit" class="amount" style="color: var(--primary);">0.00 DA</div>
+        </div>
+        <div class="profit-card dark">
+            <p>أرباح السنة الإجمالية</p>
+            <div id="yearlyProfit" class="amount" style="color: var(--text-main);">0.00 DA</div>
+        </div>
     </div>
 </div>
 
@@ -377,7 +479,13 @@ let batches = JSON.parse(localStorage.getItem("batches") || "[]");
 let sales = JSON.parse(localStorage.getItem("sales") || "[]");
 
 let commandNumber = Number(localStorage.getItem("commandNumber"));
-if (!commandNumber) {
+if (!commandNumber || commandNumber <= 0) {
+    calculateNextCommandNumber();
+}
+
+let currentCommandData = [];
+
+function calculateNextCommandNumber() {
     if (sales.length > 0) {
         let maxExistingCmd = sales.reduce((max, s) => s.command > max ? s.command : max, 0);
         commandNumber = maxExistingCmd + 1;
@@ -385,7 +493,6 @@ if (!commandNumber) {
         commandNumber = 1;
     }
 }
-let currentCommandData = [];
 
 function save(){
     localStorage.setItem("batches", JSON.stringify(batches));
@@ -515,8 +622,7 @@ function confirmCommand(){
         });
     });
 
-    let maxExistingCmd = sales.reduce((max, s) => s.command > max ? s.command : max, 0);
-    commandNumber = maxExistingCmd + 1;
+    commandNumber = commandNumber + 1;
     currentCommandData=[];
     save(); render(); renderSalesOptions();
 }
@@ -542,12 +648,12 @@ function updateCommandUI(){
     currentCommand.innerHTML = currentCommandData.map((i,idx)=>{
         total += i.sell*i.qty;
         return `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0; background:var(--background); padding:12px; border-radius:10px; border: 1px solid var(--border);">
-            <span style="font-weight:600;">${i.name} <span class="badge-qty">x${i.qty}</span></span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0; background:var(--background); padding:14px; border-radius:10px; border: 1px solid var(--border);">
+            <span style="font-weight:700;">${i.name} <span class="badge-qty">x${i.qty}</span></span>
             <span style="color:var(--primary); font-weight:bold;">${(i.sell*i.qty).toFixed(2)} DA</span>
             <div style="display:flex; gap:6px;">
-                <button class="edit" onclick="editCommandItemPrice(${idx})" style="padding:5px 10px; font-size:12px;">✏️ السعر</button>
-                <button class="del" onclick="removeFromCommand(${idx})" style="padding:5px 10px; font-size:12px;">❌ إلغاء</button>
+                <button class="edit" onclick="editCommandItemPrice(${idx})" style="padding:6px 12px; font-size:13px;"><i class="fa-solid fa-tag"></i> السعر</button>
+                <button class="del" onclick="removeFromCommand(${idx})" style="padding:6px 12px; font-size:13px;"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>`;
     }).join("");
@@ -569,9 +675,39 @@ function renderProducts(){
         <td><span class="badge-qty">${b.qty}</span></td>
         <td>${b.buy.toFixed(2)}</td>
         <td>${b.sell.toFixed(2)}</td>
-        <td><button class="edit" onclick="editProduct(${b.id})">تعديل</button></td>
-        <td><button class="del" onclick="deleteProduct(${b.id})">حذف</button></td>
+        <td><button class="edit" onclick="editProduct(${b.id})"><i class="fa-solid fa-pen"></i> تـعديل</button></td>
+        <td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i></button></td>
     </tr>`).join("");
+}
+
+function filterProfitsByDate() {
+    let fromVal = document.getElementById('profitFromDate').value;
+    let toVal = document.getElementById('profitToDate').value;
+    
+    if(!fromVal || !toVal) {
+        alert("الرجاء اختيار تاريخ البداية وتاريخ النهاية أولاً!");
+        return;
+    }
+    
+    let fromTime = new Date(fromVal).setHours(0,0,0,0);
+    let toTime = new Date(toVal).setHours(23,59,59,999);
+    
+    let filteredProfit = 0;
+    sales.forEach(s => {
+        let t = s.time || Date.now();
+        if(t >= fromTime && t <= toTime) {
+            filteredProfit += (s.profit || 0);
+        }
+    });
+    
+    document.getElementById('customPeriodResultBox').style.display = "block";
+    document.getElementById('customPeriodProfit').innerHTML = filteredProfit.toFixed(2) + " DA";
+}
+
+function resetProfitFilter() {
+    document.getElementById('profitFromDate').value = "";
+    document.getElementById('profitToDate').value = "";
+    document.getElementById('customPeriodResultBox').style.display = "none";
 }
 
 function render(){
@@ -584,25 +720,25 @@ function render(){
         return `
         <tr>
             <td><b>${b.name}</b></td>
-            <td><span class="badge-qty">${b.qty} قطعة</span></td>
+            <td><span class="badge-qty" style="background:#e0f2fe; color:#0369a1;">${b.qty} قطعة</span></td>
             <td>${capital.toFixed(2)} DA</td>
             <td>${expectedProfit.toFixed(2)} DA</td>
-            <td><button class="del" onclick="deleteProduct(${b.id})">حذف</button></td>
+            <td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i></button></td>
         </tr>`;
     }).join("");
 
     document.getElementById('totals').innerHTML = `
-        <p>📊 <strong>إجمالي رأس المال في المستودع:</strong> ${totalCapital.toFixed(2)} DA</p>
-        <p>📈 <strong>القيمة الإجمالية المتوقعة عند البيع:</strong> ${totalValue.toFixed(2)} DA</p>
-        <p style="color:var(--success)">✨ <strong>صافي الأرباح المنتظرة:</strong> ${(totalValue - totalCapital).toFixed(2)} DA</p>`;
+        <p><i class="fa-solid fa-money-bill-trend-up" style="color:var(--primary)"></i> <strong>إجمالي رأس المال في المستودع:</strong> ${totalCapital.toFixed(2)} DA</p>
+        <p><i class="fa-solid fa-coins" style="color:var(--warning)"></i> <strong>القيمة الإجمالية المتوقعة عند البيع:</strong> ${totalValue.toFixed(2)} DA</p>
+        <p style="color:var(--success); font-size: 17px;"><i class="fa-solid fa-circle-dollar-to-slot"></i> <strong>صافي الأرباح المنتظرة الكلية:</strong> ${(totalValue - totalCapital).toFixed(2)} DA</p>`;
 
     document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s,i)=>{
         let idx = sales.length-1-i;
         return `
         <div class="saleItem">
-            <span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} (x${s.qty})</span>
-            <span>الربح: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span>
-            <button class="del" onclick="deleteSale(${idx})" style="padding:4px 8px; font-size:12px;">❌ حذف المبيعة</button>
+            <span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} <span class="badge-qty" style="background:#f1f5f9; color:var(--text-main)">x${s.qty}</span></span>
+            <span>الربح الصافي: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span>
+            <button class="del" onclick="deleteSale(${idx})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-rotate-left"></i> إلغاء المبيعة</button>
         </div>`;
     }).join("");
 
@@ -626,12 +762,12 @@ function render(){
     document.getElementById('lowTable').innerHTML = lowItems.map(b => `
     <tr style="background: ${b.qty === 0 ? '#fef2f2' : '#fffbeb'}">
         <td><b>${b.name}</b></td>
-        <td><span class="badge-qty" style="background:none; color:inherit;">${b.qty} قطع متبقية</span></td>
-        <td><span style="color:${b.qty === 0 ? 'var(--danger)':'#d97706'}; font-weight:700;">${b.qty === 0 ? 'منتهي تماماً ❌' : 'شبه فارغ ⚠️'}</span></td>
+        <td><span class="badge-qty" style="background:none; color:inherit; font-size:14px;">${b.qty} قطع متبقية</span></td>
+        <td><span style="color:${b.qty === 0 ? 'var(--danger)':'#d97706'}; font-weight:800;"><i class="fa-solid fa-circle-exclamation"></i> ${b.qty === 0 ? 'منتهي تماماً ❌' : 'شبه فارغ ⚠️'}</span></td>
     </tr>`).join("");
     
     if(lowItems.length === 0){
-        document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success)">كل السلع متوفرة بحالة ممتازة 🎉</td></tr>`;
+        document.getElementById('lowTable').innerHTML = `<tr><td colspan="3" style="color:var(--success); font-weight:700; padding:30px;"><i class="fa-solid fa-circle-check"></i> كل السلع متوفرة بحالة ممتازة في المستودع 🎉</td></tr>`;
     }
     document.getElementById('cmdNumber').innerHTML = "Commande #" + commandNumber;
 }
@@ -641,7 +777,7 @@ function exportData(){
     let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     let linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', 'pos_backup_' + new Date().toISOString().slice(0,10) + '.json');
+    linkElement.setAttribute('download', 'pos_premium_backup_' + new Date().toISOString().slice(0,10) + '.json');
     linkElement.click();
 }
 
