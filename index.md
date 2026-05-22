@@ -13,30 +13,34 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-/* ================= ULTRA PREMIUM MODERN UI/UX ================= */
+/* ================= ULTRA PREMIUM MODERN DARK/NEON UI ================= */
 :root {
-    --primary: #2563eb;
+    --primary: #3b82f6;
     --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    --success: #059669;
-    --success-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
-    --danger: #dc2626;
+    --success: #10b981;
+    --success-gradient: linear-gradient(135deg, #10b981 0%, #059669; 100%);
+    --danger: #ef4444;
     --danger-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-    --warning: #d97706;
+    --warning: #f59e0b;
     --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
     
-    --bg-app: #f8fafc;
-    --surface: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --border: #e2e8f0;
+    /* ألوان الخلفية الاحترافية الفخمة */
+    --bg-app: #0f172a; /* كحلي داكن فاخر جداً */
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --surface: #1e293b; /* واجهات فرعية متناسقة */
+    --surface-card: rgba(30, 41, 59, 0.7);
     
-    --radius-xl: 20px;
-    --radius-lg: 14px;
-    --radius-md: 10px;
+    --text-main: #f8fafc; /* نصوص بيضاء واضحة */
+    --text-muted: #94a3b8; /* نصوص ثانوية رمادية زرقاء */
+    --border: rgba(255, 255, 255, 0.08);
     
-    --shadow-blur: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-    --shadow-hover: 0 20px 30px -10px rgba(37, 99, 235, 0.15);
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    
+    --shadow-blur: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 20px 40px -10px rgba(37, 99, 235, 0.3);
 }
 
 * {
@@ -47,10 +51,10 @@
 }
 
 body {
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    background: var(--bg-gradient);
     color: var(--text-main);
     min-height: 100vh;
-    padding: 30px 15px;
+    padding: 40px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,22 +63,24 @@ body {
 /* لوحة التحكم الرئيسية (Dashboard) */
 #dashboard {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
     width: 100%;
     max-width: 1100px;
-    margin: 30px auto;
+    margin: 40px auto;
 }
 
 .card {
-    background: var(--surface);
-    padding: 30px 20px;
+    background: var(--surface-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 35px 25px;
     border-radius: var(--radius-xl);
     text-align: center;
     cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     font-weight: 700;
-    font-size: 17px;
+    font-size: 18px;
     color: var(--text-main);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-blur);
@@ -82,7 +88,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 18px;
     position: relative;
     overflow: hidden;
 }
@@ -102,7 +108,7 @@ body {
 .card:hover::after { transform: scaleX(1); }
 
 .card i {
-    font-size: 36px;
+    font-size: 40px;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -110,30 +116,31 @@ body {
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
     box-shadow: var(--shadow-hover);
-    border-color: rgba(37, 99, 235, 0.2);
+    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(30, 41, 59, 0.9);
 }
 
-.card:hover i { transform: scale(1.1) rotate(3deg); }
+.card:hover i { transform: scale(1.15) rotate(3deg); }
 
-/* الصفحات والحاويات الرئيسية */
+/* الصفحات والحاويات الرئيسية (Glassmorphism Effect) */
 .page {
     display: none;
     width: 100%;
     max-width: 1200px;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    padding: 35px;
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 40px;
     border-radius: var(--radius-xl);
-    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(15px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -143,105 +150,106 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
     border-bottom: 1px solid var(--border);
 }
 
 .header h2 {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 800;
     color: var(--text-main);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
 }
 
-/* الأزرار الاحترافية */
+/* الأزرار الاحترافية بنظام التوهج */
 button {
-    padding: 12px 22px;
+    padding: 14px 24px;
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
     background: var(--primary-gradient);
     color: white;
     font-weight: 700;
-    font-size: 14px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
-button:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+button:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
 button:active { transform: translateY(0); }
 
-.back { background: #64748b; }
-.back:hover { background: #475569; box-shadow: 0 4px 12px rgba(100, 116, 139, 0.2); }
+.back { background: #475569; box-shadow: 0 4px 12px rgba(71, 85, 105, 0.2); }
+.back:hover { background: #64748b; box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4); }
 
-.del { background: var(--danger-gradient); }
-.del:hover { box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
+.del { background: var(--danger-gradient); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
+.del:hover { box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
 
-.edit { background: #f1f5f9; color: var(--text-main); border: 1px solid var(--border); }
-.edit:hover { background: var(--border); }
+.edit { background: #334155; color: var(--text-main); border: 1px solid var(--border); box-shadow: none; }
+.edit:hover { background: #475569; }
 
 /* عناصر الإدخال والقوائم */
 label {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--text-muted);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 input, select {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    background: #f8fafc;
+    background: #1e293b;
     color: var(--text-main);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 input:focus, select:focus {
     outline: none;
     border-color: var(--primary);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    background: #0f172a;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
 }
 
-/* تقسيم واجهة البيع بالتساوي (Layout Split) */
+/* تقسيم واجهة البيع بالتساوي */
 .sales-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 25px;
+    gap: 30px;
     align-items: start;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
     .sales-grid { grid-template-columns: 1fr; }
 }
 
 /* الصناديق والعلب الفرعية */
 .box {
-    background: #f8fafc;
-    padding: 20px;
+    background: rgba(15, 23, 42, 0.4);
+    padding: 25px;
     border-radius: var(--radius-lg);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     border: 1px solid var(--border);
 }
 
-.flex-inputs { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; }
+.flex-inputs { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
 .flex-inputs > div { flex: 1; }
 
-/* الجداول المتطورة */
+/* الجداول المتطورة المظلمة */
 table {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 25px;
     border-collapse: separate;
     border-spacing: 0;
     border-radius: var(--radius-lg);
@@ -249,19 +257,19 @@ table {
     border: 1px solid var(--border);
 }
 
-th, td { padding: 14px 16px; text-align: center; font-size: 14px; }
-th { background-color: #f1f5f9; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border); }
-td { background-color: #fff; border-bottom: 1px solid #f1f5f9; }
+th, td { padding: 16px 20px; text-align: center; font-size: 15px; }
+th { background-color: #1e293b; color: var(--text-main); font-weight: 700; border-bottom: 1px solid var(--border); }
+td { background-color: rgba(30, 41, 59, 0.4); border-bottom: 1px solid var(--border); color: var(--text-main); }
 tr:last-child td { border-bottom: none; }
 
 /* بطاقات الطلبيات المسجلة والسلة */
 .order-card {
-    background: var(--surface);
+    background: #1e293b;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 16px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-blur);
 }
 
 .order-card-header {
@@ -269,41 +277,41 @@ tr:last-child td { border-bottom: none; }
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px dashed var(--border);
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
 }
 
 .order-item-line {
     display: flex;
     justify-content: space-between;
-    padding: 6px 0;
-    font-size: 13px;
-    border-bottom: 1px solid #f8fafc;
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
 
-.badge-qty { background: #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; }
+.badge-qty { background: #334155; color: #f59e0b; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 13px; }
 
-/* كروت شبكة تقارير الأرباح */
-.profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
-.profit-card { background: var(--surface); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 4px solid var(--primary); box-shadow: var(--shadow-blur); }
+/* كروت شبكة تقارير الأرباح النيون */
+.profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
+.profit-card { background: #1e293b; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
 .profit-card.success { border-right-color: var(--success); }
-.profit-card.dark { border-right-color: var(--text-main); }
-.profit-card.filter { border-right-color: #a855f7; background: #faf5ff; border-top: 1px solid #f3e8ff; }
-.profit-card.expense-card { border-right-color: var(--danger); background: #fef2f2; border-top: 1px solid #fee2fee2; }
-.profit-card p { color: var(--text-muted); font-size: 13px; font-weight: 700; margin-bottom: 6px;}
-.profit-card .amount { font-size: 22px; font-weight: 800; }
+.profit-card.dark { border-right-color: #cbd5e1; }
+.profit-card.filter { border-right-color: #a855f7; background: rgba(168, 85, 247, 0.05); border-top: 1px solid rgba(168, 85, 247, 0.1); }
+.profit-card.expense-card { border-right-color: var(--danger); background: rgba(239, 68, 68, 0.05); border-top: 1px solid rgba(239, 68, 68, 0.1); }
+.profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 8px;}
+.profit-card .amount { font-size: 24px; font-weight: 800; }
 
-/* ألوان السلع الناقصة بالتدرج */
-.stock-empty { background-color: #0f172a !important; color: #ffffff !important; }
-.stock-danger { background-color: #fee2e2 !important; color: #991b1b !important; }
-.stock-warning { background-color: #ffedd5 !important; color: #9a3412 !important; }
-.stock-notice { background-color: #e0f2fe !important; color: #075985 !important; }
+/* ألوان السلع الناقصة بالتدرج المتناسق مع الوضع المظلم */
+.stock-empty { background-color: #ef4444 !important; color: #ffffff !important; }
+.stock-danger { background-color: rgba(239, 68, 68, 0.2) !important; color: #fca5a5 !important; }
+.stock-warning { background-color: rgba(245, 158, 11, 0.2) !important; color: #fde047 !important; }
+.stock-notice { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
 
 /* تجميل شريط التمرير */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f1f5f9; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
 </style>
 </head>
 
@@ -317,7 +325,7 @@ tr:last-child td { border-bottom: none; }
     <div class="card" onclick="openPage('low')"><i class="fa-solid fa-triangle-exclamation" style="background:var(--warning-gradient); -webkit-background-clip: text;"></i> السلع الناقصة بالمحل</div>
     <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
     <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
-    <div class="card" onclick="exportData()" style="background: #f8fafc; border: 1px dashed #cbd5e1;"><i class="fa-solid fa-file-export" style="background:#64748b; -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
+    <div class="card" onclick="exportData()" style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.15);"><i class="fa-solid fa-file-export" style="background:#94a3b8; -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
 </div>
 
 <!-- إدارة المنتجات - PRODUCTS -->
@@ -327,7 +335,7 @@ tr:last-child td { border-bottom: none; }
         <h2><i class="fa-solid fa-box-open" style="color:var(--primary);"></i> إدارة المنتجات والمخزن</h2>
     </div>
     <div class="box">
-        <h3 style="margin-bottom: 15px; font-size:16px;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
+        <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
         <div class="flex-inputs">
             <div><label>الباركود / Ref:</label><input id="pRef" placeholder="أدخل أو امسح الباركود"></div>
             <div><label>اسم المنتج:</label><input id="pName" placeholder="اسم المنتج بالكامل"></div>
@@ -337,9 +345,9 @@ tr:last-child td { border-bottom: none; }
             <div><label>سعر البيع الافتراضي (DA):</label><input id="pSell" type="number" step="0.01" placeholder="0.00"></div>
             <div><label>الكمية الابتدائية:</label><input id="pQty" type="number" step="0.01" placeholder="0"></div>
         </div>
-        <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 45px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
+        <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 50px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
     </div>
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 25px; margin-bottom: 10px;">
         <label>🔍 بحث سريع وسلس في المنتجات:</label>
         <input id="productSearch" placeholder="ابحث باسم المنتج أو الرقم المتسلسل..." oninput="renderProducts()">
     </div>
@@ -358,30 +366,27 @@ tr:last-child td { border-bottom: none; }
         <h2><i class="fa-solid fa-cash-register" style="color:var(--primary);"></i> واجهة البيع السريعة والتعديل الفوري</h2>
     </div>
     
-    <!-- قسم التحكم العلوي برقم الطلب والتعديل الاسترجاعي -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-        <div class="box" style="background: var(--text-main); color: white; padding: 15px; margin: 0; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap;">
-            <span style="font-weight: 700; font-size: 15px;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
-            <input id="cmdNumberInput" type="number" min="1" style="width: 100px; text-align: center; font-size: 18px; font-weight: 800; color: var(--text-main); background: #fff; padding: 6px;" oninput="updateCommandNumberManual()">
-            <button class="del" onclick="resetCommandNumber()" style="padding: 8px 14px; font-size: 12px;"><i class="fa-solid fa-arrow-rotate-left"></i> تصفير</button>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+        <div class="box" style="background: #0f172a; color: white; padding: 15px; margin: 0; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; border-color: rgba(255,255,255,0.05);">
+            <span style="font-weight: 700; font-size: 16px;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
+            <input id="cmdNumberInput" type="number" min="1" style="width: 110px; text-align: center; font-size: 18px; font-weight: 800; color: #fff; background: #1e293b; padding: 8px;" oninput="updateCommandNumberManual()">
+            <button class="del" onclick="resetCommandNumber()" style="padding: 10px 16px; font-size: 13px;"><i class="fa-solid fa-arrow-rotate-left"></i> تصفير</button>
         </div>
-        <div class="box" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; margin: 0; display: flex; align-items: center; gap: 10px;">
-            <input id="searchOrderNumber" type="number" placeholder="رقم طلبية سابقة لتعديلها..." style="background: #fff;">
-            <button onclick="loadOrderToEdit()" style="background: var(--purple-gradient); white-space: nowrap; padding: 11px 16px;"><i class="fa-solid fa-edit"></i> جلب للتعديل</button>
+        <div class="box" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 15px; margin: 0; display: flex; align-items: center; gap: 15px;">
+            <input id="searchOrderNumber" type="number" placeholder="رقم طلبية سابقة لتعديلها..." style="background: #1e293b;">
+            <button onclick="loadOrderToEdit()" style="background: var(--purple-gradient); white-space: nowrap; padding: 14px 20px;"><i class="fa-solid fa-edit"></i> جلب للتعديل</button>
         </div>
     </div>
 
-    <!-- شبكة البيع المنقسمة -->
     <div class="sales-grid">
-        <!-- الجهة اليمنى: اختيار المنتج والتحكم بالسعر المعدل -->
         <div>
-            <div class="box" style="background: #fff;">
-                <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--primary);"><i class="fa-solid fa-filter"></i> اختيار المنتج وتحديد السعر</h3>
-                <div style="margin-bottom: 15px;">
+            <div class="box" style="background: rgba(30, 41, 59, 0.4);">
+                <h3 style="font-size: 17px; margin-bottom: 20px; color: var(--primary);"><i class="fa-solid fa-filter"></i> اختيار المنتج وتحديد السعر</h3>
+                <div style="margin-bottom: 18px;">
                     <label>فصل وتصفية المنتجات:</label>
                     <input id="saleSearch" placeholder="اكتب اسم المنتج أو امسح الباركود للبحث..." oninput="renderSalesOptions()">
                 </div>
-                <div style="margin-bottom: 15px;">
+                <div style="margin-bottom: 18px;">
                     <label>المنتج المستهدف حالياً:</label>
                     <select id="saleStock" onchange="updateDefaultSalePriceField()"></select>
                 </div>
@@ -389,30 +394,29 @@ tr:last-child td { border-bottom: none; }
                 <div class="flex-inputs">
                     <div>
                         <label>الكمية المراد بيعها:</label>
-                        <input id="saleQty" type="number" step="1" value="1" style="background: #fff;">
+                        <input id="saleQty" type="number" step="1" value="1">
                     </div>
                     <div>
                         <label style="color: var(--primary); font-weight: 800;"><i class="fa-solid fa-pen-clip"></i> سعر البيع الحالي (عدّله بحرية):</label>
-                        <input id="salePriceInput" type="number" step="0.01" style="background: #fff; border: 2px solid var(--primary); font-size: 16px; font-weight: 700; color: var(--primary);">
+                        <input id="salePriceInput" type="number" step="0.01" style="border: 2px solid var(--primary); font-size: 17px; font-weight: 700; color: #fff; background:#0f172a;">
                     </div>
                 </div>
-                <button onclick="addToCommand()" style="width: 100%; height: 48px; font-size: 15px; background: var(--primary-gradient);"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
+                <button onclick="addToCommand()" style="width: 100%; height: 52px; font-size: 16px; background: var(--primary-gradient);"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
             </div>
             
-            <h3 style="color: var(--text-muted); font-weight:700; font-size: 16px; margin-bottom: 12px;"><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبيات المبيوعة السابقة</h3>
-            <div id="salesLog" style="max-height: 380px; overflow-y: auto;"></div>
+            <h3 style="color: var(--text-main); font-weight:700; font-size: 17px; margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبيات المبيوعة السابقة</h3>
+            <div id="salesLog" style="max-height: 400px; overflow-y: auto;"></div>
         </div>
 
-        <!-- الجهة اليسرى: السلة الحالية والمجموع والتأكيد -->
-        <div class="box" style="background: #fff; border: 1px solid var(--primary); position: sticky; top: 10px;">
-            <h3 style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 16px; color: var(--success);"><i class="fa-solid fa-basket-shopping"></i> سلة التسوق الحالية</h3>
-            <div id="currentCommand" style="min-height: 150px; max-height: 300px; overflow-y: auto; margin-bottom: 15px;"></div>
+        <div class="box" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.3); position: sticky; top: 20px;">
+            <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; font-size: 17px; color: var(--success);"><i class="fa-solid fa-basket-shopping"></i> سلة التسوق الحالية</h3>
+            <div id="currentCommand" style="min-height: 160px; max-height: 320px; overflow-y: auto; margin-bottom: 20px;"></div>
             
-            <div style="background: #f0fdf4; padding: 15px; border-radius: var(--radius-md); border: 1px solid #bbf7d0; text-align: left; margin-bottom: 15px;">
-                <span style="color: #166534; font-size: 14px; font-weight: 700;">المجموع الإجمالي المستحق:</span>
-                <h3 id="commandTotal" style="color: var(--success); font-size: 24px; font-weight: 900; margin-top: 2px;">0.00 DA</h3>
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.2); text-align: left; margin-bottom: 20px;">
+                <span style="color: var(--success); font-size: 15px; font-weight: 700;">المجموع الإجمالي المستحق:</span>
+                <h3 id="commandTotal" style="color: var(--success); font-size: 28px; font-weight: 900; margin-top: 5px;">0.00 DA</h3>
             </div>
-            <button onclick="confirmCommand()" style="width:100%; background: var(--success-gradient); font-size: 16px; padding: 14px;"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب النهائي</button>
+            <button onclick="confirmCommand()" style="width:100%; background: var(--success-gradient); font-size: 17px; padding: 16px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب النهائي</button>
         </div>
     </div>
 </div>
@@ -453,8 +457,8 @@ tr:last-child td { border-bottom: none; }
         <h2><i class="fa-solid fa-hand-holding-dollar" style="color:var(--danger);"></i> إدارة مصاريف المحل الكلية 💸</h2>
     </div>
     <div class="box">
-        <h3 style="margin-bottom: 15px; font-size:16px;"><i class="fa-solid fa-file-invoice-dollar"></i> تسجيل مصروف جديد وتدوينه</h3>
-        <div style="margin-bottom: 15px;">
+        <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-file-invoice-dollar"></i> تسجيل مصروف جديد وتدوينه</h3>
+        <div style="margin-bottom: 18px;">
             <label>بيان المصروف ونوعه:</label>
             <input id="expTitle" placeholder="مثال: فاتورة الكهرباء، نقل السلعة، تالف...">
         </div>
@@ -462,10 +466,10 @@ tr:last-child td { border-bottom: none; }
             <div><label>قيمة المصروف (DA):</label><input id="expAmount" type="number" step="0.01" placeholder="0.00"></div>
             <div><label>تاريخ التقييد:</label><input id="expDate" type="date"></div>
         </div>
-        <button onclick="addExpense()" style="width: 100%; margin-top: 5px; background: var(--danger-gradient); height: 45px;"><i class="fa-solid fa-check"></i> حفظ وقيد المصروف بالدفتر</button>
+        <button onclick="addExpense()" style="width: 100%; margin-top: 5px; background: var(--danger-gradient); height: 50px;"><i class="fa-solid fa-check"></i> حفظ وقيد المصروف بالدفتر</button>
     </div>
-    <h3 style="color: var(--text-muted); font-weight:700; margin-top:25px; font-size: 16px;"><i class="fa-solid fa-receipt"></i> سجل المصاريف اليومية والسنوية المقيدة</h3>
-    <div id="expensesLog" style="max-height: 400px; overflow-y: auto; margin-top: 15px;"></div>
+    <h3 style="color: var(--text-main); font-weight:700; margin-top:30px; font-size: 17px;"><i class="fa-solid fa-receipt"></i> سجل المصاريف اليومية والسنوية المقيدة</h3>
+    <div id="expensesLog" style="max-height: 420px; overflow-y: auto; margin-top: 20px;"></div>
 </div>
 
 <!-- تقارير الأرباح - PROFITS -->
@@ -474,8 +478,8 @@ tr:last-child td { border-bottom: none; }
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
         <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية الحقيقية</h2>
     </div>
-    <div class="box" style="background: #fff;">
-        <h3 style="margin-bottom: 15px; font-size:16px; color: #a855f7;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
+    <div class="box" style="background: rgba(30, 41, 59, 0.4);">
+        <h3 style="margin-bottom: 20px; font-size:17px; color: #a855f7;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
         <div class="flex-inputs">
             <div><label>من تاريخ 📅:</label><input type="date" id="filterFrom" onchange="calculateFilteredProfit()"></div>
             <div><label>إلى تاريخ 🏁:</label><input type="date" id="filterTo" onchange="calculateFilteredProfit()"></div>
@@ -484,7 +488,7 @@ tr:last-child td { border-bottom: none; }
     <div class="profit-grid">
         <div class="profit-card filter" style="grid-column: span 2 / span 2;">
             <p>🎯 صافي فائدة الفترة المحددة بالفرز أعلاه (فائدة المبيعات المعدلة - المصاريف)</p>
-            <div id="filteredProfit" class="amount" style="color: #a855f7;">0.00 DA 💰</div>
+            <div id="filteredProfit" class="amount" style="color: #c084fc;">0.00 DA 💰</div>
         </div>
         <div class="profit-card success">
             <p>💵 صافي أرباح اليوم الحالي</p>
@@ -496,7 +500,7 @@ tr:last-child td { border-bottom: none; }
         </div>
         <div class="profit-card expense-card" style="grid-column: span 2 / span 2;">
             <p>📉 إجمالي مصاريف السنة المسجلة بالكامل</p>
-            <div id="totalExpensesYear" class="amount" style="color: var(--danger);">0.00 DA 💸</div>
+            <div id="totalExpensesYear" class="amount" style="color: #fca5a5;">0.00 DA 💸</div>
         </div>
         <div class="profit-card dark" style="grid-column: span 2 / span 2;">
             <p>👑 صافي فائدة السنة الإجمالية الحقيقية</p>
@@ -658,18 +662,21 @@ function updateCommandUI(){
     currentCommand.innerHTML = currentCommandData.map((i,idx)=>{
         total += i.sell*i.qty;
         return `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0; background:#f8fafc; padding:10px 14px; border-radius:8px; border:1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0; background:#1e293b; padding:12px 16px; border-radius:10px; border:1px solid var(--border);">
             <span><b>${i.name}</b> <span class="badge-qty">x${i.qty}</span> <small style="color:var(--text-muted);">(@ ${i.sell.toFixed(2)} DA)</small></span>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span style="color:var(--primary); font-weight:700;">${(i.sell*i.qty).toFixed(2)} DA</span>
-                <button class="del" onclick="removeFromCommand(${idx})" style="padding:5px 10px; font-size:12px;"><i class="fa-solid fa-trash"></i></button>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="color:var(--success); font-weight:700;">${(i.sell*i.qty).toFixed(2)} DA</span>
+                <button class="del" onclick="removeFromCommand(${idx})" style="padding:6px 12px; font-size:13px;"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>`;
     }).join("");
     commandTotal.innerHTML = total.toFixed(2) + " DA";
 }
 
-function removeFromCommand(i) { currentCommandData.splice(i,1); updateCommandUI(); }
+function removeFromCommand(index) { 
+    currentCommandData.splice(index, 1); 
+    updateCommandUI(); 
+}
 
 function confirmCommand(){
     if(currentCommandData.length===0) return alert("السلة فارغة!");
@@ -731,7 +738,7 @@ function renderProducts(){
     <tr>
         <td><code>${b.ref}</code></td>
         <td><b>${b.name}</b></td>
-        <td><span class="badge-qty" style="background:#e0f2fe; color:#0369a1;">${b.qty} قطع</span></td>
+        <td><span class="badge-qty" style="background:rgba(59,130,246,0.15); color:#60a5fa;">${b.qty} قطع</span></td>
         <td>${b.buy}</td>
         <td>${b.sell}</td>
         <td><button class="edit" onclick="editProduct(${b.id})"><i class="fa-solid fa-pen"></i></button></td>
@@ -745,15 +752,15 @@ function render(){
     document.getElementById('stockTable').innerHTML = batches.map(b=>{
         let capital = b.buy * b.qty; let expectedProfit = (b.sell - b.buy) * b.qty;
         totalCapital += capital; totalValue += (b.sell * b.qty); totalPieces += b.qty;
-        return `<tr><td><b>${b.name}</b></td><td><span class="badge-qty" style="background:#e0f2fe; color:#0369a1;">${b.qty} قطعة</span></td><td>${capital.toFixed(2)} DA</td><td>${expectedProfit.toFixed(2)} DA</td><td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+        return `<tr><td><b>${b.name}</b></td><td><span class="badge-qty" style="background:rgba(59,130,246,0.15); color:#60a5fa;">${b.qty} قطعة</span></td><td>${capital.toFixed(2)} DA</td><td>${expectedProfit.toFixed(2)} DA</td><td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i></button></td></tr>`;
     }).join("");
 
     document.getElementById('stockTableFoot').innerHTML = `
-        <tr style="background: #f1f5f9;">
+        <tr style="background: #1e293b;">
             <td style="color: var(--text-main); font-weight:800; text-align:right;">📦 إجمالي المخزون:</td>
-            <td style="color: #0284c7; font-weight:800;">${totalPieces} قطعة</td>
-            <td style="color: #b91c1c; font-weight:800;">${totalCapital.toFixed(2)} DA</td>
-            <td style="color: #047857; font-weight:800;">${(totalValue - totalCapital).toFixed(2)} DA</td>
+            <td style="color: #60a5fa; font-weight:800;">${totalPieces} قطعة</td>
+            <td style="color: #fca5a5; font-weight:800;">${totalCapital.toFixed(2)} DA</td>
+            <td style="color: #34d399; font-weight:800;">${(totalValue - totalCapital).toFixed(2)} DA</td>
             <td></td>
         </tr>`;
 
@@ -771,20 +778,20 @@ function render(){
             let itemsHTML = order.items.map(item => `
                 <div class="order-item-line">
                     <span>📦 ${item.name} <span class="badge-qty">x${item.qty}</span> <small style="color:var(--text-muted);">(@ ${item.sell} DA)</small></span>
-                    <span style="font-weight:600;">${(item.sell * item.qty).toFixed(2)} DA</span>
+                    <span style="font-weight:600; color:var(--success);">${(item.sell * item.qty).toFixed(2)} DA</span>
                 </div>
             `).join("");
             return `
             <div class="order-card">
                 <div class="order-card-header">
-                    <span style="font-weight:800; font-size:15px; color:var(--primary);">الطلبية # ${cmdNum}</span>
-                    <div style="display:flex; gap:6px;">
-                        <button onclick="document.getElementById('searchOrderNumber').value=${cmdNum}; loadOrderToEdit();" style="padding:5px 10px; font-size:11px; background:var(--purple-gradient);"><i class="fa-solid fa-pen"></i> جلب</button>
-                        <button class="del" onclick="deleteEntireOrder(${cmdNum})" style="padding:5px 10px; font-size:11px;"><i class="fa-solid fa-trash"></i> إلغاء</button>
+                    <span style="font-weight:800; font-size:16px; color:var(--primary);">الطلبية # ${cmdNum}</span>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="document.getElementById('searchOrderNumber').value=${cmdNum}; loadOrderToEdit();" style="padding:6px 12px; font-size:12px; background:var(--purple-gradient);"><i class="fa-solid fa-pen"></i> جلب</button>
+                        <button class="del" onclick="deleteEntireOrder(${cmdNum})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash"></i> إلغاء</button>
                     </div>
                 </div>
                 <div>${itemsHTML}</div>
-                <div style="display:flex; justify-content:space-between; margin-top:10px; padding-top:6px; border-top:1px solid var(--border); font-size:13px; font-weight:700;">
+                <div style="display:flex; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid var(--border); font-size:14px; font-weight:700;">
                     <span style="color:var(--text-muted);">الفائدة: <b style="color:var(--success);">${order.totalProfit.toFixed(2)} DA</b></span>
                     <span style="color:var(--text-main);">المجموع: <b style="color:var(--primary);">${order.totalAmount.toFixed(2)} DA</b></span>
                 </div>
@@ -796,11 +803,11 @@ function render(){
     document.getElementById('expensesLog').innerHTML = [...expenses].reverse().map(e => {
         totalExpensesSum += e.amount;
         return `
-        <div class="order-card" style="border-right: 4px solid var(--danger); display:flex; justify-content:space-between; align-items:center;">
+        <div class="order-card" style="border-right: 5px solid var(--danger); display:flex; justify-content:space-between; align-items:center;">
             <span>💸 <b>${e.title}</b> <small style="color:var(--text-muted); margin-right:8px;">(${e.date})</small></span>
             <div style="display:flex; align-items:center; gap:15px;">
                 <b style="color:var(--danger);">${e.amount.toFixed(2)} DA</b>
-                <button class="del" onclick="deleteExpense(${e.id})" style="padding:5px 10px; font-size:12px;"><i class="fa-solid fa-trash"></i></button>
+                <button class="del" onclick="deleteExpense(${e.id})" style="padding:6px 12px; font-size:13px;"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>`;
     }).join("");
