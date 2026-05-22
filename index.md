@@ -1,4 +1,4 @@
-لوحة التحكم الرئيسية
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
@@ -619,7 +619,12 @@ function openPage(id){
     document.getElementById("dashboard").style.display="none";
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById(id).classList.add("active");
-    if(id === 'sales') { document.getElementById('saleSearch').value = ''; renderSalesOptions(); }
+    if(id === 'sales') { 
+        let sSearch = document.getElementById('saleSearch');
+        sSearch.value = ''; 
+        renderSalesOptions(); 
+        setTimeout(() => sSearch.focus(), 100);
+    }
     if(id === 'low') { renderLowStockPage(); }
     window.scrollTo(0, 0);
 }
@@ -836,6 +841,7 @@ function renderSalesOptions() {
     updateDefaultSalePriceField();
 }
 
+/* التحديث المطلق لتفريغ البحث وإرجاع الفوكس تلقائياً للـ Input */
 function addToCommand() {
     let select = document.getElementById('saleStock');
     let id = Number(select.value); if (!id) return;
@@ -851,8 +857,18 @@ function addToCommand() {
     if (exist) { exist.qty += qty; exist.sellPrice = customPrice; } else {
         currentCommandData.push({ ref: b.ref, name: b.name, qty: qty, sellPrice: customPrice, buyPrice: b.buy });
     }
-    playBeepSound(); renderCurrentCommand();
+    playBeepSound(); 
+    renderCurrentCommand();
+    
+    // تصفير خانة البحث وتحديث الخيارات وإرجاع الفوكس فوراً للكتابة المباشرة
+    let searchInput = document.getElementById('saleSearch');
+    searchInput.value = '';
+    renderSalesOptions();
+    
     document.getElementById('saleQty').value = 1;
+    
+    // إجبار المتصفح على التركيز بالـ Input بدون فارة
+    setTimeout(() => { searchInput.focus(); }, 10);
 }
 
 function removeFromCommand(index) {
@@ -951,12 +967,10 @@ function renderStockPage() {
     tfoot.innerHTML = `<tr style="background:#111827; font-weight:800;"><td>الإجمالي العام:</td><td>${totalPieces} قطعة</td><td style="color:#fca5a5;">${totalCapital.toFixed(2)} DA</td><td style="color:#34d399;">${totalExpectedProfit.toFixed(2)} DA</td><td>---</td></tr>`;
 }
 
-/* ================= التحديث الجوهري: فرز تصاعدي وحساب درجة الخطورة من 1 إلى 15 ================= */
 function renderLowStockPage() {
     let tbody = document.getElementById('lowTable');
     tbody.innerHTML = '';
 
-    // تصفية السلع التي كميتها 15 أو أقل
     let lowItems = batches.filter(b => b.qty <= 15);
 
     if(lowItems.length === 0) {
@@ -964,32 +978,28 @@ function renderLowStockPage() {
         return;
     }
 
-    // الترتيب التصاعدي الفعلي: يبدأ من 0 (لي مكانش) فما فوق
     lowItems.sort((a, b) => a.qty - b.qty);
 
     lowItems.forEach(b => {
         let tr = document.createElement('tr');
         
-        let riskScore = 1;        // من 1 إلى 15
+        let riskScore = 1;        
         let statusText = "";
         let bgColor = "";
         let textColor = "#ffffff";
 
-        // حساب الخطورة الديناميكية بناءً على نقص الكمية الدقيق
         if (b.qty <= 0) {
-            riskScore = 15;
-            statusText = "🚨 نافذ تماماً (إنقاذ المخزن)";
-            bgColor = "rgba(239, 68, 68, 0.95)"; // أحمر نيون فاقع جداً للـ 0
+            riskScore = 15; statusText = "🚨 نافذ تماماً (إنقاذ المخزن)"; bgColor = "rgba(239, 68, 68, 0.95)";
         } else if (b.qty === 1) {
             riskScore = 14; statusText = "⚠️ قطعة واحدة متبقية!"; bgColor = "rgba(239, 68, 68, 0.75)";
         } else if (b.qty === 2) {
             riskScore = 13; statusText = "⚠️ قطعتين فقط بالمحل!"; bgColor = "rgba(239, 68, 68, 0.6)";
         } else if (b.qty === 3) {
-            riskScore = 12; statusText = "🚨 نقص حاد جداً"; bgColor = "rgba(244, 63, 94, 0.6)";
+            riskScore = 12; statusText = "📦 نقص حاد جداً"; bgColor = "rgba(244, 63, 94, 0.6)";
         } else if (b.qty === 4) {
-            riskScore = 11; statusText = "🚨 نقص حاد بالمخزن"; bgColor = "rgba(249, 115, 22, 0.7)";
+            riskScore = 11; statusText = "📦 نقص حاد بالمخزن"; bgColor = "rgba(249, 115, 22, 0.7)";
         } else if (b.qty === 5) {
-            riskScore = 10; statusText = "🚨 نقص حاد ملحوظ"; bgColor = "rgba(249, 115, 22, 0.55)";
+            riskScore = 10; statusText = "📦 نقص حاد ملحوظ"; bgColor = "rgba(249, 115, 22, 0.55)";
         } else if (b.qty === 6) {
             riskScore = 9; statusText = "🔔 إنذار متوسط الدرجة"; bgColor = "rgba(245, 158, 11, 0.65)";
         } else if (b.qty === 7) {
@@ -1006,11 +1016,10 @@ function renderLowStockPage() {
             riskScore = 3; statusText = "📉 تراجع خفيف للمخزون"; bgColor = "rgba(59, 130, 246, 0.35)";
         } else if (b.qty === 13) {
             riskScore = 2; statusText = "🛡️ وضع آمن مؤقتاً"; bgColor = "rgba(16, 185, 129, 0.4)";
-        } else { // 14 أو 15 قطعة
+        } else { 
             riskScore = 1; statusText = "🛡️ السلعة ممتازة وبداية الفرز"; bgColor = "rgba(16, 185, 129, 0.25)";
         }
 
-        // تطبيق لون السطر حسب طبيعة درجة خطورة المنتج
         tr.style.backgroundColor = bgColor;
         tr.style.color = textColor;
 
