@@ -989,31 +989,31 @@ function renderLowStockPage() {
         let textColor = "#ffffff";
 
         if (b.qty <= 0) {
-            riskScore = 15; statusText = "🚨 نافذ تماماً (إنقاذ المخزن)"; bgColor = "rgba(239, 68, 68, 0.95)";
+            riskScore = 15; statusText = "🚨 نقص حاد"; bgColor = "rgba(239, 68, 68, 0.95)";
         } else if (b.qty === 1) {
-            riskScore = 14; statusText = "⚠️ قطعة واحدة متبقية!"; bgColor = "rgba(239, 68, 68, 0.75)";
+            riskScore = 14; statusText = "🚨 نقص حاد"; bgColor = "rgba(239, 68, 68, 0.75)";
         } else if (b.qty === 2) {
-            riskScore = 13; statusText = "⚠️ قطعتين فقط بالمحل!"; bgColor = "rgba(239, 68, 68, 0.6)";
+            riskScore = 13; statusText = "🚨 نقص حاد"; bgColor = "rgba(239, 68, 68, 0.6)";
         } else if (b.qty === 3) {
-            riskScore = 12; statusText = "📦 نقص حاد جداً"; bgColor = "rgba(244, 63, 94, 0.6)";
+            riskScore = 12; statusText = "🚨 نقص حاد"; bgColor = "rgba(244, 63, 94, 0.6)";
         } else if (b.qty === 4) {
-            riskScore = 11; statusText = "📦 نقص حاد بالمخزن"; bgColor = "rgba(249, 115, 22, 0.7)";
+            riskScore = 11; statusText = "🚨 نقص حاد"; bgColor = "rgba(249, 115, 22, 0.7)";
         } else if (b.qty === 5) {
-            riskScore = 10; statusText = "📦 نقص حاد ملحوظ"; bgColor = "rgba(249, 115, 22, 0.55)";
+            riskScore = 10; statusText = "⚠️ إنذار"; bgColor = "rgba(249, 115, 22, 0.55)";
         } else if (b.qty === 6) {
-            riskScore = 9; statusText = "🔔 إنذار متوسط الدرجة"; bgColor = "rgba(245, 158, 11, 0.65)";
+            riskScore = 9; statusText = "⚠️ إنذار"; bgColor = "rgba(245, 158, 11, 0.65)";
         } else if (b.qty === 7) {
-            riskScore = 8; statusText = "🔔 إنذار قيد التناقص"; bgColor = "rgba(245, 158, 11, 0.5)";
+            riskScore = 8; statusText = "⚠️ إنذار"; bgColor = "rgba(245, 158, 11, 0.5)";
         } else if (b.qty === 8) {
-            riskScore = 7; statusText = "⚡ كمية متوسطة ضئيلة"; bgColor = "rgba(234, 179, 8, 0.6)";
+            riskScore = 7; statusText = "⚠️ إنذار"; bgColor = "rgba(234, 179, 8, 0.6)";
         } else if (b.qty === 9) {
-            riskScore = 6; statusText = "⚡ كمية متوسطة المدى"; bgColor = "rgba(234, 179, 8, 0.45)";
+            riskScore = 6; statusText = "⚠️ إنذار"; bgColor = "rgba(234, 179, 8, 0.45)";
         } else if (b.qty === 10) {
-            riskScore = 5; statusText = "💡 مستوى النصف المقبول"; bgColor = "rgba(202, 138, 4, 0.4)";
+            riskScore = 5; statusText = "🛡️ وضع آمن مؤقتاً"; bgColor = "rgba(202, 138, 4, 0.4)";
         } else if (b.qty === 11) {
-            riskScore = 4; statusText = "📉 بداية الهبوط الميداني"; bgColor = "rgba(59, 130, 246, 0.5)";
+            riskScore = 4; statusText = "🛡️ وضع آمن مؤقتاً"; bgColor = "rgba(59, 130, 246, 0.5)";
         } else if (b.qty === 12) {
-            riskScore = 3; statusText = "📉 تراجع خفيف للمخزون"; bgColor = "rgba(59, 130, 246, 0.35)";
+            riskScore = 3; statusText = "🛡️ وضع آمن مؤقتاً"; bgColor = "rgba(59, 130, 246, 0.35)";
         } else if (b.qty === 13) {
             riskScore = 2; statusText = "🛡️ وضع آمن مؤقتاً"; bgColor = "rgba(16, 185, 129, 0.4)";
         } else { 
