@@ -24,7 +24,6 @@
             --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
             
-            /* ألوان الخلفية الاحترافية الفخمة */
             --bg-app: #090d16; 
             --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
             --surface: #1f2937; 
@@ -59,7 +58,6 @@
             align-items: center;
         }
 
-        /* لوحة التحكم الرئيسية (Dashboard) */
         #dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -123,7 +121,6 @@
 
         .card:hover i { transform: scale(1.15) rotate(3deg); }
 
-        /* الصفحات والحاويات الرئيسية */
         .page {
             display: none;
             width: 100%;
@@ -163,7 +160,6 @@
             gap: 15px;
         }
 
-        /* الأزرار الاحترافية بنظام التوهج */
         button {
             padding: 14px 24px;
             border: none;
@@ -193,7 +189,9 @@
         .edit { background: #1f2937; color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: none; }
         .edit:hover { background: #3b82f6; color: white; }
 
-        /* عناصر الإدخال والقوائم */
+        .price-btn { background: #1f2937; color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: none; }
+        .price-btn:hover { background: var(--warning-gradient); color: white; }
+
         label {
             display: block;
             font-size: 14px;
@@ -221,7 +219,6 @@
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
         }
 
-        /* تنسيق خطأ خاص بالرفرونس المتكرر وسعر الخسارة */
         input.input-error {
             border-color: var(--danger) !important;
             background: rgba(239, 68, 68, 0.1) !important;
@@ -235,7 +232,6 @@
             75% { transform: translateX(6px); }
         }
 
-        /* تقسيم واجهة البيع بالتساوي */
         .sales-grid {
             display: grid;
             grid-template-columns: 1.2fr 1fr;
@@ -247,7 +243,6 @@
             .sales-grid { grid-template-columns: 1fr; }
         }
 
-        /* الصناديق والعلب الفرعية */
         .box {
             background: rgba(9, 13, 22, 0.6);
             padding: 25px;
@@ -259,7 +254,6 @@
         .flex-inputs { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
         .flex-inputs > div { flex: 1; }
 
-        /* الجداول */
         table {
             width: 100%;
             margin-top: 25px;
@@ -325,7 +319,6 @@
 
         tr:last-child td { border-bottom: none; }
 
-        /* بطاقات الطلبيات المسجلة والسلة */
         .order-card {
             background: #1f2937;
             border: 1px solid var(--border);
@@ -354,7 +347,6 @@
 
         .badge-qty { background: #111827; color: #f59e0b; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.3); }
 
-        /* كروت الأرباح والمخزون النيون */
         .profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
         .profit-card { background: #1f2937; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
         .profit-card.success { border-right-color: var(--success); }
@@ -364,7 +356,6 @@
         .profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 8px;}
         .profit-card .amount { font-size: 24px; font-weight: 800; }
 
-        /* ألوان السلع الناقصة */
         .stock-empty { background-color: #ef4444 !important; color: #ffffff !important; }
         .stock-danger { background-color: rgba(239, 68, 68, 0.3) !important; color: #ffffff !important; }
         .stock-warning { background-color: rgba(245, 158, 11, 0.3) !important; color: #ffffff !important; }
@@ -424,7 +415,7 @@
         </div>
         <div style="overflow-x: auto;">
             <table>
-                <thead><tr><th>الباركود</th><th>اسم المنتج</th><th>الكمية الحالية</th><th>الشراء (DA)</th><th>البيع الافتراضي (DA)</th><th>تعديل</th><th>حذف</th></tr></thead>
+                <thead><tr><th>الباركود</th><th>اسم المنتج</th><th>الكمية الحالية</th><th>الشراء (DA)</th><th>البيع الافتراضي (DA)</th><th>تعديل الأسعار</th><th>تعديل كمية</th><th>حذف</th></tr></thead>
                 <tbody id="productTable"></tbody>
             </table>
         </div>
@@ -595,14 +586,14 @@
         </div>
     </div>
 
-    <!-- ================= SYSTEM LOGIC (MANUALLY ENGINEERED COMPLETELY) ================= -->
+    <!-- ================= SYSTEM LOGIC ================= -->
     <script>
         let batches = JSON.parse(localStorage.getItem("batches") || "[]");
         let sales = JSON.parse(localStorage.getItem("sales") || "[]");
         let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
         let commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
         let currentCommandData = [];
-        let editingOrderNumber = null; // يحفظ رقم الفاتورة الجاري تعديلها
+        let editingOrderNumber = null;
 
         window.onload = function() {
             let todayStr = new Date().toISOString().split('T')[0];
@@ -639,7 +630,6 @@
             document.querySelectorAll(".page").forEach(p=>p.classList.remove("active")); 
         }
 
-        /* المؤثرات الصوتية الاحترافية */
         function playBeepSound() {
             try {
                 let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -675,7 +665,6 @@
             try {
                 let ctx = new (window.AudioContext || window.webkitAudioContext)();
                 let now = ctx.currentTime;
-                
                 let osc1 = ctx.createOscillator();
                 let gain1 = ctx.createGain();
                 osc1.type = 'sine';
@@ -687,7 +676,6 @@
             } catch (e) { console.log("Cash sound error: ", e); }
         }
 
-        /* التحقق من صحة المدخلات */
         function checkRefUniqueness() {
             let refField = document.getElementById('pRef');
             let refVal = refField.value.trim();
@@ -730,7 +718,6 @@
             }
         }
 
-        /* هندسة ومعالجة البيانات الأساسية للرندرة الشاملة */
         function render() {
             renderProducts();
             renderSalesOptions();
@@ -756,7 +743,6 @@
             save();
             render();
             
-            // تصفير الخانات
             document.getElementById('pRef').value = '';
             document.getElementById('pName').value = '';
             document.getElementById('pBuy').value = '';
@@ -777,11 +763,39 @@
                     <td>${b.qty}</td>
                     <td>${b.buy.toFixed(2)}</td>
                     <td>${b.sell.toFixed(2)}</td>
-                    <td><button class="edit" onclick="editProductQty(${b.id})"><i class="fa-solid fa-pen"></i> تعديل كمية</button></td>
+                    <td><button class="price-btn" onclick="editProductPrices(${b.id})"><i class="fa-solid fa-tags"></i> تعديل الأسعار</button></td>
+                    <td><button class="edit" onclick="editProductQty(${b.id})"><i class="fa-solid fa-pen"></i> كمية</button></td>
                     <td><button class="del" onclick="deleteProduct(${b.id})"><i class="fa-solid fa-trash"></i> حذف</button></td>
                 </tr>`;
             });
             document.getElementById('productTable').innerHTML = html;
+        }
+
+        /* دالة تعديل أسعار الشراء والبيع المضافة حديثاً */
+        function editProductPrices(id) {
+            let p = batches.find(x => x.id === id);
+            if(!p) return;
+
+            let newBuy = prompt(`أدخل سعر الشراء الجديد للمنتج (${p.name}):`, p.buy);
+            if(newBuy === null) return; 
+
+            let newSell = prompt(`أدخل سعر البيع الجديد للمنتج (${p.name}):`, p.sell);
+            if(newSell === null) return;
+
+            let numBuy = Number(newBuy) || 0;
+            let numSell = Number(newSell) || 0;
+
+            if(numSell < numBuy) {
+                playErrorSound();
+                if(!confirm("تنبيه: سعر البيع أقل من سعر الشراء (خسارة)، هل تريد الاستمرار بحفظ هذه الأسعار على أي حال؟")) return;
+            }
+
+            p.buy = numBuy;
+            p.sell = numSell;
+            save(); 
+            render();
+            playBeepSound();
+            alert("تم تحديث أسعار الشراء والبيع بنجاح!");
         }
 
         function editProductQty(id) {
@@ -827,7 +841,6 @@
             let p = batches.find(x => x.id === id);
             if(!p) return;
 
-            // التحقق من تكرار السلعة في السلة الحالية
             let existing = currentCommandData.find(x => x.id === id);
             if(existing) {
                 existing.qty += qty;
@@ -869,23 +882,19 @@
 
             let todayStr = new Date().toISOString().split('T')[0];
 
-            // إذا كنا نقوم بتعديل طلبية قديمة، نقوم أولاً بإرجاع الكميات القديمة للمخزن وحذف السجل القديم للطلب
             if(editingOrderNumber !== null) {
                 let oldSales = sales.filter(x => x.command === editingOrderNumber);
                 oldSales.forEach(os => {
                     let p = batches.find(b => b.id === os.id);
-                    if(p) p.qty += os.qty; // استعادة الكمية
+                    if(p) p.qty += os.qty;
                 });
-                sales = sales.filter(x => x.command !== editingOrderNumber); // حذف السجل القديم لتعويضه بالجديد
-                commandNumber = editingOrderNumber; // حفظها بنفس رقم الفاتورة الأصلية
+                sales = sales.filter(x => x.command !== editingOrderNumber);
+                commandNumber = editingOrderNumber;
             }
 
-            // خصم الكميات وتسجيل المبيعات
             for(let item of currentCommandData) {
                 let p = batches.find(b => b.id === item.id);
-                if(p) {
-                    p.qty -= item.qty; // خصم المخزن
-                }
+                if(p) { p.qty -= item.qty; }
                 
                 sales.push({
                     command: commandNumber,
@@ -903,8 +912,8 @@
             alert(`تم حفظ وتأكيد الطلبية بنجاح برقم: #${commandNumber}`);
 
             if(editingOrderNumber !== null) {
-                editingOrderNumber = null; // إنهاء وضع التعديل
-                commandNumber = Number(localStorage.getItem("commandNumber")) || 1; // العودة للعداد الافتراضي
+                editingOrderNumber = null;
+                commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
             } else {
                 commandNumber++;
             }
@@ -922,7 +931,6 @@
             let container = document.getElementById('salesLog');
             container.innerHTML = '';
             
-            // تجميع المبيعات حسب رقم الفاتورة
             let grouped = {};
             sales.forEach(s => {
                 if(!grouped[s.command]) grouped[s.command] = { total: 0, date: s.date, items: [] };
@@ -930,7 +938,6 @@
                 grouped[s.command].items.push(s);
             });
 
-            // عرض الفواتير بترتيب تنازلي (الأحدث أولاً)
             let keys = Object.keys(grouped).sort((a,b) => b - a);
             keys.forEach(cmdId => {
                 let g = grouped[cmdId];
@@ -1032,7 +1039,7 @@
                 else if(b.qty <= 5) { statusClass = 'stock-danger'; statusText = '🚨 خطورة قصوى (أقل من 5)'; }
                 else if(b.qty <= 15) { statusClass = 'stock-warning'; statusText = '⚡ تنبيه متوسط (أقل من 15)'; }
                 else if(b.qty <= 30) { statusClass = 'stock-notice'; statusText = '📦 بداية نقص (أقل من 30)'; }
-                else return; // إذا كانت الكمية ممتازة لا تظهر هنا
+                else return;
 
                 html += `<tr class="${statusClass}">
                     <td><code>${b.ref}</code></td>
@@ -1065,7 +1072,6 @@
             let container = document.getElementById('expensesLog');
             container.innerHTML = '';
             
-            // ترتيب تنازلي للمصاريف
             let sorted = [...expenses].sort((a,b) => new Date(b.date) - new Date(a.date));
             sorted.forEach(e => {
                 container.innerHTML += `<div class="order-card" style="border-right: 5px solid var(--danger);">
@@ -1088,18 +1094,17 @@
             }
         }
 
-        /* الحسابات والتقارير المالية والأرباح الصافية الحقيقية */
+        /* الحسابات والتقارير المالية والأرباح */
         function calculateProfits() {
             let todayStr = new Date().toISOString().split('T')[0];
-            let thisMonthStr = todayStr.substring(0, 7); // YYYY-MM
-            let thisYearStr = todayStr.substring(0, 4); // YYYY
+            let thisMonthStr = todayStr.substring(0, 7);
+            let thisYearStr = todayStr.substring(0, 4);
 
             let dailyProfit = 0;
             let monthlyProfit = 0;
             let yearlyProfit = 0;
             let totalExpensesYear = 0;
 
-            // 1. احتساب فائدة المبيعات (سعر البيع المعدل الفعلي - سعر الشراء)
             sales.forEach(s => {
                 let profitItem = (s.price - s.buy) * s.qty;
                 if(s.date === todayStr) dailyProfit += profitItem;
@@ -1107,7 +1112,6 @@
                 if(s.date.startsWith(thisYearStr)) yearlyProfit += profitItem;
             });
 
-            // 2. تجميع مصاريف السنة الجارية وخصمها من الأرباح الصافية
             expenses.forEach(e => {
                 if(e.date.startsWith(thisYearStr)) {
                     totalExpensesYear += e.amount;
@@ -1116,10 +1120,8 @@
                 }
             });
 
-            // الفائدة الصافية السنوية الإجمالية = فائدة المبيعات السنوية - مصاريف السنة
             yearlyProfit = yearlyProfit - totalExpensesYear;
 
-            // رندرة النتائج على كروت لوحة التحكم والتقارير المالية
             document.getElementById('dailyProfit').textContent = dailyProfit.toFixed(2) + ' DA';
             document.getElementById('monthlyProfit').textContent = monthlyProfit.toFixed(2) + ' DA';
             document.getElementById('totalExpensesYear').textContent = totalExpensesYear.toFixed(2) + ' DA 💸';
@@ -1154,7 +1156,7 @@
             document.getElementById('filteredProfit').textContent = filteredProfit.toFixed(2) + ' DA 💰';
         }
 
-        /* حزمة الاستيراد والتصدير للنسخ الاحتياطي JSON */
+        /* حزمة الاستيراد والتصدير */
         function exportData() {
             let dataStr = JSON.stringify({ batches, sales, expenses, commandNumber });
             let blob = new Blob([dataStr], { type: "application/json" });
