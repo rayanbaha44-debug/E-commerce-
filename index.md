@@ -9,7 +9,7 @@
 <!-- استدعاء خط Cairo والأيقونات الاحترافية -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -259,7 +259,7 @@ tr:last-child td {
 
 #salesLog{
     margin-top: 15px;
-    max-height: 280px;
+    max-height: 350px;
     overflow-y: auto;
     padding-right: 5px;
 }
@@ -280,6 +280,15 @@ tr:last-child td {
 .badge-qty {
     background: #fef3c7;
     color: #d97706;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.badge-returned {
+    background: #fee2e2;
+    color: #ef4444;
     padding: 5px 10px;
     border-radius: 8px;
     font-weight: 700;
@@ -339,7 +348,9 @@ tr:last-child td {
         <h2><i class="fa-solid fa-box-open" style="color:var(--primary);"></i> إدارة المنتجات والمخزن</h2>
     </div>
 
+    <!-- قسم الإدخال الفردي والجمع المتقدم -->
     <div class="box">
+        <h3 style="margin-bottom: 12px; font-size:16px;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
         <input id="pRef" placeholder="الرقم المتسلسل / الباركود (Ref)">
         <input id="pName" placeholder="اسم المنتج بالكامل">
         <div class="flex-inputs">
@@ -350,8 +361,26 @@ tr:last-child td {
         <button onclick="addProduct()" style="width: 100%; margin-top: 12px; background: var(--success-gradient); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
     </div>
 
-    <input type="file" id="importFile" hidden onchange="importData(event)">
-    <button onclick="document.getElementById('importFile').click()" style="width: 100%; margin-bottom: 20px; background:#475569;"><i class="fa-solid fa-file-import"></i> استيراد بيانات من ملف خارجي (.json)</button>
+    <!-- قسم الاستيراد من الكمبيوتر (الميزة الجديدة لملفات Excel/CSV والنسخ الاحتياطية) -->
+    <div class="box" style="background: #f8fafc; border: 1px dashed var(--primary);">
+        <h3 style="margin-bottom: 12px; font-size:16px; color: var(--primary);"><i class="fa-solid fa-file-import"></i> استيراد من الكمبيوتر</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <!-- زر استيراد قائمة سلع Excel / CSV -->
+            <div>
+                <input type="file" id="importCsvFile" hidden accept=".csv,.txt" onchange="importProductsFromCsv(event)">
+                <button onclick="document.getElementById('importCsvFile').click()" style="width: 100%; background: var(--primary-gradient); font-size: 13px;">
+                    <i class="fa-solid fa-file-csv"></i> استيراد سلع من ملف Excel (CSV)
+                </button>
+            </div>
+            <!-- زر استيراد نسخة النظام الكاملة السابقة -->
+            <div>
+                <input type="file" id="importFile" hidden onchange="importData(event)">
+                <button onclick="document.getElementById('importFile').click()" style="width: 100%; background:#475569; font-size: 13px;">
+                    <i class="fa-solid fa-database"></i> استعادة نسخة احتياطية (.json)
+                </button>
+            </div>
+        </div>
+    </div>
 
     <input id="productSearch" placeholder="🔍 ابحث هنا باسم المنتج أو الرمز لتصفية الجدول الموالي..." oninput="renderProducts()">
 
@@ -378,7 +407,6 @@ tr:last-child td {
             <input id="editCmdNumInput" type="number" placeholder="أدخل رقم الكوموند القديم للبحث عنه...">
             <button onclick="loadCommandForEdit()" style="white-space: nowrap;"><i class="fa-solid fa-magnifying-glass"></i> جلب وتعديل</button>
         </div>
-        <!-- الزر الجديد لتصفير العداد إلى 1 -->
         <button onclick="resetCommandCounterToOne()" style="background: var(--warning); box-shadow: none; font-size: 13px; padding: 8px 15px; align-self: flex-start;"><i class="fa-solid fa-arrow-rotate-left"></i> 🔄 إرجاع وتثبيت عداد الكوموند عند الرقم 1</button>
     </div>
 
@@ -438,7 +466,6 @@ tr:last-child td {
         <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية</h2>
     </div>
 
-    <!-- ميزة البحث بين تاريخين المتقدمة -->
     <div class="box" style="background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-md);">
         <h4 style="margin-bottom: 12px; color: var(--text-main); font-weight:700;"><i class="fa-solid fa-calendar-days" style="color:var(--primary)"></i> فلترة الأرباح حسب فترة زمنية مخصصة</h4>
         <div class="flex-inputs" style="flex-wrap: wrap;">
@@ -496,10 +523,9 @@ function calculateNextCommandNumber() {
     }
 }
 
-/* دالة جديدة لإجبار العداد على العودة للرقم 1 وتصفير سجل المبيعات القديم */
 function resetCommandCounterToOne() {
     if(confirm("هل أنت متأكد من تصفير العداد؟ سيتم البدء من الكوموند #1 (ملاحظة: هذا الخيار سيمسح سجل العمليات السابقة لتجنب تداخل الأرقام)")) {
-        sales = []; // إخلاء سجل المبيعات لتصفير الحسابات
+        sales = []; 
         commandNumber = 1;
         save();
         render();
@@ -548,6 +574,59 @@ function addProduct(){
     document.getElementById('pBuy').value = ''; document.getElementById('pSell').value = '';
     document.getElementById('pQty').value = '';
     save(); render();
+}
+
+/* الدالة الجديدة لقراءة ملف Excel المصدّر كـ CSV وإدخال السلع آلياً للستوك */
+function importProductsFromCsv(event) {
+    let file = event.target.files[0];
+    if (!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        let text = e.target.result;
+        let lines = text.split(/\r?\n/);
+        let addedCount = 0;
+
+        lines.forEach(line => {
+            if (!line.trim()) return;
+            let columns = line.split(',');
+
+            if (columns.length >= 5) {
+                let ref = columns[0].trim();
+                let name = columns[1].trim();
+                let buy = parseFloat(columns[2]);
+                let sell = parseFloat(columns[3]);
+                let qty = parseFloat(columns[4]);
+
+                if (ref && name && !isNaN(buy) && !isNaN(sell) && !isNaN(qty)) {
+                    // التحقق إذا كان الباركود موجوداً مسبقاً لزيادة الكمية فقط أو إنشاء جديد
+                    let existing = batches.find(b => b.ref === ref);
+                    if (existing) {
+                        existing.qty += qty;
+                    } else {
+                        batches.push({
+                            id: Date.now() + Math.random(),
+                            ref: ref,
+                            name: name,
+                            buy: buy,
+                            sell: sell,
+                            qty: qty
+                        });
+                    }
+                    addedCount++;
+                }
+            }
+        });
+
+        if (addedCount > 0) {
+            save();
+            render();
+            alert(`تم استيراد وإدراج ${addedCount} سلعة بنجاح داخل المخزن!`);
+        } else {
+            alert("فشل الاستيراد. يرجى التحقق من صياغة الملف وترتيب الأعمدة بشكل صحيح.");
+        }
+    };
+    reader.readAsText(file);
 }
 
 function deleteProduct(id){
@@ -609,10 +688,10 @@ function loadCommandForEdit() {
     let cmdNum = Number(document.getElementById('editCmdNumInput').value);
     if (!cmdNum || cmdNum <= 0) { alert("أدخل رقم كوموند صالح من فضلك"); return; }
 
-    let targetSales = sales.filter(x => x.command === cmdNum);
-    if (targetSales.length === 0) { alert("الكوموند غير مسجل أو تم حذفه سابقاً"); return; }
+    let targetSales = sales.filter(x => x.command === cmdNum && !x.returned);
+    if (targetSales.length === 0) { alert("الكوموند غير مسجل، أو تم إرجاعه/حذفه مسبقاً"); return; }
 
-    if (currentCommandData.length > 0 && !confirm("السلة تحتوي على منتجات، هل تريد استبدالها بالكوموند القديم؟")) return;
+    if (currentCommandData.length > 0 && !confirm("السلة تحتوي على منتجات، هل تريد استبدالها بالكوموند القديم?")) return;
 
     targetSales.forEach(s => { let b = batches.find(x => x.id === s.id); if (b) b.qty += s.qty; });
     currentCommandData = targetSales.map(s => ({ id: s.id, ref: s.ref, name: s.name, buy: s.buy, sell: s.sell, qty: s.qty }));
@@ -641,7 +720,8 @@ function confirmCommand(){
             sell:item.sell,
             profit:(item.sell-item.buy)*item.qty, 
             time: uniqueTime + index, 
-            command:commandNumber
+            command:commandNumber,
+            returned: false
         });
     });
 
@@ -651,19 +731,46 @@ function confirmCommand(){
 }
 
 function deleteSaleByTime(saleTime){
-    if(!confirm("هل تريد إلغاء هذه المبيعة وإرجاع الكمية للمخزن؟")) return;
+    if(!confirm("هل تريد إلغاء هذه المبيعة وحذفها نهائياً وإرجاع الكمية للمخزن؟")) return;
     
     let s = sales.find(x => x.time === saleTime);
     if(!s) return;
     
-    let b = batches.find(x => x.id === s.id); 
-    if(b) b.qty += s.qty; 
+    if(!s.returned) {
+        let b = batches.find(x => x.id === s.id); 
+        if(b) b.qty += s.qty; 
+    }
     
     let deletedCommandNumber = s.command;
     sales = sales.filter(x => x.time !== saleTime);
     commandNumber = deletedCommandNumber;
 
     save(); render(); renderSalesOptions();
+}
+
+function returnProductToStock(saleTime) {
+    let s = sales.find(x => x.time === saleTime);
+    if(!s) return;
+    
+    if(s.returned) {
+        alert("هذه السلعة تم إرجاعها إلى المخزن من قبل!");
+        return;
+    }
+    
+    if(!confirm(`هل أنت متأكد من إرجاع منتج [${s.name}] إلى الستوك؟ سيتم تصفير أرباح هذه القطعة.`)) return;
+    
+    let b = batches.find(x => x.id === s.id);
+    if(b) {
+        b.qty += s.qty; 
+    } else {
+        alert("تنبيه: لم يتم العثور على المنتج الأصلي في المخزن، ولكن سيتم تحديث حالة المبيعة.");
+    }
+    
+    s.returned = true;
+    s.profit = 0; 
+    
+    save(); render(); renderSalesOptions();
+    alert("تم إرجاع السلعة إلى المخزن بنجاح وتحديث الحسابات المالية.");
 }
 
 function updateCommandUI(){
@@ -760,11 +867,17 @@ function render(){
         <p style="color:var(--success); font-size: 17px;"><i class="fa-solid fa-circle-dollar-to-slot"></i> <strong>صافي الأرباح المنتظرة الكلية:</strong> ${(totalValue - totalCapital).toFixed(2)} DA</p>`;
 
     document.getElementById('salesLog').innerHTML = [...sales].reverse().map((s)=>{
+        let statusBadge = s.returned ? `<span class="badge-returned">مسترجع 🔄</span>` : `<span class="badge-qty" style="background:#f1f5f9; color:var(--text-main)">x${s.qty}</span>`;
+        let returnBtn = s.returned ? '' : `<button onclick="returnProductToStock(${s.time})" style="padding:6px 12px; font-size:12px; background:var(--warning); box-shadow:none;"><i class="fa-solid fa-arrow-rotate-left"></i> إرجاع (Retour)</button>`;
+        
         return `
-        <div class="saleItem">
-            <span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} <span class="badge-qty" style="background:#f1f5f9; color:var(--text-main)">x${s.qty}</span></span>
-            <span>الربح الصافي: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span>
-            <button class="del" onclick="deleteSaleByTime(${s.time})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-rotate-left"></i> إلغاء المبيعة</button>
+        <div class="saleItem" style="${s.returned ? 'opacity: 0.7; background: #fafafa;' : ''}">
+            <span><b style="color:var(--primary);">#${s.command}</b> - ${s.name} ${statusBadge}</span>
+            <span>الربح: <b style="color:var(--success);">${s.profit.toFixed(2)} DA</b></span>
+            <div style="display:flex; gap:6px;">
+                ${returnBtn}
+                <button class="del" onclick="deleteSaleByTime(${s.time})" style="padding:6px 12px; font-size:12px;"><i class="fa-solid fa-trash"></i> إلغاء وحذف</button>
+            </div>
         </div>`;
     }).join("");
 
