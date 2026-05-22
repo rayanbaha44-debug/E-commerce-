@@ -8,14 +8,14 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ================= ULTRA PREMIUM MODERN DARK/NEON UI ================= */
+        /* ================= ULTRA PREMIUM MODERN LIGHT UI ================= */
         :root {
-            --primary: #3b82f6;
-            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --primary: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             --success: #10b981;
             --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --danger: #ef4444;
@@ -24,21 +24,22 @@
             --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
             
-            --bg-app: #090d16; 
-            --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
-            --surface: #1f2937; 
-            --surface-card: rgba(22, 30, 49, 0.8);
+            /* خلفية فاتحة ونقية */
+            --bg-app: #f8fafc; 
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --surface: #ffffff; 
+            --surface-card: rgba(255, 255, 255, 0.9);
             
-            --text-main: #ffffff; 
-            --text-muted: #9ca3af; 
-            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #0f172a; 
+            --text-muted: #64748b; 
+            --border: rgba(15, 23, 42, 0.08);
             
-            --radius-xl: 24px;
-            --radius-lg: 16px;
-            --radius-md: 12px;
+            --radius-xl: 20px;
+            --radius-lg: 14px;
+            --radius-md: 10px;
             
-            --shadow-blur: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-            --shadow-hover: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
+            --shadow-blur: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+            --shadow-hover: 0 20px 35px -10px rgba(37, 99, 235, 0.15);
         }
 
         * {
@@ -75,9 +76,9 @@
             border-radius: var(--radius-xl);
             text-align: center;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(15, 23, 42, 0.05);
             font-weight: 700;
-            font-size: 18px;
+            font-size: 17px;
             color: var(--text-main);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--shadow-blur);
@@ -105,7 +106,7 @@
         .card:hover::after { transform: scaleX(1); }
 
         .card i {
-            font-size: 40px;
+            font-size: 36px;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -113,30 +114,30 @@
         }
 
         .card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
-            border-color: rgba(59, 130, 246, 0.4);
-            background: rgba(31, 41, 55, 0.9);
+            border-color: rgba(37, 99, 235, 0.2);
+            background: #ffffff;
         }
 
-        .card:hover i { transform: scale(1.15) rotate(3deg); }
+        .card:hover i { transform: scale(1.1) rotate(2deg); }
 
         .page {
             display: none;
             width: 100%;
             max-width: 1200px;
-            background: rgba(17, 24, 39, 0.85);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             padding: 40px;
             border-radius: var(--radius-xl);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(15, 23, 42, 0.05);
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -152,7 +153,7 @@
         }
 
         .header h2 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--text-main);
             display: flex;
@@ -161,72 +162,72 @@
         }
 
         button {
-            padding: 14px 24px;
+            padding: 13px 22px;
             border: none;
             border-radius: var(--radius-md);
             cursor: pointer;
             background: var(--primary-gradient);
             color: white;
             font-weight: 700;
-            font-size: 15px;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
         }
 
-        button:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
+        button:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25); }
         button:active { transform: translateY(0); }
 
-        .back { background: #374151; box-shadow: 0 4px 12px rgba(55, 65, 81, 0.2); }
-        .back:hover { background: #4b5563; box-shadow: 0 6px 20px rgba(75, 85, 99, 0.4); }
+        .back { background: #64748b; box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15); }
+        .back:hover { background: #475569; box-shadow: 0 6px 16px rgba(71, 85, 105, 0.25); }
 
-        .del { background: var(--danger-gradient); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
-        .del:hover { box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
+        .del { background: var(--danger-gradient); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15); }
+        .del:hover { box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25); }
 
-        .edit { background: #1f2937; color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: none; }
-        .edit:hover { background: #3b82f6; color: white; }
+        .edit { background: #f1f5f9; color: #2563eb; border: 1px solid rgba(37, 99, 235, 0.15); box-shadow: none; }
+        .edit:hover { background: #2563eb; color: white; }
 
         label {
             display: block;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 700;
-            color: #9ca3af;
+            color: #475569;
             margin-bottom: 8px;
         }
 
         input, select {
             width: 100%;
-            padding: 14px 18px;
+            padding: 13px 16px;
             border-radius: var(--radius-md);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: #111827;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
             color: var(--text-main);
-            font-size: 15px;
+            font-size: 14.5px;
             font-weight: 600;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
         }
 
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
-            background: #090d16;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
 
         input.input-error {
             border-color: var(--danger) !important;
-            background: rgba(239, 68, 68, 0.1) !important;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3) !important;
+            background: rgba(239, 68, 68, 0.05) !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
             animation: shake 0.3s ease;
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-6px); }
-            75% { transform: translateX(6px); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
         }
 
         .sales-grid {
@@ -241,11 +242,11 @@
         }
 
         .box {
-            background: rgba(9, 13, 22, 0.6);
+            background: #f8fafc;
             padding: 25px;
             border-radius: var(--radius-lg);
             margin-bottom: 25px;
-            border: 1px solid var(--border);
+            border: 1px solid #e2e8f0;
         }
 
         .flex-inputs { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
@@ -258,46 +259,45 @@
             border-spacing: 0;
             border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
             table-layout: auto;
         }
 
         th, td { 
-            padding: 18px 15px; 
+            padding: 16px 14px; 
             text-align: center; 
-            font-size: 15px; 
+            font-size: 14.5px; 
             vertical-align: middle;
         }
 
         th { 
-            background-color: #111827; 
-            color: #9ca3af; 
+            background-color: #f1f5f9; 
+            color: #475569; 
             font-weight: 700; 
-            border-bottom: 2px solid rgba(255, 255, 255, 0.15); 
+            border-bottom: 2px solid #e2e8f0; 
         }
 
         td { 
-            background-color: #1f2937; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06); 
-            color: #ffffff; 
+            background-color: #ffffff; 
+            border-bottom: 1px solid #f1f5f9; 
+            color: #0f172a; 
             font-weight: 600;
         }
 
         tr:hover td {
-            background-color: #2563eb; 
-            color: #ffffff !important;
+            background-color: #f8fafc; 
             transition: background 0.15s ease;
         }
 
         td code {
-            background: rgba(0, 0, 0, 0.4);
+            background: #f1f5f9;
             padding: 6px 12px;
-            border-radius: 8px;
-            color: #38bdf8; 
+            border-radius: 6px;
+            color: #1e40af; 
             font-family: monospace;
-            font-size: 14px;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            font-size: 13.5px;
+            border: 1px solid #e2e8f0;
             font-weight: 700;
             display: inline-block;
             max-width: 180px;
@@ -308,17 +308,11 @@
             text-align: center;
         }
 
-        tr:hover td code {
-            color: #ffffff;
-            background: rgba(0,0,0,0.3);
-            border-color: #ffffff;
-        }
-
         tr:last-child td { border-bottom: none; }
 
         .order-card {
-            background: #1f2937;
-            border: 1px solid var(--border);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: var(--radius-lg);
             padding: 20px;
             margin-bottom: 20px;
@@ -329,7 +323,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px dashed var(--border);
+            border-bottom: 1px dashed #e2e8f0;
             padding-bottom: 12px;
             margin-bottom: 12px;
         }
@@ -339,29 +333,38 @@
             justify-content: space-between;
             padding: 8px 0;
             font-size: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid #f8fafc;
+            color: #334155;
         }
 
-        .badge-qty { background: #111827; color: #f59e0b; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-qty { background: #f1f5f9; color: #b45309; padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 12px; border: 1px solid #fde68a; }
 
         .profit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
-        .profit-card { background: #1f2937; padding: 25px; border-radius: var(--radius-lg); border: 1px solid var(--border); border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
+        .profit-card { background: #ffffff; padding: 25px; border-radius: var(--radius-lg); border: 1px solid #e2e8f0; border-right: 5px solid var(--primary); box-shadow: var(--shadow-blur); }
         .profit-card.success { border-right-color: var(--success); }
-        .profit-card.dark { border-right-color: #cbd5e1; }
-        .profit-card.filter { border-right-color: #a855f7; background: rgba(168, 85, 247, 0.05); border-top: 1px solid rgba(168, 85, 247, 0.1); }
-        .profit-card.expense-card { border-right-color: var(--danger); background: rgba(239, 68, 68, 0.05); border-top: 1px solid rgba(239, 68, 68, 0.1); }
-        .profit-card p { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 8px;}
-        .profit-card .amount { font-size: 24px; font-weight: 800; }
+        .profit-card.dark { border-right-color: #475569; }
+        .profit-card.filter { border-right-color: #a855f7; background: rgba(168, 85, 247, 0.02); }
+        .profit-card.expense-card { border-right-color: var(--danger); background: rgba(239, 68, 68, 0.02); }
+        .profit-card p { color: var(--text-muted); font-size: 13.5px; font-weight: 700; margin-bottom: 8px;}
+        .profit-card .amount { font-size: 22px; font-weight: 800; }
 
-        .stock-empty { background-color: #ef4444 !important; color: #ffffff !important; }
-        .stock-danger { background-color: rgba(239, 68, 68, 0.3) !important; color: #ffffff !important; }
-        .stock-warning { background-color: rgba(245, 158, 11, 0.3) !important; color: #ffffff !important; }
-        .stock-notice { background-color: rgba(59, 130, 246, 0.3) !important; color: #ffffff !important; }
+        /* ستايل التنبيهات في المخزن ليتناسب مع الخلفية الفاتحة */
+        .stock-empty { background-color: #fee2e2 !important; color: #991b1b !important; }
+        .stock-empty td { background-color: #fee2e2 !important; color: #991b1b !important; }
+        
+        .stock-danger { background-color: #fef3c7 !important; color: #92400e !important; }
+        .stock-danger td { background-color: #fef3c7 !important; color: #92400e !important; }
+        
+        .stock-warning { background-color: #fffbp; color: #92400e !important; } /* تم استخدام لون برتقالي خفيف */
+        .stock-warning td { background-color: #fff7ed !important; color: #c2410c !important; }
+        
+        .stock-notice { background-color: #eff6ff !important; color: #1e40af !important; }
+        .stock-notice td { background-color: #eff6ff !important; color: #1e40af !important; }
 
         .stock-empty td code, .stock-danger td code, .stock-warning td code, .stock-notice td code {
-            color: #ffffff !important;
-            background: rgba(0, 0, 0, 0.25) !important;
-            border-color: rgba(255, 255, 255, 0.3) !important;
+            background: rgba(255, 255, 255, 0.6) !important;
+            border-color: currentColor !important;
+            color: inherit !important;
         }
 
         .modal {
@@ -372,27 +375,27 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
+            background-color: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(6px);
             align-items: center;
             justify-content: center;
         }
         .modal.active { display: flex; }
         .modal-content {
-            background: #1f2937;
+            background: #ffffff;
             padding: 30px;
             border-radius: var(--radius-xl);
             width: 90%;
             max-width: 550px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
             animation: slideUp 0.3s ease;
         }
 
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: #090d16; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 
@@ -402,15 +405,14 @@
         <div class="card" onclick="openPage('products')"><i class="fa-solid fa-box-open"></i> إدارة المنتجات والمخزن</div>
         <div class="card" onclick="openPage('sales')"><i class="fa-solid fa-cash-register"></i> واجهة البيع السريعة</div>
         <div class="card" onclick="openPage('stock')"><i class="fa-solid fa-warehouse"></i> جرد المخزون الكلي</div>
-        <div class="card" onclick="openPage('low')"><i class="fa-solid fa-triangle-exclamation" style="background:var(--warning-gradient); -webkit-background-clip: text;"></i> السلع الناقصة بالمحل</div>
-        <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
-        <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
+        <div class="card" onclick="openPage('low')"><i class="fa-solid fa-triangle-exclamation"></i> السلع الناقصة بالمحل</div>
+        <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar"></i> إدارة المصاريف الكلية</div>
+        <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line"></i> تقارير الأرباح الصافية</div>
         
-        <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية (Text)</div>
-        <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد ملف من الكمبيوتر (أي صيغة)</div>
+        <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.04); border: 1px dashed rgba(16, 185, 129, 0.3);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية (Text)</div>
+        <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.04); border: 1px dashed rgba(168, 85, 247, 0.3);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد ملف من الكمبيوتر (أي صيغة)</div>
     </div>
 
-    <!-- تم إلغاء حصر الامتداد بـ .json ليقبل أي ملف نصي حتى لو تم حفظه بصيغة txt -->
     <input type="file" id="importFileInput" style="display: none;" onchange="importData(event)">
 
     <!-- صفحة إدارة المنتجات -->
@@ -420,7 +422,7 @@
             <h2><i class="fa-solid fa-box-open" style="color:var(--primary);"></i> إدارة المنتجات والمخزن</h2>
         </div>
         <div class="box">
-            <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
+            <h3 style="margin-bottom: 20px; font-size:16px; font-weight:800;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
             <div class="flex-inputs">
                 <div><label>الباركود / Ref (يجب أن يكون فريداً):</label><input id="pRef" placeholder="أدخل أو امسح الباركود" oninput="checkRefUniqueness()"></div>
                 <div><label>اسم المنتج:</label><input id="pName" placeholder="اسم المنتج بالكامل"></div>
@@ -430,7 +432,7 @@
                 <div><label>سعر البيع الافتراضي (DA):</label><input id="pSell" type="number" step="0.01" placeholder="0.00" oninput="checkPriceValidity()"></div>
                 <div><label>الكمية الابتدائية:</label><input id="pQty" type="number" step="0.01" placeholder="0"></div>
             </div>
-            <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 50px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
+            <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 48px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
         </div>
         <div style="margin-top: 25px; margin-bottom: 10px;">
             <label>🔍 بحث سريع وسلس في المنتجات:</label>
@@ -447,7 +449,7 @@
     <!-- نافذة تعديل المنتج الشاملة المنبثقة -->
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--primary);"><i class="fa-solid fa-pen-to-square"></i> نافذة التعديل الشامل للمنتج</h3>
+            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--primary); font-weight:800;"><i class="fa-solid fa-pen-to-square"></i> نافذة التعديل الشامل للمنتج</h3>
             <input type="hidden" id="editProductId">
             <div style="margin-bottom: 12px;">
                 <label>الباركود / الرفرونس (Ref):</label>
@@ -486,21 +488,21 @@
         </div>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-            <div class="box" style="background: #111827; color: white; padding: 15px; margin: 0; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; border-color: rgba(255,255,255,0.05);">
-                <span style="font-weight: 700; font-size: 16px;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
-                <input id="cmdNumberInput" type="number" min="1" style="width: 110px; text-align: center; font-size: 18px; font-weight: 800; color: #fff; background: #1f2937; padding: 8px;" oninput="updateCommandNumberManual()">
+            <div class="box" style="background: #ffffff; color: var(--text-main); padding: 15px; margin: 0; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap;">
+                <span style="font-weight: 700; font-size: 15px;"><i class="fa-solid fa-receipt"></i> رقم الطلب الحالي:</span>
+                <input id="cmdNumberInput" type="number" min="1" style="width: 110px; text-align: center; font-size: 17px; font-weight: 800; color: #0f172a; background: #f1f5f9; padding: 8px;" oninput="updateCommandNumberManual()">
                 <button class="del" onclick="resetCommandNumber()" style="padding: 10px 16px; font-size: 13px;"><i class="fa-solid fa-arrow-rotate-left"></i> تصفير</button>
             </div>
-            <div class="box" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 15px; margin: 0; display: flex; align-items: center; gap: 15px;">
-                <input id="searchOrderNumber" type="number" placeholder="رقم طلبية سابقة لتعديلها..." style="background: #1f2937;">
-                <button onclick="loadOrderToEdit()" style="background: var(--purple-gradient); white-space: nowrap; padding: 14px 20px;"><i class="fa-solid fa-edit"></i> جلب للتعديل</button>
+            <div class="box" style="background: rgba(37, 99, 235, 0.03); border: 1px solid rgba(37, 99, 235, 0.15); padding: 15px; margin: 0; display: flex; align-items: center; gap: 15px;">
+                <input id="searchOrderNumber" type="number" placeholder="رقم طلبية سابقة لتعديلها..." style="background: #ffffff;">
+                <button onclick="loadOrderToEdit()" style="background: var(--purple-gradient); white-space: nowrap; padding: 13px 20px;"><i class="fa-solid fa-edit"></i> جلب للتعديل</button>
             </div>
         </div>
 
         <div class="sales-grid">
             <div>
-                <div class="box" style="background: rgba(17, 24, 39, 0.6);">
-                    <h3 style="font-size: 17px; margin-bottom: 20px; color: var(--primary);"><i class="fa-solid fa-filter"></i> اختيار المنتج وتحديد السعر</h3>
+                <div class="box" style="background: #ffffff;">
+                    <h3 style="font-size: 16px; font-weight:800; margin-bottom: 20px; color: var(--primary);"><i class="fa-solid fa-filter"></i> اختيار المنتج وتحديد السعر</h3>
                     <div style="margin-bottom: 18px;">
                         <label>فصل وتصفية المنتجات:</label>
                         <input id="saleSearch" placeholder="اكتب اسم المنتج أو امسح الباركود للبحث..." oninput="renderSalesOptions()">
@@ -517,25 +519,25 @@
                         </div>
                         <div>
                             <label style="color: var(--primary); font-weight: 800;"><i class="fa-solid fa-pen-clip"></i> سعر البيع الحالي (عدّله بحرية):</label>
-                            <input id="salePriceInput" type="number" step="0.01" style="border: 2px solid var(--primary); font-size: 17px; font-weight: 700; color: #fff; background:#111827;">
+                            <input id="salePriceInput" type="number" step="0.01" style="border: 2px solid var(--primary); font-size: 16px; font-weight: 700; color: #0f172a; background:#ffffff;">
                         </div>
                     </div>
-                    <button onclick="addToCommand()" style="width: 100%; height: 52px; font-size: 16px; background: var(--primary-gradient);"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
+                    <button onclick="addToCommand()" style="width: 100%; height: 50px; font-size: 15px; background: var(--primary-gradient);"><i class="fa-solid fa-cart-plus"></i> إضافة إلى السلة الحالية</button>
                 </div>
                 
-                <h3 style="color: var(--text-main); font-weight:700; font-size: 17px; margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبيات المبيوعة السابقة</h3>
+                <h3 style="color: var(--text-main); font-weight:800; font-size: 16px; margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبيات المبيوعة السابقة</h3>
                 <div id="salesLog" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
 
-            <div class="box" style="background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(16, 185, 129, 0.3); position: sticky; top: 20px;">
-                <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; font-size: 17px; color: var(--success);"><i class="fa-solid fa-basket-shopping"></i> سلة التسوق الحالية</h3>
+            <div class="box" style="background: #ffffff; border: 1px solid rgba(16, 185, 129, 0.4); position: sticky; top: 20px; box-shadow: var(--shadow-blur);">
+                <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; font-size: 16px; font-weight:800; color: var(--success);"><i class="fa-solid fa-basket-shopping"></i> سلة التسوق الحالية</h3>
                 <div id="currentCommand" style="min-height: 160px; max-height: 320px; overflow-y: auto; margin-bottom: 20px;"></div>
                 
-                <div style="background: rgba(16, 185, 129, 0.05); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.2); text-align: left; margin-bottom: 20px;">
-                    <span style="color: var(--success); font-size: 15px; font-weight: 700;">المجموع الإجمالي المستحق:</span>
-                    <h3 id="commandTotal" style="color: var(--success); font-size: 28px; font-weight: 900; margin-top: 5px;">0.00 DA</h3>
+                <div style="background: rgba(16, 185, 129, 0.04); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.15); text-align: left; margin-bottom: 20px;">
+                    <span style="color: #047857; font-size: 14px; font-weight: 700;">المجموع الإجمالي المستحق:</span>
+                    <h3 id="commandTotal" style="color: var(--success); font-size: 26px; font-weight: 900; margin-top: 5px;">0.00 DA</h3>
                 </div>
-                <button onclick="confirmCommand()" style="width:100%; background: var(--success-gradient); font-size: 17px; padding: 16px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب النهائي</button>
+                <button onclick="confirmCommand()" style="width:100%; background: var(--success-gradient); font-size: 16px; padding: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);"><i class="fa-solid fa-circle-check"></i> تأكيد وحفظ الطلب النهائي</button>
             </div>
         </div>
     </div>
@@ -550,11 +552,11 @@
         <div class="profit-grid" style="margin-top: 0; margin-bottom: 30px;">
             <div class="profit-card" style="border-right-color: var(--primary);">
                 <p>📦 إجمالي السلع المتوفرة بالمخزن</p>
-                <div id="topStockPieces" class="amount" style="color: #60a5fa;">0 قطعة</div>
+                <div id="topStockPieces" class="amount" style="color: #1e40af;">0 قطعة</div>
             </div>
             <div class="profit-card" style="border-right-color: var(--danger);">
                 <p>💰 إجمالي رأس المال المستثمر (الشراء)</p>
-                <div id="topStockCapital" class="amount" style="color: #fca5a5;">0.00 DA</div>
+                <div id="topStockCapital" class="amount" style="color: #c2410c;">0.00 DA</div>
             </div>
             <div class="profit-card success" style="border-right-color: var(--success);">
                 <p>📈 صافي الأرباح المتوقعة عند البيع</p>
@@ -591,7 +593,7 @@
             <h2><i class="fa-solid fa-hand-holding-dollar" style="color:var(--danger);"></i> إدارة مصاريف المحل الكلية 💸</h2>
         </div>
         <div class="box">
-            <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-file-invoice-dollar"></i> تسجيل مصروف جديد وتدوينه</h3>
+            <h3 style="margin-bottom: 20px; font-size:16px; font-weight:800;"><i class="fa-solid fa-file-invoice-dollar"></i> تسجيل مصروف جديد وتدوينه</h3>
             <div style="margin-bottom: 18px;">
                 <label>بيان المصروف ونوعه:</label>
                 <input id="expTitle" placeholder="مثال: فاتورة الكهرباء، نقل السلعة، تالف...">
@@ -600,9 +602,9 @@
                 <div><label>قيمة المصروف (DA):</label><input id="expAmount" type="number" step="0.01" placeholder="0.00"></div>
                 <div><label>تاريخ التقييد:</label><input id="expDate" type="date"></div>
             </div>
-            <button onclick="addExpense()" style="width: 100%; margin-top: 5px; background: var(--danger-gradient); height: 50px;"><i class="fa-solid fa-check"></i> حفظ وقيد المصروف بالدفتر</button>
+            <button onclick="addExpense()" style="width: 100%; margin-top: 5px; background: var(--danger-gradient); height: 48px;"><i class="fa-solid fa-check"></i> حفظ وقيد المصروف بالدفتر</button>
         </div>
-        <h3 style="color: var(--text-main); font-weight:700; margin-top:30px; font-size: 17px;"><i class="fa-solid fa-receipt"></i> سجل المصاريف المقيدة</h3>
+        <h3 style="color: var(--text-main); font-weight:800; margin-top:30px; font-size: 16px;"><i class="fa-solid fa-receipt"></i> سجل المصاريف المقيدة</h3>
         <div id="expensesLog" style="max-height: 420px; overflow-y: auto; margin-top: 20px;"></div>
     </div>
 
@@ -612,8 +614,8 @@
             <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
             <h2><i class="fa-solid fa-chart-line" style="color:var(--success);"></i> التقارير المالية والأرباح الصافية الحقيقية</h2>
         </div>
-        <div class="box" style="background: rgba(17, 24, 39, 0.6);">
-            <h3 style="margin-bottom: 20px; font-size:17px; color: #a855f7;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
+        <div class="box" style="background: #ffffff;">
+            <h3 style="margin-bottom: 20px; font-size:16px; font-weight:800; color: #7e22ce;"><i class="fa-solid fa-calendar-days"></i> فرز واحتساب الأرباح بفترة زمنية مخصصة 🗓️</h3>
             <div class="flex-inputs">
                 <div><label>من تاريخ 📅:</label><input type="date" id="filterFrom" onchange="calculateFilteredProfit()"></div>
                 <div><label>إلى تاريخ 🏁:</label><input type="date" id="filterTo" onchange="calculateFilteredProfit()"></div>
@@ -622,7 +624,7 @@
         <div class="profit-grid">
             <div class="profit-card filter" style="grid-column: span 2 / span 2;">
                 <p>🎯 صافي فائدة الفترة المحددة بالفرز أعلاه (فائدة المبيعات المعدلة - المصاريف)</p>
-                <div id="filteredProfit" class="amount" style="color: #c084fc;">0.00 DA 💰</div>
+                <div id="filteredProfit" class="amount" style="color: #7e22ce;">0.00 DA 💰</div>
             </div>
             <div class="profit-card success">
                 <p>💵 صافي أرباح اليوم الحالي</p>
@@ -634,7 +636,7 @@
             </div>
             <div class="profit-card expense-card" style="grid-column: span 2 / span 2;">
                 <p>📉 إجمالي مصاريف السنة المسجلة بالكامل</p>
-                <div id="totalExpensesYear" class="amount" style="color: #fca5a5;">0.00 DA 💸</div>
+                <div id="totalExpensesYear" class="amount" style="color: #b91c1c;">0.00 DA 💸</div>
             </div>
             <div class="profit-card dark" style="grid-column: span 2 / span 2;">
                 <p>👑 صافي فائدة السنة الإجمالية الحقيقية</p>
@@ -648,7 +650,12 @@
         let batches = JSON.parse(localStorage.getItem("batches") || "[]");
         let sales = JSON.parse(localStorage.getItem("sales") || "[]");
         let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
-        let commandNumber = Number(localStorage.getItem("commandNumber")) || 1;
+        
+        let commandNumber = parseInt(localStorage.getItem("commandNumber"));
+        if (!commandNumber || isNaN(commandNumber) || commandNumber < 1) {
+            commandNumber = 1;
+        }
+
         let currentCommandData = [];
         let editingOrderNumber = null;
 
@@ -675,6 +682,7 @@
             if(id === 'sales') { 
                 document.getElementById('saleSearch').value = ''; 
                 renderSalesOptions();
+                document.getElementById('cmdNumberInput').value = commandNumber;
             }
         }
 
@@ -819,7 +827,8 @@
 
         /* ================= QUICK SALES INTERFACE ================= */
         function updateCommandNumberManual() {
-            let val = parseInt(document.getElementById("cmdNumberInput").value) || 1;
+            let val = parseInt(document.getElementById("cmdNumberInput").value);
+            if (isNaN(val) || val < 1) val = 1;
             commandNumber = val;
             localStorage.setItem("commandNumber", commandNumber);
         }
@@ -840,7 +849,7 @@
             filtered.forEach(b => {
                 let opt = document.createElement("option");
                 opt.value = b.id;
-                opt.textContent = `${b.name} [البارcode: ${b.ref}] (المخزون: ${b.qty})`;
+                opt.textContent = `${b.name} [الباركود: ${b.ref}] (المخزون: ${b.qty})`;
                 select.appendChild(opt);
             });
 
@@ -849,7 +858,7 @@
 
         function updateDefaultSalePriceField() {
             let select = document.getElementById("saleStock");
-            if(select.value) {
+            if(select && select.value) {
                 let b = batches.find(x => x.id === select.value);
                 if(b) document.getElementById("salePriceInput").value = b.sell;
             } else {
@@ -859,7 +868,10 @@
 
         function addToCommand() {
             let select = document.getElementById("saleStock");
-            if(!select.value) return;
+            if(!select || !select.value) {
+                alert("الرجاء اختيار منتج أولاً. إذا كانت القائمة فارغة قم بإضافة منتجات للمخزن.");
+                return;
+            }
 
             let b = batches.find(x => x.id === select.value);
             let qty = parseFloat(document.getElementById("saleQty").value) || 1;
@@ -922,12 +934,14 @@
 
         function confirmCommand() {
             if(currentCommandData.length === 0) {
-                alert("سلة التسوق فارغة حالياً.");
+                alert("سلة التسوق فارغة حالياً. قم بإضافة منتجات أولاً.");
                 return;
             }
 
             let total = currentCommandData.reduce((acc, curr) => acc + (curr.sellPrice * curr.qty), 0);
             let todayStr = new Date().toISOString().split('T')[0];
+
+            if (!commandNumber || isNaN(commandNumber)) commandNumber = 1;
 
             if(editingOrderNumber !== null) {
                 let oldOrder = sales.find(s => s.orderNumber === editingOrderNumber);
@@ -960,9 +974,9 @@
                 });
 
                 commandNumber++;
-                document.getElementById("cmdNumberInput").value = commandNumber;
             }
 
+            document.getElementById("cmdNumberInput").value = commandNumber;
             currentCommandData = [];
             save();
             render();
@@ -991,7 +1005,7 @@
                         <span style="font-size:12px; color:var(--text-muted);">${s.date}</span>
                     </div>
                     <div>${itemsHtml}</div>
-                    <div style="margin-top:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
+                    <div style="margin-top:12px; padding-top:8px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
                         <span style="font-weight:800; color:var(--success);">إجمالي: ${s.total.toFixed(2)} DA</span>
                         <button class="edit" style="padding: 6px 12px; font-size: 12px;" onclick="prepareEditOldOrder(${s.orderNumber})"><i class="fa-solid fa-pen"></i> تعديل</button>
                     </div>
@@ -1040,7 +1054,7 @@
                 let tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td style="text-align: right; font-weight:700;">${b.name}</td>
-                    <td><span class="badge-qty" style="color:#fff;">${b.qty}</span></td>
+                    <td><span class="badge-qty" style="color:#0f172a; background:#e2e8f0; border-color:#cbd5e1;">${b.qty}</span></td>
                     <td>${capital.toFixed(2)} DA</td>
                     <td style="color:var(--success);">${expectedProfit.toFixed(2)} DA</td>
                     <td><button class="edit" onclick="openPage('products'); openEditModal('${b.id}');">توريد / تعديل</button></td>
@@ -1127,11 +1141,11 @@
                 div.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                            <h4 style="color:#fff;">${e.title}</h4>
+                            <h4 style="color:var(--text-main);">${e.title}</h4>
                             <span style="font-size:12px; color:var(--text-muted);">${e.date}</span>
                         </div>
                         <div style="display:flex; align-items:center; gap:15px;">
-                            <span style="font-size:18px; font-weight:800; color:var(--danger);">${e.amount.toFixed(2)} DA</span>
+                            <span style="font-size:17px; font-weight:800; color:var(--danger);">${e.amount.toFixed(2)} DA</span>
                             <button class="del" style="padding:6px 10px;" onclick="deleteExpense('${e.id}')"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
@@ -1217,8 +1231,7 @@
             document.getElementById("filteredProfit").textContent = finalNet.toFixed(2) + " DA 💰";
         }
 
-        /* ================= MIGRATED & ENHANCED BACKUP SYSTEM ================= */
-        // تم تعديل التصدير ليخرج بصيغة ملف نصي مرن ومقروء بدلاً من إجبار المتصفح على JSON فقط
+        /* ================= BACKUP SYSTEM ================= */
         function exportData() {
             let backupObject = {
                 batches, 
@@ -1230,7 +1243,6 @@
             let dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObject));
             let downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            // سيتم تحميله كملف نصي عادي متوافق مع كافة أنظمة ويندوز والهواتف
             downloadAnchor.setAttribute("download", `POS_DATA_BACKUP_${new Date().toISOString().split('T')[0]}.txt`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
@@ -1241,7 +1253,6 @@
             document.getElementById("importFileInput").click();
         }
 
-        // دالة الاستيراد الذكية الفائقة: تقبل أي ملف (.txt، .json، إلخ) وتقوم بفلترة البيانات برمجياً
         function importData(event) {
             let file = event.target.files[0];
             if (!file) return;
@@ -1249,32 +1260,30 @@
             let reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    // تنظيف النص بالكامل من أي فراغات عشوائية في البداية والنهاية قد يسببها محرر النصوص
                     let cleanRawText = e.target.result.trim();
-                    
                     let imported = JSON.parse(cleanRawText);
                     
-                    // التحقق الهيكلي الصارم لضمان عدم إدخال ملفات تالفة أو غريبة
                     if (imported && (imported.batches || imported.sales || imported.expenses)) {
                         
                         batches = imported.batches || [];
                         sales = imported.sales || [];
                         expenses = imported.expenses || [];
-                        commandNumber = imported.commandNumber || 1;
+                        
+                        let importedNum = parseInt(imported.commandNumber);
+                        commandNumber = (!importedNum || isNaN(importedNum)) ? 1 : importedNum;
                         
                         save();
                         render();
-                        alert("✅ تم استيراد وقراءة النسخة الاحتياطية بنجاح وتحديث المتجر فورا!");
+                        document.getElementById('cmdNumberInput').value = commandNumber;
+                        alert("✅ تم استيراد النسخة الاحتياطية وتحديث النظام بنجاح!");
                     } else {
-                        alert("❌ خطأ: هذا الملف نصي عادي ولكنه لا يحتوي على الهيكلة البرمجية الخاصة بنظام الـ POS.");
+                        alert("❌ خطأ: الملف لا يحتوي على هيكلة برمجية صحيحة لنظام الـ POS.");
                     }
                 } catch(err) {
-                    alert("❌ فشل الاستيراد: محتوى الملف غير متوافق أو تالف برمجياً، يرجى رفع الملف الأصلي الذي قمت بتصديره من الزر الأخضر.");
+                    alert("❌ فشل الاستيراد: محتوى الملف غير متوافق أو تالف.");
                 }
             };
             reader.readAsText(file);
-            
-            // تصفير المدخل لكي يسمح برفع نفس الملف مجدداً إذا دعت الحاجة
             event.target.value = "";
         }
     </script>
