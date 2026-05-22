@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>POS SYSTEM EXECUTIVE - نظام المبيعات الاحترافي المطور</title>
 
-<!-- استدعاء خط Cairo والأيقونات الاحترافية -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -222,6 +221,20 @@ input:focus, select:focus {
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
 }
 
+/* تنسيق خطأ خاص بالرفرونس المتكرر وسعر الخسارة */
+input.input-error {
+    border-color: var(--danger) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3) !important;
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
 /* تقسيم واجهة البيع بالتساوي */
 .sales-grid {
     display: grid;
@@ -378,7 +391,6 @@ tr:last-child td { border-bottom: none; }
 
 <body>
 
-<!-- لوحة التحكم الرئيسية - DASHBOARD -->
 <div id="dashboard">
     <div class="card" onclick="openPage('products')"><i class="fa-solid fa-box-open"></i> إدارة المنتجات والمخزن</div>
     <div class="card" onclick="openPage('sales')"><i class="fa-solid fa-cash-register"></i> واجهة البيع السريعة</div>
@@ -387,15 +399,12 @@ tr:last-child td { border-bottom: none; }
     <div class="card" onclick="openPage('expenses')"><i class="fa-solid fa-hand-holding-dollar" style="background:var(--danger-gradient); -webkit-background-clip: text;"></i> إدارة المصاريف الكلية</div>
     <div class="card" onclick="openPage('profits')"><i class="fa-solid fa-chart-line" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تقارير الأرباح الصافية</div>
     
-    <!-- أزرار النسخ الاحتياطي المحدثة (التصدير والاستيراد) -->
     <div class="card" onclick="exportData()" style="background: rgba(16, 185, 129, 0.02); border: 1px dashed rgba(16, 185, 129, 0.25);"><i class="fa-solid fa-file-export" style="background:var(--success-gradient); -webkit-background-clip: text;"></i> تصدير نسخة احتياطية</div>
     <div class="card" onclick="triggerImport()" style="background: rgba(168, 85, 247, 0.02); border: 1px dashed rgba(168, 85, 247, 0.25);"><i class="fa-solid fa-file-import" style="background:var(--purple-gradient); -webkit-background-clip: text;"></i> استيراد نسخة من الكمبيوتر</div>
 </div>
 
-<!-- حقل مخفي مخصص لرفع الملفات من الكمبيوتر -->
 <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importData(event)">
 
-<!-- إدارة المنتجات - PRODUCTS -->
 <div id="products" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
@@ -404,12 +413,12 @@ tr:last-child td { border-bottom: none; }
     <div class="box">
         <h3 style="margin-bottom: 20px; font-size:17px;"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد يدوياً</h3>
         <div class="flex-inputs">
-            <div><label>الباركود / Ref:</label><input id="pRef" placeholder="أدخل أو امسح الباركود"></div>
+            <div><label>الباركود / Ref (يجب أن يكون فريداً):</label><input id="pRef" placeholder="أدخل أو امسح الباركود" oninput="checkRefUniqueness()"></div>
             <div><label>اسم المنتج:</label><input id="pName" placeholder="اسم المنتج بالكامل"></div>
         </div>
         <div class="flex-inputs">
-            <div><label>سعر الشراء (DA):</label><input id="pBuy" type="number" step="0.01" placeholder="0.00"></div>
-            <div><label>سعر البيع الافتراضي (DA):</label><input id="pSell" type="number" step="0.01" placeholder="0.00"></div>
+            <div><label>سعر الشراء (DA):</label><input id="pBuy" type="number" step="0.01" placeholder="0.00" oninput="checkPriceValidity()"></div>
+            <div><label>سعر البيع الافتراضي (DA):</label><input id="pSell" type="number" step="0.01" placeholder="0.00" oninput="checkPriceValidity()"></div>
             <div><label>الكمية الابتدائية:</label><input id="pQty" type="number" step="0.01" placeholder="0"></div>
         </div>
         <button onclick="addProduct()" style="width: 100%; margin-top: 5px; background: var(--success-gradient); height: 50px;"><i class="fa-solid fa-plus"></i> إضافة المنتج للمخزن</button>
@@ -426,7 +435,6 @@ tr:last-child td { border-bottom: none; }
     </div>
 </div>
 
-<!-- واجهة البيع السريعة - SALES -->
 <div id="sales" class="page" style="max-width: 1300px;">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
@@ -488,14 +496,12 @@ tr:last-child td { border-bottom: none; }
     </div>
 </div>
 
-<!-- جرد المخزون الكلي - STOCK -->
 <div id="stock" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
         <h2><i class="fa-solid fa-warehouse" style="color:var(--primary);"></i> كشف وجرد المخزون الكلي</h2>
     </div>
 
-    <!-- بطاقات الإحصاءات العلوية المضافة حديثاً للمخزون للرؤية السريعة فور الدخول -->
     <div class="profit-grid" style="margin-top: 0; margin-bottom: 30px;">
         <div class="profit-card" style="border-right-color: var(--primary);">
             <p>📦 إجمالي السلع المتوفرة بالمخزن</p>
@@ -520,7 +526,6 @@ tr:last-child td { border-bottom: none; }
     </div>
 </div>
 
-<!-- السلع الناقصة - LOW -->
 <div id="low" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
@@ -534,7 +539,6 @@ tr:last-child td { border-bottom: none; }
     </div>
 </div>
 
-<!-- إدارة المصاريف - EXPENSES -->
 <div id="expenses" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
@@ -556,7 +560,6 @@ tr:last-child td { border-bottom: none; }
     <div id="expensesLog" style="max-height: 420px; overflow-y: auto; margin-top: 20px;"></div>
 </div>
 
-<!-- تقارير الأرباح - PROFITS -->
 <div id="profits" class="page">
     <div class="header">
         <button class="back" onclick="back()"><i class="fa-solid fa-arrow-right"></i> رجوع للرئيسية</button>
@@ -641,6 +644,30 @@ function playBeepSound() {
     } catch (e) { console.log("Audio error"); }
 }
 
+// صوت تنبيه قوي عند حدوث خطأ أو تكرار رفرنس أو سعر بيع أقل من الشراء
+function playErrorSound() {
+    try {
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let now = audioCtx.currentTime;
+        
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
+        
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(now);
+        osc.stop(now + 0.3);
+    } catch (e) { console.log("Audio error"); }
+}
+
 // رنين الكاسة الاحترافي الفخم عند نجاح عملية البيع
 function playCashRegisterSound() {
     try {
@@ -683,6 +710,36 @@ function playCashRegisterSound() {
         osc3.stop(now + 0.3);
         
     } catch (e) { console.log("Cash sound error: ", e); }
+}
+
+/* التحقق الفوري من تكرار الرفرونس وتلوين الحقل بالأمر */
+function checkRefUniqueness() {
+    let refField = document.getElementById('pRef');
+    let refVal = refField.value.trim();
+    if(!refVal) {
+        refField.classList.remove('input-error');
+        return;
+    }
+    let isDuplicate = batches.some(b => b.ref === refVal);
+    if(isDuplicate) {
+        refField.classList.add('input-error');
+    } else {
+        refField.classList.remove('input-error');
+    }
+}
+
+/* التحقق الفوري من ملاءمة سعر البيع وسعر الشراء */
+function checkPriceValidity() {
+    let buyField = document.getElementById('pBuy');
+    let sellField = document.getElementById('pSell');
+    let buyVal = Number(buyField.value) || 0;
+    let sellVal = Number(sellField.value) || 0;
+    
+    if(sellField.value !== "" && sellVal < buyVal) {
+        sellField.classList.add('input-error');
+    } else {
+        sellField.classList.remove('input-error');
+    }
 }
 
 function updateDefaultSalePriceField(){
@@ -729,16 +786,42 @@ function loadOrderToEdit() {
 }
 
 function addProduct(){
-    let ref = document.getElementById('pRef').value.trim();
+    let refField = document.getElementById('pRef');
+    let sellField = document.getElementById('pSell');
+    
+    let ref = refField.value.trim();
     let name = document.getElementById('pName').value.trim();
     let buy = document.getElementById('pBuy').value;
-    let sell = document.getElementById('pSell').value;
+    let sell = sellField.value;
     let qty = document.getElementById('pQty').value;
+    
     if(!ref || !name || !buy || !sell || !qty) return alert("يرجى ملء جميع الخانات");
+    
+    // شرط 1: منع تكرار الرفرونس نهائياً في إضافة منتج جديد
     let existing = batches.find(b => b.ref === ref);
-    if(existing) { existing.qty += +qty; } else { batches.push({ id: Date.now(), ref, name, buy: +buy, sell: +sell, qty: +qty }); }
-    document.getElementById('pRef').value = ''; document.getElementById('pName').value = '';
-    document.getElementById('pBuy').value = ''; document.getElementById('pSell').value = ''; document.getElementById('pQty').value = '';
+    if(existing) {
+        playErrorSound();
+        refField.classList.add('input-error');
+        alert("خطأ: هذا الرفरونس (الباركود) مستعمل مسبقاً لمنتج آخر! لا يمكن التكرار.");
+        return;
+    }
+    
+    // شرط 2: منع جعل سعر البيع أقل من سعر الشراء
+    if(Number(sell) < Number(buy)) {
+        playErrorSound();
+        sellField.classList.add('input-error');
+        alert("خطأ مالي: لا يمكن أن يكون سعر البيع أقل من سعر الشراء (بيع بالخسارة مجمّد)!");
+        return;
+    }
+    
+    batches.push({ id: Date.now(), ref, name, buy: +buy, sell: +sell, qty: +qty });
+    
+    // تفريغ المدخلات وإزالة حالات الخطأ
+    refField.value = ''; document.getElementById('pName').value = '';
+    document.getElementById('pBuy').value = ''; sellField.value = ''; document.getElementById('pQty').value = '';
+    refField.classList.remove('input-error');
+    sellField.classList.remove('input-error');
+    
     save(); render();
 }
 
@@ -749,10 +832,18 @@ function deleteProduct(id){
 
 function editProduct(id){
     let b = batches.find(x => x.id === id); if(!b) return;
-    b.name = prompt("تعديل اسم المنتج:", b.name) || b.name;
-    b.qty = +prompt("تعديل الكمية الحالية:", b.qty) || b.qty;
-    b.buy = +prompt("تعديل سعر الشراء:", b.buy) || b.buy;
-    b.sell = +prompt("تعديل سعر البيع الافتراضي:", b.sell) || b.sell;
+    let newName = prompt("تعديل اسم المنتج:", b.name) || b.name;
+    let newQty = +prompt("تعديل الكمية الحالية:", b.qty) || b.qty;
+    let newBuy = +prompt("تعديل سعر الشراء:", b.buy) || b.buy;
+    let newSell = +prompt("تعديل سعر البيع الافتراضي:", b.sell) || b.sell;
+    
+    if(newSell < newBuy) {
+        playErrorSound();
+        alert("خطأ: تم رفض التعديل لأن سعر البيع أقل من سعر الشراء!");
+        return;
+    }
+    
+    b.name = newName; b.qty = newQty; b.buy = newBuy; b.sell = newSell;
     save(); render();
 }
 
@@ -776,6 +867,14 @@ function addToCommand(){
     if(!b || qty<=0) return;
     if(isNaN(customPrice) || customPrice < 0) { alert("يرجى إدخال سعر بيع صحيح"); return; }
     if(b.qty < qty){ alert("المخزون غير كافي"); return; }
+    
+    // منع البيع بخسارة في واجهة البيع السريع عند تعديل السعر يدوياً
+    if(customPrice < b.buy) {
+        playErrorSound();
+        alert("تنبيه: سعر البيع المقترح في السلة أقل من سعر شراء السلعة الأصلي!");
+        return;
+    }
+    
     let ex = currentCommandData.find(x => x.id === id && x.sell === customPrice);
     if(ex){
         if(b.qty < ex.qty + qty){ alert("المجموع يتجاوز المتاح في المخزن"); return; }
@@ -846,7 +945,7 @@ function addExpense(){
 }
 
 function deleteExpense(id){
-    if(!confirm("هل تريد حذف هذا المصروف؟")) return;
+    if(!confirm("هل تريد حذف هذا المصروف?")) return;
     expenses = expenses.filter(x => x.id !== id); save(); render();
 }
 
