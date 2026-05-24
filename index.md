@@ -692,7 +692,7 @@ function renderSalesOptions(){
     let o = document.createElement('option');
     o.value = b.id;
 
-    o.text = `${b.name} [${b.ref}] (المتاح: ${b.qty}) - سعر البيع: ${fmt(b.sell)} DA`;
+  o.text = `${fmt(b.sell)} DA | ${b.name} | الكمية: ${b.qty} | REF: ${b.ref}`;
 
     sel.appendChild(o);
   });
