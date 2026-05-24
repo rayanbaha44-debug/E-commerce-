@@ -690,17 +690,91 @@ function renderSalesOptions(){
   }
 }
 function addToCommand(){
+
   let sel=document.getElementById('saleStock');
+
   if(!sel.value) return;
+
   let b=batches.find(x=>x.id===Number(sel.value));
+
   if(!b) return;
+
   let qty=parseFloat(document.getElementById('saleQty').value)||0;
+
   let price=parseFloat(document.getElementById('salePriceInput').value)||0;
-  if(qty<=0){ playErr(); toast("يرجى تحديد كمية أكبر من صفر","error"); return; }
-  let ex=currentCmd.find(x=>x.ref===b.ref&&x.sellPrice===price);
-  if(ex){ ex.qty+=qty; }
-  else { currentCmd.push({ref:b.ref,name:b.name,qty,sellPrice:price,buyPrice:b.buy}); }
-  renderCurrentCmd(); playBeep();
+
+  /* الكمية الموجودة في السلة */
+  let alreadyInCart = currentCmd
+    .filter(x=>x.ref===b.ref)
+    .reduce((s,x)=>s+x.qty,0);
+
+  /* الكمية المتوفرة */
+  let availableQty = b.qty - alreadyInCart;
+
+  /* تحقق */
+  if(qty<=0){
+
+    playErr();
+
+    toast(
+      "يرجى تحديد كمية أكبر من صفر",
+      "error"
+    );
+
+    return;
+  }
+
+  /* منع البيع فوق المخزون */
+  if(qty > availableQty){
+
+    playErr();
+
+    toast(
+      "المخزون غير كاف! المتوفر فقط: " + availableQty,
+      "error"
+    );
+
+    return;
+  }
+
+  /* بحث إذا المنتج موجود في السلة */
+  let ex=currentCmd.find(
+    x=>x.ref===b.ref && x.sellPrice===price
+  );
+
+  if(ex){
+
+    /* تحقق عند الدمج */
+    if(ex.qty + qty > b.qty){
+
+      playErr();
+
+      toast(
+        "لا يمكن تجاوز كمية المخزون",
+        "error"
+      );
+
+      return;
+    }
+
+    ex.qty += qty;
+
+  }else{
+
+    currentCmd.push({
+      ref:b.ref,
+      name:b.name,
+      qty,
+      sellPrice:price,
+      buyPrice:b.buy
+    });
+
+  }
+
+  renderCurrentCmd();
+
+  playBeep();
+
   document.getElementById('saleQty').value='1';
 }
 function removeFromCmd(i){ currentCmd.splice(i,1); renderCurrentCmd(); }
@@ -724,16 +798,84 @@ function renderCurrentCmd(){
   document.getElementById('commandTotal').innerText=fmt(total)+' DA';
 }
 function confirmCommand(){
-  if(!currentCmd.length){ playErr(); toast("السلة فارغة!","error"); return; }
-  let today=new Date().toISOString().split('T')[0];
-  currentCmd.forEach(item=>{
+
+  if(!currentCmd.length){
+
+    playErr();
+
+    toast("السلة فارغة!","error");
+
+    return;
+  }
+
+  /* تحقق نهائي من المخزون */
+  for(let item of currentCmd){
+
     let b=batches.find(x=>x.ref===item.ref);
-    if(b) b.qty=Math.max(0,b.qty-item.qty);
-    sales.push({id:Date.now()+Math.random(),command:cmdNumber,ref:item.ref,name:item.name,qty:item.qty,buyPrice:item.buyPrice,sellPrice:item.sellPrice,date:today});
+
+    if(!b){
+
+      playErr();
+
+      toast(
+        "المنتج غير موجود بالمخزن",
+        "error"
+      );
+
+      return;
+    }
+
+    if(item.qty > b.qty){
+
+      playErr();
+
+      toast(
+        "المخزون غير كاف للمنتج: " + b.name,
+        "error"
+      );
+
+      return;
+    }
+  }
+
+  let today=new Date().toISOString().split('T')[0];
+
+  /* خصم الكميات */
+  currentCmd.forEach(item=>{
+
+    let b=batches.find(x=>x.ref===item.ref);
+
+    b.qty -= item.qty;
+
+    sales.push({
+      id:Date.now()+Math.random(),
+      command:cmdNumber,
+      ref:item.ref,
+      name:item.name,
+      qty:item.qty,
+      buyPrice:item.buyPrice,
+      sellPrice:item.sellPrice,
+      date:today
+    });
+
   });
-  cmdNumber++; document.getElementById('cmdNumberInput').value=cmdNumber;
-  currentCmd=[]; save(); render(); playCash();
-  toast("تم تأكيد وحفظ الطلبية بنجاح","success");
+
+  cmdNumber++;
+
+  document.getElementById('cmdNumberInput').value=cmdNumber;
+
+  currentCmd=[];
+
+  save();
+
+  render();
+
+  playCash();
+
+  toast(
+    "تم تأكيد وحفظ الطلبية بنجاح",
+    "success"
+  );
 }
 function loadOrderToEdit(){
   let num=Number(document.getElementById('searchOrderNumber').value);
