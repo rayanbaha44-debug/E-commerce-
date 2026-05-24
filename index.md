@@ -673,7 +673,7 @@ function renderSalesOptions(){
   let list=sv?batches.filter(b=>b.name.toLowerCase().includes(sv)||b.ref.toLowerCase().includes(sv)):batches;
   if(!list.length){
     let o=document.createElement('option');
-    o.text='لا توجد نتائج...'; o.value=''; sel.appendChild(o);
+   o.text = `${b.name} [${b.ref}] (المتاح: ${b.qty}) - سعر البيع: ${fmt(b.sell)} DA`;
     document.getElementById('salePriceInput').value=''; return;
   }
   list.forEach(b=>{
