@@ -914,7 +914,7 @@ function calcNetProfit(){
     totalOrdersAmount += orderTotal;
 
     /* 14900 - order total */
-    let orderProfit = baseAmt - orderTotal;
+   let orderProfit = Math.abs(baseAmt - orderTotal);
 
     totalNetProfit += orderProfit;
   });
