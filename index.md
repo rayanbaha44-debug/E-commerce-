@@ -1122,76 +1122,80 @@ function calcNetProfit(){
 
 /* ========== NET PROFIT (NEW SECTION) ========== */
 function calcNetProfit(){
-  /* read base from input */
-  baseAmt=Number(document.getElementById('baseAmountInput').value)||14900;
+
+  baseAmt =
+    Number(document.getElementById('baseAmountInput').value) || 14900;
+
   save();
 
-  let from=document.getElementById('npFilterFrom').value;
-  let to=document.getElementById('npFilterTo').value;
+  let from = document.getElementById('npFilterFrom').value;
+  let to   = document.getElementById('npFilterTo').value;
 
-  /* filter sales and expenses by period */
-  let fSales  = (from&&to) ? sales.filter(s=>s.date>=from&&s.date<=to)    : sales;
-  let fExp    = (from&&to) ? expenses.filter(e=>e.date>=from&&e.date<=to) : expenses;
+  let fSales = (from && to)
+    ? sales.filter(s => s.date >= from && s.date <= to)
+    : sales;
 
-  /* total sales (raw amount = qty * sellPrice, NOT profit margin) */
+  let fExp = (from && to)
+    ? expenses.filter(e => e.date >= from && e.date <= to)
+    : expenses;
 
-  let totalExp = fExp.reduce((s,x)=>s+x.amount, 0);
+  /* تجميع الطلبات */
+  let groups = {};
 
-let groups = {};
+  fSales.forEach(s=>{
+    if(!groups[s.command]) groups[s.command] = [];
+    groups[s.command].push(s);
+  });
 
-fSales.forEach(s => {
-  if(!groups[s.command]) groups[s.command] = [];
-  groups[s.command].push(s);
-});
+  let totalSales = 0;
+  let totalProfit = 0;
 
-let totalSales = 0;
+  Object.values(groups).forEach(order=>{
 
-let totalProfit = 0;
+    let orderTotal = order.reduce((sum,item)=>{
+      return sum + (item.qty * item.sellPrice);
+    },0);
 
-Object.values(groups).forEach(order => {
+    totalSales += orderTotal;
 
-  let orderTotal = order.reduce((sum,item)=>{
-    return sum + (item.qty * item.sellPrice);
-  },0);
+    /* المرجعي الخاص بكل طلبية */
+    let orderBase = Number(order[0].baseAmount);
 
-  totalSales += orderTotal;
+    if(!orderBase || isNaN(orderBase)){
+      orderBase = 14900;
+    }
 
-  /* السعر المرجعي الخاص بهذه الطلبية */
-  let orderBase =
-    Number(order[0].baseAmount) || baseAmt;
+    totalProfit += (orderBase - orderTotal);
 
-  /* فائدة الطلبية */
-  totalProfit += (orderBase - orderTotal);
+  });
 
-});
+  let totalExp = fExp.reduce((s,x)=>s + x.amount,0);
 
-/* النتيجة النهائية */
-let result = totalProfit - totalExp;
+  let result = totalProfit - totalExp;
 
-  /* update hero */
+  /* HERO */
   let hero = document.getElementById('netHeroBig');
   hero.innerText = fmt(result) + ' DA';
-  hero.className = 'big-amount ' + (result>0?'positive':result<0?'negative':'zero');
+  hero.className = 'big-amount ' +
+    (result > 0 ? 'positive' : result < 0 ? 'negative' : 'zero');
 
-document.getElementById('netHeroFormula').innerText =
-    'مجموع فوائد الطلبيات - المصاريف = ' + fmt(result) + ' DA';
+  document.getElementById('netHeroFormula').innerText =
+    'مجموع الفائدة - المصاريف = ' + fmt(result) + ' DA';
 
-  /* update row cards */
-  document.getElementById('npBaseDisp').innerText = fmt(baseAmt)  + ' DA';
+  /* cards */
+  document.getElementById('npBaseDisp').innerText = fmt(baseAmt) + ' DA';
   document.getElementById('npSalesDisp').innerText = fmt(totalSales) + ' DA';
-  document.getElementById('npExpDisp').innerText  = fmt(totalExp)  + ' DA';
+  document.getElementById('npExpDisp').innerText = fmt(totalExp) + ' DA';
 
-  /* update formula breakdown */
-document.getElementById('npFbBase').innerText =
-    fmt(baseAmt) + ' DA لكل طلبية';
+  /* breakdown */
+  document.getElementById('npFbBase').innerText = 'مرجعي محفوظ لكل طلبية';
   document.getElementById('npFbSales').innerText = fmt(totalSales) + ' DA';
-  document.getElementById('npFbExp').innerText   = fmt(totalExp)  + ' DA';
+  document.getElementById('npFbExp').innerText = fmt(totalExp) + ' DA';
 
-  let res=document.getElementById('npFbResult');
+  let res = document.getElementById('npFbResult');
   res.innerText = fmt(result) + ' DA';
-  res.style.color = result>0?'#34d399':result<0?'#f87171':'var(--warning)';
+  res.style.color = result > 0 ? '#34d399' : result < 0 ? '#f87171' : 'var(--warning)';
 
-  /* sales list for period */
   renderNpSalesList(fSales);
 }
 
