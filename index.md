@@ -989,7 +989,6 @@ function calcNetProfit(){
   let fExp    = (from&&to) ? expenses.filter(e=>e.date>=from&&e.date<=to) : expenses;
 
   /* total sales (raw amount = qty * sellPrice, NOT profit margin) */
-  let totalExp   = fExp.reduce((s,x)=>s+x.amount, 0);
 
   let totalExp = fExp.reduce((s,x)=>s+x.amount, 0);
 
@@ -1024,8 +1023,8 @@ let result = totalProfit - totalExp;
   hero.innerText = fmt(result) + ' DA';
   hero.className = 'big-amount ' + (result>0?'positive':result<0?'negative':'zero');
 
-  document.getElementById('netHeroFormula').innerText =
-    fmt(baseAmt)+' - '+fmt(totalSales)+' (مبيعات) - '+fmt(totalExp)+' (مصاريف) = '+fmt(result)+' DA';
+document.getElementById('netHeroFormula').innerText =
+    'مجموع فوائد الطلبيات - المصاريف = ' + fmt(result) + ' DA';
 
   /* update row cards */
   document.getElementById('npBaseDisp').innerText = fmt(baseAmt)  + ' DA';
@@ -1033,7 +1032,8 @@ let result = totalProfit - totalExp;
   document.getElementById('npExpDisp').innerText  = fmt(totalExp)  + ' DA';
 
   /* update formula breakdown */
-  document.getElementById('npFbBase').innerText  = fmt(baseAmt)  + ' DA';
+ document.getElementById('npFbBase').innerText =
+    '14900 DA لكل طلبية';
   document.getElementById('npFbSales').innerText = fmt(totalSales) + ' DA';
   document.getElementById('npFbExp').innerText   = fmt(totalExp)  + ' DA';
 
