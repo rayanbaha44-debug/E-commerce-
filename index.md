@@ -667,25 +667,42 @@ function updateSalePrice(){
   if(b) document.getElementById('salePriceInput').value=b.sell;
 }
 function renderSalesOptions(){
-  let sv=(document.getElementById('saleSearch').value||'').toLowerCase().trim();
-  let sel=document.getElementById('saleStock');
-  sel.innerHTML='';
-  let list=sv?batches.filter(b=>b.name.toLowerCase().includes(sv)||b.ref.toLowerCase().includes(sv)):batches;
+  let sv = (document.getElementById('saleSearch').value || '').toLowerCase().trim();
+  let sel = document.getElementById('saleStock');
+
+  sel.innerHTML = '';
+
+  let list = sv
+    ? batches.filter(b => b.name.toLowerCase().includes(sv) || b.ref.toLowerCase().includes(sv))
+    : batches;
+
+  /* إذا ماكانش نتائج */
   if(!list.length){
-    let o=document.createElement('option');
-   o.text = `${b.name} [${b.ref}] (المتاح: ${b.qty}) - سعر البيع: ${fmt(b.sell)} DA`;
-    document.getElementById('salePriceInput').value=''; return;
+    let o = document.createElement('option');
+    o.text = 'لا توجد نتائج...';
+    o.value = '';
+    sel.appendChild(o);
+
+    document.getElementById('salePriceInput').value = '';
+    return;
   }
-  list.forEach(b=>{
-    let o=document.createElement('option');
-    o.value=b.id;
-    o.text=`${b.name} [${b.ref}] (المتاح: ${b.qty})`;
+
+  /* عرض المنتجات */
+  list.forEach(b => {
+    let o = document.createElement('option');
+    o.value = b.id;
+
+    o.text = `${b.name} [${b.ref}] (المتاح: ${b.qty}) - سعر البيع: ${fmt(b.sell)} DA`;
+
     sel.appendChild(o);
   });
+
   updateSalePrice();
-  if(sv&&list.length===1&&list[0].ref.toLowerCase()===sv){
+
+  /* إذا بحث ورجع منتج واحد */
+  if(sv && list.length === 1 && list[0].ref.toLowerCase() === sv){
     addToCommand();
-    document.getElementById('saleSearch').value='';
+    document.getElementById('saleSearch').value = '';
     renderSalesOptions();
   }
 }
