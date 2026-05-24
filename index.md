@@ -877,14 +877,12 @@ function renderExpenses(){
 /* ========== PROFITS PAGE ========== */
 function calcNetProfit(){
 
-  /* read base from input */
   baseAmt = Number(document.getElementById('baseAmountInput').value) || 14900;
   save();
 
   let from = document.getElementById('npFilterFrom').value;
   let to   = document.getElementById('npFilterTo').value;
 
-  /* filter sales and expenses by period */
   let fSales = (from && to)
     ? sales.filter(s => s.date >= from && s.date <= to)
     : sales;
@@ -893,7 +891,7 @@ function calcNetProfit(){
     ? expenses.filter(e => e.date >= from && e.date <= to)
     : expenses;
 
-  /* ===== GROUP ORDERS ===== */
+  /* تجميع الطلبيات */
   let groups = {};
 
   fSales.forEach(s => {
@@ -901,31 +899,32 @@ function calcNetProfit(){
     groups[s.command].push(s);
   });
 
-  /* ===== CALCULATE EACH ORDER ===== */
-  let totalOrdersAmount = 0;
   let totalNetProfit = 0;
+  let totalSales = 0;
 
+  /* حساب كل طلبية وحدها */
   Object.values(groups).forEach(order => {
 
     let orderTotal = order.reduce((sum,item)=>{
       return sum + (item.qty * item.sellPrice);
     },0);
 
-    totalOrdersAmount += orderTotal;
+    totalSales += orderTotal;
 
-    /* 14900 - order total */
-   let orderProfit = Math.abs(baseAmt - orderTotal);
+    /* 14900 - مبلغ الطلبية */
+    let orderProfit = 14900 - orderTotal;
 
     totalNetProfit += orderProfit;
+
   });
 
-  /* expenses */
+  /* المصاريف */
   let totalExp = fExp.reduce((s,x)=>s+x.amount,0);
 
-  /* final result */
+  /* النتيجة النهائية */
   let finalResult = totalNetProfit - totalExp;
 
-  /* ===== HERO ===== */
+  /* HERO */
   let hero = document.getElementById('netHeroBig');
 
   hero.innerText = fmt(finalResult) + ' DA';
@@ -939,32 +938,25 @@ function calcNetProfit(){
       : 'zero');
 
   document.getElementById('netHeroFormula').innerText =
-    'مجموع فوائد الطلبيات (' +
-    fmt(totalNetProfit) +
-    ') - المصاريف (' +
-    fmt(totalExp) +
-    ') = ' +
-    fmt(finalResult) +
-    ' DA';
+    'مجموع فوائد الطلبيات - المصاريف = ' +
+    fmt(finalResult) + ' DA';
 
-  /* ===== ROW CARDS ===== */
-
+  /* cards */
   document.getElementById('npBaseDisp').innerText =
     fmt(baseAmt) + ' DA';
 
   document.getElementById('npSalesDisp').innerText =
-    fmt(totalOrdersAmount) + ' DA';
+    fmt(totalSales) + ' DA';
 
   document.getElementById('npExpDisp').innerText =
     fmt(totalExp) + ' DA';
 
-  /* ===== BREAKDOWN ===== */
-
+  /* breakdown */
   document.getElementById('npFbBase').innerText =
-    fmt(baseAmt) + ' DA لكل طلبية';
+    '14900 DA لكل طلبية';
 
   document.getElementById('npFbSales').innerText =
-    fmt(totalOrdersAmount) + ' DA';
+    fmt(totalSales) + ' DA';
 
   document.getElementById('npFbExp').innerText =
     fmt(totalExp) + ' DA';
@@ -980,7 +972,6 @@ function calcNetProfit(){
       ? '#f87171'
       : 'var(--warning)';
 
-  /* render orders list */
   renderNpSalesList(fSales);
 }
 
