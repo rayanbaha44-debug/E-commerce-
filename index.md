@@ -848,15 +848,18 @@ function confirmCommand(){
     b.qty -= item.qty;
 
     sales.push({
-      id:Date.now()+Math.random(),
-      command:cmdNumber,
-      ref:item.ref,
-      name:item.name,
-      qty:item.qty,
-      buyPrice:item.buyPrice,
-      sellPrice:item.sellPrice,
-      date:today
-    });
+  id:Date.now()+Math.random(),
+  command:cmdNumber,
+  ref:item.ref,
+  name:item.name,
+  qty:item.qty,
+  buyPrice:item.buyPrice,
+  sellPrice:item.sellPrice,
+  date:today,
+
+  /* حفظ السعر المرجعي وقت البيع */
+  baseAmount: baseAmt
+});
 
   });
 
@@ -1142,6 +1145,7 @@ fSales.forEach(s => {
 });
 
 let totalSales = 0;
+
 let totalProfit = 0;
 
 Object.values(groups).forEach(order => {
@@ -1152,8 +1156,12 @@ Object.values(groups).forEach(order => {
 
   totalSales += orderTotal;
 
-  /* كل طلبية وحدها */
-  totalProfit += (baseAmt - orderTotal);
+  /* السعر المرجعي الخاص بهذه الطلبية */
+  let orderBase =
+    Number(order[0].baseAmount) || baseAmt;
+
+  /* فائدة الطلبية */
+  totalProfit += (orderBase - orderTotal);
 
 });
 
