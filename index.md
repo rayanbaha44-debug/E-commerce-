@@ -875,35 +875,113 @@ function renderExpenses(){
 }
 
 /* ========== PROFITS PAGE ========== */
-function calcProfits(){
-  let today=new Date().toISOString().split('T')[0];
-  let thisMonth=today.substring(0,7);
-  let thisYear=today.substring(0,4);
-  let from=document.getElementById('filterFrom').value;
-  let to=document.getElementById('filterTo').value;
+function calcNetProfit(){
 
-  /* filtered */
-  if(from&&to){
-    let fs=sales.filter(s=>s.date>=from&&s.date<=to);
-    let fe=expenses.filter(e=>e.date>=from&&e.date<=to);
-    let sp=fs.reduce((s,x)=>s+(x.sellPrice-x.buyPrice)*x.qty,0);
-    let ep=fe.reduce((s,x)=>s+x.amount,0);
-    document.getElementById('filteredProfit').innerText=fmt(sp-ep)+' DA';
-  }
-  /* daily */
-  let dS=sales.filter(s=>s.date===today);
-  let dE=expenses.filter(e=>e.date===today);
-  document.getElementById('dailyProfit').innerText=fmt(dS.reduce((s,x)=>s+(x.sellPrice-x.buyPrice)*x.qty,0)-dE.reduce((s,x)=>s+x.amount,0))+' DA';
-  /* monthly */
-  let mS=sales.filter(s=>s.date.startsWith(thisMonth));
-  let mE=expenses.filter(e=>e.date.startsWith(thisMonth));
-  document.getElementById('monthlyProfit').innerText=fmt(mS.reduce((s,x)=>s+(x.sellPrice-x.buyPrice)*x.qty,0)-mE.reduce((s,x)=>s+x.amount,0))+' DA';
-  /* yearly */
-  let yE=expenses.filter(e=>e.date.startsWith(thisYear));
-  let yET=yE.reduce((s,x)=>s+x.amount,0);
-  document.getElementById('totalExpensesYear').innerText=fmt(yET)+' DA';
-  let yS=sales.filter(s=>s.date.startsWith(thisYear));
-  document.getElementById('yearlyProfit').innerText=fmt(yS.reduce((s,x)=>s+(x.sellPrice-x.buyPrice)*x.qty,0)-yET)+' DA';
+  /* read base from input */
+  baseAmt = Number(document.getElementById('baseAmountInput').value) || 14900;
+  save();
+
+  let from = document.getElementById('npFilterFrom').value;
+  let to   = document.getElementById('npFilterTo').value;
+
+  /* filter sales and expenses by period */
+  let fSales = (from && to)
+    ? sales.filter(s => s.date >= from && s.date <= to)
+    : sales;
+
+  let fExp = (from && to)
+    ? expenses.filter(e => e.date >= from && e.date <= to)
+    : expenses;
+
+  /* ===== GROUP ORDERS ===== */
+  let groups = {};
+
+  fSales.forEach(s => {
+    if(!groups[s.command]) groups[s.command] = [];
+    groups[s.command].push(s);
+  });
+
+  /* ===== CALCULATE EACH ORDER ===== */
+  let totalOrdersAmount = 0;
+  let totalNetProfit = 0;
+
+  Object.values(groups).forEach(order => {
+
+    let orderTotal = order.reduce((sum,item)=>{
+      return sum + (item.qty * item.sellPrice);
+    },0);
+
+    totalOrdersAmount += orderTotal;
+
+    /* 14900 - order total */
+    let orderProfit = baseAmt - orderTotal;
+
+    totalNetProfit += orderProfit;
+  });
+
+  /* expenses */
+  let totalExp = fExp.reduce((s,x)=>s+x.amount,0);
+
+  /* final result */
+  let finalResult = totalNetProfit - totalExp;
+
+  /* ===== HERO ===== */
+  let hero = document.getElementById('netHeroBig');
+
+  hero.innerText = fmt(finalResult) + ' DA';
+
+  hero.className =
+    'big-amount ' +
+    (finalResult > 0
+      ? 'positive'
+      : finalResult < 0
+      ? 'negative'
+      : 'zero');
+
+  document.getElementById('netHeroFormula').innerText =
+    'مجموع فوائد الطلبيات (' +
+    fmt(totalNetProfit) +
+    ') - المصاريف (' +
+    fmt(totalExp) +
+    ') = ' +
+    fmt(finalResult) +
+    ' DA';
+
+  /* ===== ROW CARDS ===== */
+
+  document.getElementById('npBaseDisp').innerText =
+    fmt(baseAmt) + ' DA';
+
+  document.getElementById('npSalesDisp').innerText =
+    fmt(totalOrdersAmount) + ' DA';
+
+  document.getElementById('npExpDisp').innerText =
+    fmt(totalExp) + ' DA';
+
+  /* ===== BREAKDOWN ===== */
+
+  document.getElementById('npFbBase').innerText =
+    fmt(baseAmt) + ' DA لكل طلبية';
+
+  document.getElementById('npFbSales').innerText =
+    fmt(totalOrdersAmount) + ' DA';
+
+  document.getElementById('npFbExp').innerText =
+    fmt(totalExp) + ' DA';
+
+  let res = document.getElementById('npFbResult');
+
+  res.innerText = fmt(finalResult) + ' DA';
+
+  res.style.color =
+    finalResult > 0
+      ? '#34d399'
+      : finalResult < 0
+      ? '#f87171'
+      : 'var(--warning)';
+
+  /* render orders list */
+  renderNpSalesList(fSales);
 }
 
 /* ========== NET PROFIT (NEW SECTION) ========== */
