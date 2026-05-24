@@ -1019,108 +1019,7 @@ function renderExpenses(){
   c.innerHTML=html;
 }
 
-/* ========== PROFITS PAGE ========== */
-function calcNetProfit(){
-
-  baseAmt = Number(document.getElementById('baseAmountInput').value) || 14900;
-  save();
-
-  let from = document.getElementById('npFilterFrom').value;
-  let to   = document.getElementById('npFilterTo').value;
-
-  let fSales = (from && to)
-    ? sales.filter(s => s.date >= from && s.date <= to)
-    : sales;
-
-  let fExp = (from && to)
-    ? expenses.filter(e => e.date >= from && e.date <= to)
-    : expenses;
-
-  /* تجميع الطلبيات */
-  let groups = {};
-
-  fSales.forEach(s => {
-    if(!groups[s.command]) groups[s.command] = [];
-    groups[s.command].push(s);
-  });
-
-  let totalNetProfit = 0;
-  let totalSales = 0;
-
-  /* حساب كل طلبية وحدها */
-  Object.values(groups).forEach(order => {
-
-    let orderTotal = order.reduce((sum,item)=>{
-      return sum + (item.qty * item.sellPrice);
-    },0);
-
-    totalSales += orderTotal;
-
-    /* 14900 - مبلغ الطلبية */
-    let orderProfit = 14900 - orderTotal;
-
-    totalNetProfit += orderProfit;
-
-  });
-
-  /* المصاريف */
-  let totalExp = fExp.reduce((s,x)=>s+x.amount,0);
-
-  /* النتيجة النهائية */
-  let finalResult = totalNetProfit - totalExp;
-
-  /* HERO */
-  let hero = document.getElementById('netHeroBig');
-
-  hero.innerText = fmt(finalResult) + ' DA';
-
-  hero.className =
-    'big-amount ' +
-    (finalResult > 0
-      ? 'positive'
-      : finalResult < 0
-      ? 'negative'
-      : 'zero');
-
-  document.getElementById('netHeroFormula').innerText =
-    'مجموع فوائد الطلبيات - المصاريف = ' +
-    fmt(finalResult) + ' DA';
-
-  /* cards */
-  document.getElementById('npBaseDisp').innerText =
-    fmt(baseAmt) + ' DA';
-
-  document.getElementById('npSalesDisp').innerText =
-    fmt(totalSales) + ' DA';
-
-  document.getElementById('npExpDisp').innerText =
-    fmt(totalExp) + ' DA';
-
-  /* breakdown */
-  document.getElementById('npFbBase').innerText =
-    '14900 DA لكل طلبية';
-
-  document.getElementById('npFbSales').innerText =
-    fmt(totalSales) + ' DA';
-
-  document.getElementById('npFbExp').innerText =
-    fmt(totalExp) + ' DA';
-
-  let res = document.getElementById('npFbResult');
-
-  res.innerText = fmt(finalResult) + ' DA';
-
-  res.style.color =
-    finalResult > 0
-      ? '#34d399'
-      : finalResult < 0
-      ? '#f87171'
-      : 'var(--warning)';
-
-  renderNpSalesList(fSales);
-}
-
-/* ========== NET PROFIT (NEW SECTION) ========== */
+/* ========== NET PROFIT (CLEAN MERGED VERSION) ========== */
 function calcNetProfit(){
 
   baseAmt =
@@ -1139,10 +1038,10 @@ function calcNetProfit(){
     ? expenses.filter(e => e.date >= from && e.date <= to)
     : expenses;
 
-  /* تجميع الطلبات */
+  /* ===== تجميع الطلبيات ===== */
   let groups = {};
 
-  fSales.forEach(s=>{
+  fSales.forEach(s => {
     if(!groups[s.command]) groups[s.command] = [];
     groups[s.command].push(s);
   });
@@ -1150,55 +1049,69 @@ function calcNetProfit(){
   let totalSales = 0;
   let totalProfit = 0;
 
-  Object.values(groups).forEach(order=>{
+  Object.values(groups).forEach(order => {
 
-    let orderTotal = order.reduce((sum,item)=>{
+    let orderTotal = order.reduce((sum, item) => {
       return sum + (item.qty * item.sellPrice);
-    },0);
+    }, 0);
 
     totalSales += orderTotal;
 
-    /* المرجعي الخاص بكل طلبية */
+    // baseAmount لكل طلبية (ولا fallback)
     let orderBase = Number(order[0].baseAmount);
-
     if(!orderBase || isNaN(orderBase)){
-      orderBase = 14900;
+      orderBase = baseAmt || 14900;
     }
 
+    // الربح = المرجعي - المبيعات
     totalProfit += (orderBase - orderTotal);
-
   });
 
-  let totalExp = fExp.reduce((s,x)=>s + x.amount,0);
+  let totalExp = fExp.reduce((s, x) => s + x.amount, 0);
 
   let result = totalProfit - totalExp;
 
-  /* HERO */
+  /* ===== HERO ===== */
   let hero = document.getElementById('netHeroBig');
   hero.innerText = fmt(result) + ' DA';
+
   hero.className = 'big-amount ' +
-    (result > 0 ? 'positive' : result < 0 ? 'negative' : 'zero');
+    (result > 0 ? 'positive' :
+     result < 0 ? 'negative' : 'zero');
 
   document.getElementById('netHeroFormula').innerText =
     'مجموع الفائدة - المصاريف = ' + fmt(result) + ' DA';
 
-  /* cards */
-  document.getElementById('npBaseDisp').innerText = fmt(baseAmt) + ' DA';
-  document.getElementById('npSalesDisp').innerText = fmt(totalSales) + ' DA';
-  document.getElementById('npExpDisp').innerText = fmt(totalExp) + ' DA';
+  /* ===== CARDS ===== */
+  document.getElementById('npBaseDisp').innerText =
+    fmt(baseAmt) + ' DA';
 
-  /* breakdown */
-  document.getElementById('npFbBase').innerText = 'مرجعي محفوظ لكل طلبية';
-  document.getElementById('npFbSales').innerText = fmt(totalSales) + ' DA';
-  document.getElementById('npFbExp').innerText = fmt(totalExp) + ' DA';
+  document.getElementById('npSalesDisp').innerText =
+    fmt(totalSales) + ' DA';
+
+  document.getElementById('npExpDisp').innerText =
+    fmt(totalExp) + ' DA';
+
+  /* ===== BREAKDOWN ===== */
+  document.getElementById('npFbBase').innerText =
+    'مرجعي لكل طلبية (قابل للتغيير)';
+
+  document.getElementById('npFbSales').innerText =
+    fmt(totalSales) + ' DA';
+
+  document.getElementById('npFbExp').innerText =
+    fmt(totalExp) + ' DA';
 
   let res = document.getElementById('npFbResult');
+
   res.innerText = fmt(result) + ' DA';
-  res.style.color = result > 0 ? '#34d399' : result < 0 ? '#f87171' : 'var(--warning)';
+  res.style.color =
+    result > 0 ? '#34d399' :
+    result < 0 ? '#f87171' :
+    'var(--warning)';
 
   renderNpSalesList(fSales);
 }
-
 function renderNpSalesList(fSales){
   let c=document.getElementById('npSalesList');
   if(!fSales.length){ c.innerHTML="<p style='color:var(--muted);text-align:center;padding:20px;'>لا توجد طلبيات في هذه الفترة.</p>"; return; }
