@@ -989,11 +989,35 @@ function calcNetProfit(){
   let fExp    = (from&&to) ? expenses.filter(e=>e.date>=from&&e.date<=to) : expenses;
 
   /* total sales (raw amount = qty * sellPrice, NOT profit margin) */
-  let totalSales = fSales.reduce((s,x)=>s+x.qty*x.sellPrice, 0);
   let totalExp   = fExp.reduce((s,x)=>s+x.amount, 0);
 
-  /* formula: baseAmt - totalSales - totalExp */
-  let result = baseAmt - totalSales - totalExp;
+  let totalExp = fExp.reduce((s,x)=>s+x.amount, 0);
+
+let groups = {};
+
+fSales.forEach(s => {
+  if(!groups[s.command]) groups[s.command] = [];
+  groups[s.command].push(s);
+});
+
+let totalSales = 0;
+let totalProfit = 0;
+
+Object.values(groups).forEach(order => {
+
+  let orderTotal = order.reduce((sum,item)=>{
+    return sum + (item.qty * item.sellPrice);
+  },0);
+
+  totalSales += orderTotal;
+
+  /* كل طلبية وحدها */
+  totalProfit += (14900 - orderTotal);
+
+});
+
+/* النتيجة النهائية */
+let result = totalProfit - totalExp;
 
   /* update hero */
   let hero = document.getElementById('netHeroBig');
