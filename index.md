@@ -1011,7 +1011,7 @@ Object.values(groups).forEach(order => {
   totalSales += orderTotal;
 
   /* كل طلبية وحدها */
-  totalProfit += (14900 - orderTotal);
+  totalProfit += (baseAmt - orderTotal);
 
 });
 
@@ -1032,8 +1032,8 @@ document.getElementById('netHeroFormula').innerText =
   document.getElementById('npExpDisp').innerText  = fmt(totalExp)  + ' DA';
 
   /* update formula breakdown */
- document.getElementById('npFbBase').innerText =
-    '14900 DA لكل طلبية';
+document.getElementById('npFbBase').innerText =
+    fmt(baseAmt) + ' DA لكل طلبية';
   document.getElementById('npFbSales').innerText = fmt(totalSales) + ' DA';
   document.getElementById('npFbExp').innerText   = fmt(totalExp)  + ' DA';
 
